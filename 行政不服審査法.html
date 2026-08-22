@@ -1,0 +1,688 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>行政不服審査法の教科書</title>
+<style>
+:root{
+  --paper:#FAFAF7; --card:#FFFFFF; --ink:#1C1B18; --ink-sub:#55524A; --hai:#8A867C;
+  --line:#E3E1D9; --line2:#B5B1A6; --fill:#EAE7DE;
+  --seiji:#2F6E7A; --seiji-soft:#E7EFF0;
+  --shu:#C3422F; --shu-soft:#F9ECE9; --midori:#2E6E4E; --midori-soft:#E9F1EC;
+  --mincho:"Hiragino Mincho ProN","Yu Mincho","YuMincho","Noto Serif JP",serif;
+  --gothic:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#17161A; --card:#211F26; --ink:#E8E6E0; --ink-sub:#B0ADA4; --hai:#7C7970;
+    --line:#33323A; --line2:#4A4854; --fill:#35333D;
+    --seiji:#74BDC9; --seiji-soft:#22333A; --shu:#E06A57; --shu-soft:#3A2523;
+    --midori:#5FA983; --midori-soft:#20302A;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#17161A; --card:#211F26; --ink:#E8E6E0; --ink-sub:#B0ADA4; --hai:#7C7970;
+  --line:#33323A; --line2:#4A4854; --fill:#35333D;
+  --seiji:#74BDC9; --seiji-soft:#22333A; --shu:#E06A57; --shu-soft:#3A2523;
+  --midori:#5FA983; --midori-soft:#20302A;
+}
+*{box-sizing:border-box}
+body{background:var(--paper); color:var(--ink); font-family:var(--gothic); margin:0;
+  line-height:1.8; font-feature-settings:"palt" 1; -webkit-text-size-adjust:100%}
+.wrap{max-width:46rem; margin:0 auto; padding:clamp(1.5rem,5vw,3rem) clamp(1rem,4vw,2rem) 6rem}
+header{border-bottom:2px solid var(--line2); padding-bottom:1.5rem; margin-bottom:2rem}
+.eyebrow{font-size:.72rem; letter-spacing:.18em; color:var(--seiji); font-weight:700; margin:0 0 .7rem}
+h1{font-family:var(--mincho); font-size:clamp(1.8rem,6vw,2.4rem); line-height:1.35;
+  margin:0 0 .8rem; font-weight:600; text-wrap:balance}
+.lede{margin:0; color:var(--ink-sub); font-size:.98rem}
+.lede strong{color:var(--ink)}
+section{margin:0 0 3.4rem; scroll-margin-top:1rem}
+h2{font-family:var(--mincho); font-size:clamp(1.25rem,4.5vw,1.55rem); margin:0 0 .3rem;
+  font-weight:600; line-height:1.45}
+h2 .ch{color:var(--seiji); margin-right:.5rem}
+h3{font-size:1.02rem; margin:1.6rem 0 .5rem; font-weight:700}
+.why{color:var(--ink-sub); font-size:.92rem; margin:.2rem 0 1rem}
+p{margin:.6rem 0}
+b{font-weight:700}
+figure{margin:1rem 0}
+figure svg{max-width:100%; height:auto; display:block}
+figcaption{font-size:.84rem; color:var(--hai); margin-top:.45rem}
+.scroll{overflow-x:auto; -webkit-overflow-scrolling:touch; margin:.8rem 0}
+table{border-collapse:collapse; width:100%; font-size:.88rem; min-width:30rem}
+caption{text-align:left; font-size:.72rem; letter-spacing:.14em; color:var(--hai); padding-bottom:.45rem; font-weight:700}
+th,td{border-bottom:1px solid var(--line); padding:.55rem .6rem; text-align:left; vertical-align:top}
+thead th{border-bottom:1px solid var(--line2); font-size:.74rem; letter-spacing:.06em; color:var(--hai); font-weight:700; white-space:nowrap}
+tbody tr:last-child th,tbody tr:last-child td{border-bottom:none}
+th[scope="row"]{font-weight:700; white-space:nowrap}
+.chip{display:inline-block; font-size:.74rem; font-weight:700; letter-spacing:.08em;
+  padding:.08rem .5rem; border-radius:3px; margin-right:.45rem; vertical-align:.08em}
+.gen{color:var(--paper); background:var(--seiji)}
+.rei{color:var(--seiji); background:var(--seiji-soft); border:1px solid var(--seiji)}
+.trap{color:var(--shu); background:var(--shu-soft); border:1px solid var(--shu)}
+.ok{color:var(--midori); font-weight:700}
+.ng{color:var(--shu); font-weight:700}
+.quote{border:1px solid var(--line); border-radius:4px; background:var(--card); margin:1rem 0; overflow:hidden}
+.quote h4{margin:0; padding:.5rem .9rem; font-size:.74rem; letter-spacing:.14em; color:var(--hai);
+  border-bottom:1px solid var(--line); font-weight:700}
+.q{display:flex; gap:.7rem; padding:.65rem .9rem; border-bottom:1px solid var(--line); font-size:.88rem}
+.q:last-child{border-bottom:none}
+.q .m{flex:none; font-weight:700; width:2.1rem; text-align:center; border-radius:3px; height:fit-content;
+  padding:.05rem 0; font-size:.8rem}
+.q .m.x{color:var(--shu); background:var(--shu-soft)}
+.q .m.o{color:var(--midori); background:var(--midori-soft)}
+.q .src{color:var(--hai); font-size:.78rem; white-space:nowrap}
+.q p{margin:.2rem 0 0; line-height:1.65}
+.q .why-x{color:var(--ink-sub); font-size:.84rem; margin-top:.3rem}
+.q .why-x b{color:var(--ink)}
+.note{border-left:3px solid var(--seiji); background:var(--seiji-soft);
+  padding:.8rem 1rem; margin:1rem 0; font-size:.9rem; border-radius:0 3px 3px 0}
+.note p{margin:0}
+.note p+p{margin-top:.5rem}
+.plain{background:var(--fill); border-radius:6px; padding:.9rem 1.1rem; margin:1.2rem 0 0}
+.plain h4{margin:0 0 .35rem; font-size:.76rem; letter-spacing:.16em; color:var(--hai); font-weight:700}
+.plain p{margin:0; font-size:.95rem}
+nav.toc{background:var(--card); border:1px solid var(--line); border-radius:4px; padding:1rem 1.2rem; margin:0 0 2.4rem}
+nav.toc h3{font-size:.72rem; letter-spacing:.16em; color:var(--hai); margin:0 0 .7rem; font-weight:700}
+nav.toc ol{margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:.35rem}
+nav.toc li{display:flex; gap:.7rem; align-items:baseline; font-size:.92rem}
+nav.toc .i{color:var(--seiji); font-family:var(--mincho); min-width:1.2rem; font-variant-numeric:tabular-nums}
+nav.toc a{color:inherit; text-decoration:none; border-bottom:1px solid var(--line2)}
+nav.toc a:hover{color:var(--seiji); border-bottom-color:var(--seiji)}
+a{color:var(--seiji)}
+a:focus-visible{outline:2px solid var(--seiji); outline-offset:3px}
+footer{border-top:1px solid var(--line); margin-top:3rem; padding-top:1.2rem; color:var(--hai); font-size:.84rem}
+.refs{border:1px solid var(--line); border-radius:5px; margin:1.1rem 0 0; padding:.55rem .85rem;
+  background:var(--fill); display:flex; flex-wrap:wrap; align-items:baseline; gap:.4rem .55rem}
+.refs h4{margin:0 .4rem 0 0; padding:0; background:none; border:none; font-size:.72rem;
+  letter-spacing:.1em; color:var(--hai); font-weight:700; white-space:nowrap}
+.rid{font-size:.78rem; font-variant-numeric:tabular-nums; color:var(--ink-sub);
+  background:var(--card); border:1px solid var(--line); border-radius:3px; padding:.1rem .4rem}
+.ref,.rans,.rpt{display:none}
+
+.refs-old{border:1px solid var(--line2); border-radius:6px; margin:1.1rem 0; overflow:hidden; background:var(--card)}
+.refs h4{margin:0; padding:.45rem .9rem; background:var(--fill); font-size:.76rem; letter-spacing:.12em; color:var(--ink-sub); font-weight:700; border-bottom:1px solid var(--line)}
+.ref{display:flex; gap:.7rem; padding:.5rem .9rem; border-bottom:1px solid var(--line); font-size:.88rem; align-items:baseline}
+.ref:last-child{border-bottom:none}
+.rid{flex:none; font-weight:700; font-variant-numeric:tabular-nums; color:var(--seiji); width:5.4rem}
+.rans{flex:none; font-weight:700; font-size:.78rem; padding:.05rem .45rem; border-radius:3px}
+.rans.o{color:var(--midori); background:var(--midori-soft)}
+.rans.x{color:var(--shu); background:var(--shu-soft)}
+.rpt{flex:1; color:var(--ink-sub)}
+
+/* ── サイドナビ ───────────────────────────── */
+body{display:flex; align-items:flex-start}
+#nav{
+  position:sticky; top:0; flex:none; width:15rem; height:100vh; overflow-y:auto;
+  background:var(--card); border-right:1px solid var(--line2); padding:1.2rem 0 3rem;
+  font-size:.86rem; line-height:1.6;
+}
+#nav .brand{display:block; padding:0 1.1rem 1rem; font-weight:700; font-size:.95rem;
+  color:var(--ink); text-decoration:none; border-bottom:1px solid var(--line); margin-bottom:.8rem}
+#nav .brand small{display:block; font-weight:400; font-size:.72rem; color:var(--hai); margin-top:.2rem}
+#nav h4{margin:1.1rem 1.1rem .35rem; font-size:.68rem; letter-spacing:.14em; color:var(--hai); font-weight:700}
+#nav a{display:block; padding:.4rem 1.1rem; color:var(--ink-sub); text-decoration:none; border-left:3px solid transparent}
+#nav a:hover{background:var(--fill); color:var(--ink)}
+#nav a.cur{border-left-color:var(--seiji); color:var(--seiji); font-weight:700; background:var(--seiji-soft)}
+#nav .sub{padding-left:1.9rem; font-size:.82rem}
+#nav .todo{color:var(--hai); opacity:.55; pointer-events:none}
+#navbtn{display:none}
+.wrap{flex:1; min-width:0}
+@media(max-width:900px){
+  body{display:block}
+  #nav{position:fixed; left:-15rem; top:0; z-index:50; transition:left .2s; box-shadow:2px 0 12px rgba(0,0,0,.15)}
+  #nav.open{left:0}
+  #navbtn{display:flex; position:fixed; left:.7rem; top:.7rem; z-index:60; width:2.5rem; height:2.5rem;
+    align-items:center; justify-content:center; background:var(--card); border:1px solid var(--line2);
+    border-radius:6px; cursor:pointer; font-size:1.1rem; color:var(--ink); box-shadow:0 1px 4px rgba(0,0,0,.1)}
+  .wrap{padding-top:3.4rem}
+}
+
+.art{border:1px solid var(--line2); border-radius:6px; margin:1.1rem 0; overflow:hidden; background:var(--paper)}
+.art h4{margin:0; padding:.5rem .9rem; background:var(--fill); font-size:.84rem; font-weight:700;
+  border-bottom:1px solid var(--line2); letter-spacing:.03em}
+.art .ain{padding:.8rem 1rem}
+.art .atext{margin:0; font-family:var(--mincho,serif); font-size:.93rem; line-height:2.05;
+  border-left:3px solid var(--line2); padding-left:.9rem; white-space:pre-wrap}
+.art .an{margin:.7rem 0 0; font-size:.87rem; color:var(--ink-sub)}
+.art .al{margin:.6rem 0 0; font-size:.82rem}
+.art .cite{color:var(--seiji); text-decoration:none; border-bottom:1px dotted var(--seiji); font-weight:600}
+</style>
+
+<div id="navbtn" onclick="document.getElementById('nav').classList.toggle('open')">☰</div>
+<nav id="nav">
+<a class="brand" href="テキスト/index.html">行政法テキスト<small>条文と判例から</small></a>
+<h4>入口</h4>
+<a href="テキスト/index.html">目次</a>
+<a href="テキスト/全体像.html">行政法の全体像</a>
+<a href="テキスト/救済の三つの道.html">救済の三つの争訟方法</a>
+<a href="テキスト/用語集.html">用語集</a>
+<a href="テキスト/義務のレベル.html">義務のレベル</a>
+<h4>第2章 行政法総論</h4>
+<a href="テキスト/02-行政法総論1-効力と瑕疵.html">行政行為の効力と瑕疵</a>
+<a class="todo">土台と行為形式</a>
+<h4>第3章 行政手続法</h4>
+<a href="テキスト/03-行政手続法1-定義と適用範囲.html">定義と適用範囲</a>
+<a href="テキスト/03-行政手続法2-申請と不利益処分.html">申請と不利益処分</a>
+<a class="todo">行政指導・意見公募</a>
+<h4>第4章 行政不服審査法</h4>
+<a href="行政不服審査法.html" class="cur">行政不服審査法</a>
+<h4>第5章 行政事件訴訟法</h4>
+<a href="テキスト/05-行政事件訴訟法1-処分性.html">処分性</a>
+<a class="todo">原告適格・訴えの利益</a>
+<h4>第6章 国家賠償法</h4>
+<a class="todo">国家賠償・損失補償</a>
+<h4>第7章 地方自治法</h4>
+<a href="テキスト/07-地方自治法1-条例と規則.html">条例と規則</a>
+<a class="todo">住民の権利・議会と長</a>
+<h4>資料</h4>
+<a href="テキスト/資料/索引.html">条文・判例の全文</a>
+<a href="テキスト/論点台帳.md">論点台帳</a>
+<a href="テキスト/執筆計画.md">執筆計画</a>
+</nav>
+<div class="wrap">
+<header>
+  <p class="eyebrow">行政不服審査法 ─ 行政の中で争う</p>
+  <h1>行政不服審査法の教科書</h1>
+  <p class="lede">行政不服審査法は、<strong>処分に不服がある人が、裁判所ではなく行政の中で争うための法律</strong>です。判例による解釈がほとんど働かず、<strong>制度の枝分かれと数字</strong>で組み立てられています。そこで各章を「<strong>原則 → 例外 → なぜそうなるか</strong>」の順に並べました。</p>
+</header>
+
+<nav class="toc">
+  <h3>章立て ── 事件が進む順</h3>
+  <ol>
+    <li><span class="i">一</span><a href="#c1">全体の流れを1枚で</a></li>
+    <li><span class="i">二</span><a href="#c2">何を・誰が争えるか</a></li>
+    <li><span class="i">三</span><a href="#c3">どの手続で ── 再調査・再審査との関係</a></li>
+    <li><span class="i">四</span><a href="#c4">誰に・いつまでに</a></li>
+    <li><span class="i">五</span><a href="#c5">審理 ── 審理員は何ができるか</a></li>
+    <li><span class="i">六</span><a href="#c6">執行停止 ── その間、処分を止められるか</a></li>
+    <li><span class="i">七</span><a href="#c7">裁決 ── 結論とその力</a></li>
+    <li><span class="i">八</span><a href="#c8">教示、そして行訴法との異同</a></li>
+  </ol>
+</nav>
+
+<section id="c1">
+  <h2><span class="ch">一</span>全体の流れを1枚で</h2>
+  <p class="why">どの条文も、この流れ図のどこかに置ける。迷子になったらここへ戻ってください。</p>
+<figure>
+<svg viewBox="0 0 880 1060" role="img" aria-label="前段: 処分・行政指導・届出・命令等のうち不服申立ての門を通れるのは処分と不作為だけ。本流: 人民が原則3か月以内に審査請求書を出し、行政側で審理員が審理し、審査庁が外部の行政不服審査会に諮問したうえで裁決する。3か月の例外3つは下段の注記に示す">
+<defs><marker id="a1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker>
+<marker id="a1s" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--seiji)"/></marker>
+<marker id="a1g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--midori)"/></marker></defs>
+
+<!-- ══ 前段: 何が門を通れるか ══ -->
+<text x="50" y="26" font-size="13" font-weight="700" fill="var(--hai)" letter-spacing="3">前段 ── 行政のどの行為が、この法律に持ち込めるか</text>
+<rect x="50" y="40" width="180" height="70" rx="4" fill="var(--midori-soft)" stroke="var(--midori)" stroke-width="2"/>
+<text x="140" y="70" text-anchor="middle" font-size="15" font-weight="700" fill="var(--midori)">処分</text>
+<text x="140" y="92" text-anchor="middle" font-size="11" fill="var(--ink-sub)">個別に権利義務を決める</text>
+<rect x="270" y="40" width="160" height="70" rx="4" fill="var(--card)" stroke="currentColor" stroke-width="1.2"/>
+<text x="350" y="70" text-anchor="middle" font-size="15" font-weight="700" fill="currentColor">行政指導</text>
+<text x="350" y="92" text-anchor="middle" font-size="11" fill="var(--ink-sub)">任意のお願い</text>
+<rect x="460" y="40" width="150" height="70" rx="4" fill="var(--card)" stroke="currentColor" stroke-width="1.2"/>
+<text x="535" y="70" text-anchor="middle" font-size="15" font-weight="700" fill="currentColor">届出</text>
+<text x="535" y="92" text-anchor="middle" font-size="11" fill="var(--ink-sub)">人民→行政の通知</text>
+<rect x="650" y="40" width="180" height="70" rx="4" fill="var(--card)" stroke="currentColor" stroke-width="1.2"/>
+<text x="740" y="70" text-anchor="middle" font-size="15" font-weight="700" fill="currentColor">命令等</text>
+<text x="740" y="92" text-anchor="middle" font-size="11" fill="var(--ink-sub)">政省令などのルール</text>
+
+<line x1="140" y1="110" x2="140" y2="196" stroke="var(--midori)" stroke-width="3.4" marker-end="url(#a1g)"/>
+<text x="152" y="152" font-size="12" font-weight="700" fill="var(--midori)">入れる</text>
+<line x1="350" y1="110" x2="350" y2="150" stroke="var(--shu)" stroke-width="1.6" stroke-dasharray="4 4"/>
+<text x="350" y="170" text-anchor="middle" font-size="12" font-weight="700" fill="var(--shu)">✕ 処分でない</text>
+<line x1="535" y1="110" x2="535" y2="150" stroke="var(--shu)" stroke-width="1.6" stroke-dasharray="4 4"/>
+<text x="535" y="170" text-anchor="middle" font-size="12" font-weight="700" fill="var(--shu)">✕ 自分の行為</text>
+<line x1="740" y1="110" x2="740" y2="150" stroke="var(--shu)" stroke-width="1.6" stroke-dasharray="4 4"/>
+<text x="740" y="170" text-anchor="middle" font-size="12" font-weight="700" fill="var(--shu)">✕ まだ一般的</text>
+
+<rect x="50" y="200" width="780" height="46" rx="4" fill="var(--seiji-soft)" stroke="var(--seiji)" stroke-width="1.6"/>
+<text x="440" y="229" text-anchor="middle" font-size="14" font-weight="700" fill="var(--seiji)">不服申立ての門(2条・3条) ── 通れるのは「処分」と「申請への無応答＝不作為」だけ</text>
+<g font-size="10.5" fill="var(--ink-sub)">
+<text x="350" y="268" text-anchor="middle">指導 → 中止等の求め(行手法36条の2)へ</text>
+<text x="740" y="268" text-anchor="middle">命令等 → 具体的な処分が出てから争う</text>
+<text x="535" y="288" text-anchor="middle">届出 → 争う相手の行為がそもそも無い</text>
+</g>
+<line x1="140" y1="246" x2="140" y2="316" stroke="var(--midori)" stroke-width="3.4" marker-end="url(#a1g)"/>
+
+<!-- ══ 本流: 3レーン ══ -->
+<rect x="16" y="322" width="848" height="150" rx="4" fill="none" stroke="var(--line2)" stroke-width="1" stroke-dasharray="3 5"/>
+<rect x="16" y="532" width="848" height="172" rx="4" fill="var(--fill)" fill-opacity="0.55" stroke="var(--line2)" stroke-width="1"/>
+<rect x="16" y="744" width="848" height="150" rx="4" fill="var(--seiji-soft)" fill-opacity="0.5" stroke="var(--seiji)" stroke-width="1" stroke-dasharray="3 5"/>
+<text x="32" y="346" font-size="12.5" font-weight="700" fill="var(--hai)" letter-spacing="3">人民 ── あなたがすること</text>
+<text x="32" y="556" font-size="12.5" font-weight="700" fill="var(--hai)" letter-spacing="3">行政 ── 役所の中で起きること</text>
+<text x="32" y="768" font-size="12.5" font-weight="700" fill="var(--seiji)" letter-spacing="3">外部 ── 行政の外の第三者</text>
+
+<rect x="50" y="368" width="170" height="86" rx="4" fill="var(--card)" stroke="currentColor" stroke-width="1.3"/>
+<text x="135" y="398" text-anchor="middle" font-size="14" font-weight="700" fill="currentColor">処分を受け取る</text>
+<text x="135" y="419" text-anchor="middle" font-size="11" fill="var(--ink-sub)">書面なら教示つき</text>
+<text x="135" y="438" text-anchor="middle" font-size="11" fill="var(--hai)">82条</text>
+<rect x="300" y="368" width="170" height="86" rx="4" fill="var(--card)" stroke="currentColor" stroke-width="1.6"/>
+<text x="385" y="398" text-anchor="middle" font-size="14" font-weight="700" fill="currentColor">審査請求書を出す</text>
+<text x="385" y="419" text-anchor="middle" font-size="11" fill="var(--ink-sub)">書面で。宛先は4条</text>
+<text x="385" y="438" text-anchor="middle" font-size="11" fill="var(--hai)">18条・19条</text>
+<rect x="510" y="368" width="150" height="86" rx="4" fill="var(--card)" stroke="var(--seiji)" stroke-width="1.4" stroke-dasharray="6 4"/>
+<text x="585" y="398" text-anchor="middle" font-size="13" font-weight="700" fill="var(--seiji)">執行停止の申立て</text>
+<text x="585" y="419" text-anchor="middle" font-size="11" fill="var(--seiji)">審理中いつでも</text>
+<text x="585" y="438" text-anchor="middle" font-size="11" fill="var(--hai)">25条</text>
+<rect x="700" y="368" width="160" height="86" rx="4" fill="var(--card)" stroke="currentColor" stroke-width="1.3"/>
+<text x="780" y="398" text-anchor="middle" font-size="14" font-weight="700" fill="currentColor">裁決書を受け取る</text>
+<text x="780" y="419" text-anchor="middle" font-size="11" fill="var(--ink-sub)">不服なら取消訴訟へ</text>
+<text x="780" y="438" text-anchor="middle" font-size="11" fill="var(--hai)">51条</text>
+
+<rect x="50" y="576" width="170" height="90" rx="4" fill="var(--card)" stroke="currentColor" stroke-width="1.3"/>
+<text x="135" y="608" text-anchor="middle" font-size="14" font-weight="700" fill="currentColor">処分庁</text>
+<text x="135" y="629" text-anchor="middle" font-size="11" fill="var(--ink-sub)">処分をした役所</text>
+<rect x="300" y="576" width="170" height="90" rx="4" fill="var(--card)" stroke="var(--seiji)" stroke-width="2"/>
+<text x="385" y="604" text-anchor="middle" font-size="14" font-weight="700" fill="var(--seiji)">審理員</text>
+<text x="385" y="624" text-anchor="middle" font-size="11" fill="var(--ink-sub)">審査庁の職員のうち</text>
+<text x="385" y="641" text-anchor="middle" font-size="11" fill="var(--ink-sub)">処分に関与していない者</text>
+<text x="385" y="659" text-anchor="middle" font-size="11" fill="var(--hai)">9条</text>
+<rect x="700" y="576" width="160" height="90" rx="4" fill="var(--card)" stroke="var(--seiji)" stroke-width="2"/>
+<text x="780" y="604" text-anchor="middle" font-size="14" font-weight="700" fill="var(--seiji)">審査庁</text>
+<text x="780" y="624" text-anchor="middle" font-size="11" fill="var(--ink-sub)">4条で決まった宛先が</text>
+<text x="780" y="641" text-anchor="middle" font-size="11" fill="var(--ink-sub)">裁決を下す</text>
+<text x="780" y="659" text-anchor="middle" font-size="11" fill="var(--hai)">44条〜49条</text>
+
+<rect x="560" y="788" width="260" height="86" rx="4" fill="var(--card)" stroke="var(--seiji)" stroke-width="1.5"/>
+<text x="690" y="818" text-anchor="middle" font-size="14" font-weight="700" fill="var(--seiji)">行政不服審査会等</text>
+<text x="690" y="839" text-anchor="middle" font-size="11" fill="var(--ink-sub)">有識者の合議機関。裁決はしない</text>
+<text x="690" y="858" text-anchor="middle" font-size="11" fill="var(--hai)">43条・67条〜</text>
+
+<line x1="135" y1="576" x2="135" y2="458" stroke="currentColor" stroke-width="2" marker-end="url(#a1)"/>
+<text x="147" y="510" font-size="12" fill="var(--ink-sub)">① 処分が届く</text>
+<line x1="385" y1="454" x2="385" y2="572" stroke="currentColor" stroke-width="2.4" marker-end="url(#a1)"/>
+<text x="397" y="496" font-size="12" font-weight="700" fill="var(--shu)">② 原則3か月以内 ※例外は下段</text>
+<polyline points="585,454 585,508 745,508 745,572" stroke="var(--seiji)" stroke-width="1.6" stroke-dasharray="6 4" fill="none" marker-end="url(#a1s)"/>
+<text x="600" y="532" font-size="11" fill="var(--seiji)">いつでも申立て可</text>
+<line x1="470" y1="614" x2="696" y2="614" stroke="currentColor" stroke-width="2" marker-end="url(#a1)"/>
+<text x="583" y="600" text-anchor="middle" font-size="12" fill="var(--ink-sub)">③ 審理→意見書(42条)</text>
+<line x1="730" y1="666" x2="672" y2="784" stroke="var(--seiji)" stroke-width="1.8" marker-end="url(#a1s)"/>
+<text x="662" y="730" text-anchor="end" font-size="12" fill="var(--seiji)">④ 諮問(43条)</text>
+<line x1="740" y1="788" x2="796" y2="670" stroke="var(--seiji)" stroke-width="1.8" marker-end="url(#a1s)"/>
+<text x="806" y="730" font-size="12" fill="var(--seiji)">⑤ 答申</text>
+<line x1="828" y1="576" x2="828" y2="458" stroke="currentColor" stroke-width="2" marker-end="url(#a1)"/>
+<text x="858" y="510" text-anchor="end" font-size="12" fill="var(--ink-sub)">⑥ 裁決書が届く</text>
+
+<!-- ══ ※注記: 3か月の例外 ══ -->
+<rect x="50" y="920" width="780" height="122" rx="4" fill="var(--shu-soft)" stroke="var(--shu)" stroke-width="1.4"/>
+<text x="70" y="950" font-size="13" font-weight="700" fill="var(--shu)">※ ②の「3か月」(18条)は原則。例外は3つ ── 束ねる理屈は「本人のせいでない遅れは救う」</text>
+<g font-size="12" fill="var(--ink)">
+<text x="70" y="978">・正当な理由があれば、期間を過ぎても請求できる(18条1項ただし書)</text>
+<text x="70" y="1002">・知らないままでも「処分があった日の翌日から1年」で締切(18条2項・こちらにも正当な理由の救済)</text>
+<text x="70" y="1026">・不作為の審査請求には期限が無い ── 待たされている本人を締め切る理由が無い(3条)</text>
+</g>
+</svg>
+<figcaption>前段の門・3レーンの本流・例外の置き場所(※)まで1枚に。各箱の下の灰色数字が根拠条文。例外は原則の矢印の脇に必ず※でぶら下がる——この位置ごと覚える。</figcaption>
+</figure>
+</section>
+<section id="c2">
+  <h2><span class="ch">二</span>何を・誰が争えるか</h2>
+
+  <h3>何を ── 処分と不作為の2つで尽きる</h3>
+
+<div class="art"><h4><a class="cite" href="テキスト/資料/条文/行政不服審査法1条.html">行政不服審査法1条</a>（目的等）</h4><div class="ain"><p class="atext">この法律は、行政庁の違法又は不当な処分その他公権力の行使に当たる行為に関し、国民が簡易迅速かつ公正な手続の下で広く行政庁に対する不服申立てをすることができるための制度を定めることにより、国民の権利利益の救済を図るとともに、行政の適正な運営を確保することを目的とする。
+2 行政庁の処分その他公権力の行使に当たる行為（以下単に「処分」という。）に関する不服申立てについては、他の法律に特別の定めがある場合を除くほか、この法律の定めるところによる。</p><p class="an">この法律の性格が1項に出ている。第一に、審査の対象が<b>違法だけでなく不当にも及ぶ</b>点。裁判所は違法かどうかしか判断できないが、行政の中で争うこの制度では、法に反していなくても妥当でない処分を正すことができる。第二に、<b>簡易迅速</b>を掲げている点。訴訟のような厳格な手続を踏まず、書面で早く決着させることが想定されている。第三に、目的が国民の救済<b>だけ</b>ではなく、<b>行政の適正な運営の確保</b>も並んでいる点。後に出てくる職権による証拠調べは、この後半の目的から説明される。</p><p class="al">この法律の全文は<a href="テキスト/資料/索引.html">条文の索引</a>から引けます</p></div></div>
+
+<div class="art"><h4><a class="cite" href="テキスト/資料/条文/行政不服審査法2条.html">行政不服審査法2条</a>（処分についての審査請求）</h4><div class="ain"><p class="atext">行政庁の処分に不服がある者は、第四条及び第五条第二項の定めるところにより、審査請求をすることができる。</p><p class="an">「不服がある者」と書かれており、処分の相手方に限られていない。処分によって自己の権利利益を侵害された者であれば、名あて人でなくても審査請求ができる。行政事件訴訟法9条1項の原告適格と同じく、法律上の利益を有する者かどうかで判断される。</p><p class="al">この法律の全文は<a href="テキスト/資料/索引.html">条文の索引</a>から引けます</p></div></div>
+
+<div class="art"><h4><a class="cite" href="テキスト/資料/条文/行政不服審査法3条.html">行政不服審査法3条</a>（不作為についての審査請求）</h4><div class="ain"><p class="atext">法令に基づき行政庁に対して処分についての申請をした者は、当該申請から相当の期間が経過したにもかかわらず、行政庁の不作為（法令に基づく申請に対して何らの処分をもしないことをいう。以下同じ。）がある場合には、次条の定めるところにより、当該不作為についての審査請求をすることができる。</p><p class="an">主語が<b>「申請をした者」</b>に限られている点が要である。2条が「不服がある者」と広く書いているのに対し、こちらは申請をした本人だけができる。申請をしていない者は、いくら利害関係があっても不作為を争えない。また、かっこ書の定義が<b>「何らの処分をもしない」</b>としているので、拒否処分がされていれば不作為ではなく、2条の処分についての審査請求で争うことになる。</p><p class="al">この法律の全文は<a href="テキスト/資料/索引.html">条文の索引</a>から引けます</p></div></div>
+
+  <p><span class="chip gen">原則</span>争えるのは<b>処分</b>(2条)と<b>不作為</b>(3条)。不作為とは「<b>法令に基づく申請</b>に対して、相当の期間内に何らの処分もしないこと」です。<b>申請が前提</b>である点が急所で、ここから2つの帰結が出ます。</p>
+  <p>第一に、<b>申請していない人は不作為を争えません</b>。3条が「法令に基づき行政庁に対して処分についての申請をした者」と定めており、法律上の利益がある者にまで広げてはいないからです。第二に、「他人の違法を正す処分をしてくれない」は不作為に<b>含まれません</b>。誰でも申し出られる制度は行政手続法36条の3(処分等の求め)で、あちらは申立てに応答義務がない別物です。</p>
+<div class="art"><h4><a class="cite" href="テキスト/資料/条文/行政不服審査法7条.html">行政不服審査法7条</a>（適用除外）</h4><div class="ain"><p class="atext">次に掲げる処分及びその不作為については、第二条及び第三条の規定は、適用しない。
+一 国会の両院若しくは一院又は議会の議決によってされる処分
+二 裁判所若しくは裁判官の裁判により、又は裁判の執行としてされる処分
+（中略）
+五 当事者間の法律関係を確認し、又は形成する処分で、法令の規定により当該処分に関する訴えにおいてその法律関係の当事者の一方を被告とすべきものと定められているもの
+六 刑事事件に関する法令に基づいて検察官、検察事務官又は司法警察職員がする処分
+（中略）
+八 学校、講習所、訓練所又は研修所において、教育、講習、訓練又は研修の目的を達成するために、学生、生徒、児童若しくは幼児若しくはこれらの保護者、講習生、訓練生又は研修生に対してされる処分
+九 刑務所、少年刑務所、拘置所、留置施設、海上保安留置施設、少年院又は少年鑑別所において、収容の目的を達成するためにされる処分
+十 外国人の出入国又は帰化に関する処分</p><p class="an">外す理由は行政手続法3条1項とほぼ重なる。行政以外の権力が決めるもの（一号・二号）、刑事手続にかかるもの（六号・七号）、特別な関係の中でされるもの（八号・九号）、性質上なじまないもの（十号）である。<b>五号だけは行政手続法にない類型</b>で、当事者訴訟という別の争い方が法令で用意されている処分を指す。争う道がすでにあるので、この制度を重ねる必要がない。</p><p class="al">この法律の全文は<a href="テキスト/資料/索引.html">条文の索引</a>から引けます</p></div></div>
+
+  <h4>行政手続法の適用除外と取り違えない</h4>
+
+  <p>7条の列挙は<span class="key">限定列挙</span>です。ここに挙がっていない処分には、この法律が適用されます。取り違えやすいのが、<span class="term-b">行政手続法13条2項</span>の適用除外です。あちらは<span class="key">聴聞または弁明の機会の付与という事前の手続を執らなくてよい場合</span>を定めたもので、その4号が<span class="key">「納付すべき金銭の額を確定し、一定の額の金銭の納付を命じ、又は金銭の給付決定の取消しその他の金銭の給付を制限する不利益処分」</span>を挙げています。</p>
+
+  <p><span class="warn">この金銭に関する処分が、行政不服審査法の適用からも外れるわけではありません。</span>行政不服審査法7条にそのような類型は挙がっていないからです。<span class="key">課税処分や給付の打切りに不服があれば、審査請求ができます。</span>むしろ課税処分は、審査請求前置が定められている代表的な分野です。</p>
+
+  <p>二つの法律で外している場面が違う理由は、<span class="key">外している手続の中身が違う</span>ところにあります。行政手続法が外したのは処分をする前に言い分を聴く手続であり、金銭の額は計算で定まるので言い分を聴いても意味が薄い、というのがその理由です。これに対し行政不服審査法が用意しているのは処分がされた後に争う手続で、計算に誤りがあれば争う必要があるのですから、外す理由がありません。<span class="warn">同じ「適用除外」という言葉でも、何を外しているのかを確かめてください。</span></p>
+
+  <p><span class="chip rei">例外＝適用除外</span>7条は国会・裁判所の議決や刑事事件の処分などを列挙します。覚える価値が高いのは7条2項: <b>国や地方公共団体が「固有の資格」で相手方となる処分</b>には行審法を適用しない。行政どうしの内輪の話に、国民のための救済制度を使わせない趣旨です。</p>
+  <div class="refs"><h4>過去問での出題</h4><span class="rid">R7-14-5</span><span class="rid">R6-15-2</span><span class="rid">R6-15-4</span><span class="rid">R6-15-3</span></div>
+
+  <h3>不作為の審査請求の途中で処分がされたら</h3>
+
+  <p>不作為についての審査請求をしている間に、行政庁が申請を拒否する処分をすることがあります。このとき、<span class="warn">その審査請求が自動的に拒否処分についての審査請求に切り替わる、という仕組みはありません。</span>そのような読み替えの規定が置かれていないからです。</p>
+
+  <p>処分がされた以上、もはや「何らの処分もしない」という状態ではなくなるので、<span class="key">不作為についての審査請求は、その対象を失って却下されます</span>。拒否処分を争いたければ、<span class="key">改めて処分についての審査請求（2条）をする</span>ことになります。手続がつながっていないので、期間の計算もそこから数え直しになります。</p>
+
+  <h3>誰が ── 本人のほかに4つの登場人物</h3>
+  <div class="scroll"><table>
+    <thead><tr><th>登場人物</th><th>入り方</th><th>できること・限界</th><th>条文</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">法人でない社団・財団</th><td>代表者・管理人の定めがあれば<b>その名で</b>請求できる</td><td>代表者または管理人の定めがあることが条件である</td><td>10条</td></tr>
+      <tr><th scope="row">総代</th><td>多数人の共同請求で<b>3人以内</b>を互選<b>できる</b>(任意)</td><td>取下げ以外の一切の行為。総代を選んだら各自は総代を通じてのみ行為する</td><td>11条</td></tr>
+      <tr><th scope="row">代理人</th><td>選任は自由</td><td>一切の行為ができるが、<b>取下げだけは特別の委任</b>が要る</td><td>12条</td></tr>
+      <tr><th scope="row">参加人</th><td>利害関係人が<b>審理員の許可</b>を得て参加</td><td>口頭意見陳述・証拠書類の提出など、請求人に準じた手続保障</td><td>13条</td></tr>
+      <tr><th scope="row">承継人</th><td>死亡→相続人が<b>当然に</b>承継 / 権利の譲受け→<b>審査庁の許可</b>で承継</td><td>この対比がそのまま出る</td><td>15条</td></tr>
+    </tbody>
+  </table></div>
+  <h3>取下げ ── 裁決があるまでは、いつでも</h3>
+
+<div class="art"><h4><a class="cite" href="テキスト/資料/条文/行政不服審査法27条.html">行政不服審査法27条</a>（審査請求の取下げ）</h4><div class="ain"><p class="atext">審査請求人は、裁決があるまでは、いつでも審査請求を取り下げることができる。
+2 審査請求の取下げは、書面でしなければならない。</p><p class="an">二つの点が要である。第一に、<b>裁決があるまではいつでも</b>取り下げられ、取下げの理由に制限はない。争うのをやめるかどうかは本人が決めることだからである。第二に、<b>取下げは書面でしなければならない</b>。本人の意思をたしかめる必要が高い行為なので、口頭では認められない。</p><p class="al">この法律の全文は<a href="テキスト/資料/索引.html">条文の索引</a>から引けます</p></div></div>
+
+  <p>取下げに<span class="warn">理由の制限はありません。</span>納得したから、争う気がなくなったから、どれでもかまいません。<span class="key">争うかどうかは本人が決めることであり、行政庁が本人に争いを続けさせる筋合いはない</span>からです。ただし、いったん取り下げれば審査請求はなかったことになるので、審査請求期間が過ぎていれば、もう一度出し直すことはできません。</p>
+
+  <p>理屈は一本です。<b>本人の意思に関わる行為(取下げ)だけは、誰にも当然には代われない</b>。総代も代理人も取下げから外されているのは同じ理由です。承継の対比も、相続は本人の地位ごと引き継ぐから当然、譲渡は取引だから審査庁が確認してから、と理由ごと覚えれば混ざりません。</p>
+  <div class="refs"><h4>過去問での出題</h4><span class="rid">R6-14-3</span><span class="rid">R2-14-ア</span><span class="rid">R7-14-2</span></div></section>
+
+<section id="c3">
+  <h2><span class="ch">三</span>どの手続で ── 再調査・再審査との関係</h2>
+  <p class="why">3つの手続の関係は、位置の図で覚えるのが最短です。</p>
+<figure>
+<svg viewBox="0 0 840 300" role="img" aria-label="処分の後、個別法に定めがあるときだけ再調査の請求を挟める。審査請求が本流で、裁決の後に個別法に定めがあるときだけ再審査請求ができる">
+<defs><marker id="a2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs>
+<rect x="16" y="110" width="110" height="56" rx="4" fill="var(--fill)" stroke="currentColor" stroke-width="1.3"/>
+<text x="71" y="143" text-anchor="middle" font-size="15" font-weight="700" fill="currentColor">処分</text>
+<rect x="330" y="110" width="150" height="56" rx="4" fill="var(--card)" stroke="var(--seiji)" stroke-width="2.4"/>
+<text x="405" y="136" text-anchor="middle" font-size="15" font-weight="700" fill="var(--seiji)">審査請求</text>
+<text x="405" y="156" text-anchor="middle" font-size="11" fill="var(--ink-sub)">本流。常に使える</text>
+<rect x="560" y="110" width="110" height="56" rx="4" fill="var(--fill)" stroke="currentColor" stroke-width="1.3"/>
+<text x="615" y="143" text-anchor="middle" font-size="15" font-weight="700" fill="currentColor">裁決</text>
+<line x1="126" y1="138" x2="326" y2="138" stroke="currentColor" stroke-width="2.4" marker-end="url(#a2)"/>
+<line x1="480" y1="138" x2="556" y2="138" stroke="currentColor" stroke-width="2" marker-end="url(#a2)"/>
+<rect x="140" y="24" width="180" height="58" rx="4" fill="var(--card)" stroke="currentColor" stroke-width="1.2" stroke-dasharray="6 4"/>
+<text x="230" y="48" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor">再調査の請求(5条)</text>
+<text x="230" y="68" text-anchor="middle" font-size="11" fill="var(--ink-sub)">処分庁がもう一度見る</text>
+<polyline points="150,86 150,138" stroke="var(--hai)" stroke-width="1.6" stroke-dasharray="5 4" fill="none" marker-end="url(#a2)"/>
+<polyline points="310,86 310,120" stroke="var(--hai)" stroke-width="1.6" stroke-dasharray="5 4" fill="none" marker-end="url(#a2)"/>
+<text x="230" y="102" text-anchor="middle" font-size="11" fill="var(--shu)" font-weight="700">個別法に定めがあるときだけ・選択制</text>
+<rect x="600" y="216" width="200" height="58" rx="4" fill="var(--card)" stroke="currentColor" stroke-width="1.2" stroke-dasharray="6 4"/>
+<text x="700" y="240" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor">再審査請求(6条)</text>
+<text x="700" y="260" text-anchor="middle" font-size="11" fill="var(--ink-sub)">個別法が定める行政庁へ・1か月</text>
+<polyline points="615,166 615,212" stroke="var(--hai)" stroke-width="1.6" stroke-dasharray="5 4" fill="none" marker-end="url(#a2)"/>
+<text x="748" y="200" text-anchor="middle" font-size="11" fill="var(--shu)" font-weight="700">これも個別法があるときだけ</text>
+</svg>
+<figcaption>本流は審査請求ひとつ。前に挟めるのが再調査(処分庁による簡易なやり直し)、後ろに続けられるのが再審査。どちらも個別法の定めが条件。</figcaption>
+</figure>
+
+  <h3>再調査の請求 ── 審査請求の前に挟む簡易な手続</h3>
+
+<div class="art"><h4><a class="cite" href="テキスト/資料/条文/行政不服審査法5条.html">行政不服審査法5条</a>（再調査の請求）</h4><div class="ain"><p class="atext">行政庁の処分につき処分庁以外の行政庁に対して審査請求をすることができる場合において、法律に再調査の請求をすることができる旨の定めがあるときは、当該処分に不服がある者は、処分庁に対して再調査の請求をすることができる。ただし、当該処分について第二条の規定により審査請求をしたときは、この限りでない。
+2 前項本文の規定により再調査の請求をしたときは、当該再調査の請求についての決定を経た後でなければ、審査請求をすることができない。ただし、次の各号のいずれかに該当する場合は、この限りでない。
+一 当該処分につき再調査の請求をした日の翌日から起算して三月を経過しても、処分庁が当該再調査の請求につき決定をしない場合
+二 その他再調査の請求についての決定を経ないことにつき正当な理由がある場合</p><p class="an">要件が二重にかかっている。第一に<b>処分庁以外の行政庁に審査請求ができる場合</b>であること。処分庁自身が審査庁になる場合には、同じ役所がもう一度見ることになるので、再調査を置く意味がない。第二に<b>法律に定めがあるとき</b>に限られること。<b>条例では置けない</b>点が、次の再審査請求と同じである。1項ただし書と2項本文で、二つの手続を同時に進めさせない仕組みが作られている。</p><p class="al">この法律の全文は<a href="テキスト/資料/索引.html">条文の索引</a>から引けます</p></div></div>
+
+  <p><span class="chip gen">原則</span>再調査は<b>選択制</b>です。定めがあっても直ちに審査請求してよい。ただし選択には片方向の縛りがあります: <b>先に審査請求をしたら再調査はできない</b>。逆に<b>先に再調査を選んだら、その決定を経た後でなければ審査請求できない</b>(5条2項本文)。並行は許されません。同じ処分を2つの手続が同時に審理して結論が割れるのを防ぐためです。</p>
+  <p><span class="chip rei">例外</span>再調査を選んでも、請求から<b>3か月</b>を経て決定がないときなどは、決定を待たずに審査請求へ進めます(5条2項ただし書)。このとき「棄却とみなす」制度は<b>ありません</b>——みなし裁決を置くと、処分庁が放置するほど請求人に不利になるからです。<span class="warn">この点は審査請求についても同じで、期間内に裁決がないことをもって棄却されたものとみなす、という制度は行政不服審査法に置かれていません。</span>16条の標準審理期間はあくまで目安であり、これを過ぎたことに法律上の効果は結びついていません。<span class="key">裁決が出ないまま放置されたときに使えるのは、行政事件訴訟法3条5項の不作為の違法確認の訴えです。</span></p>
+  <p>再調査は処分庁自身による簡易な手続なので、<b>審理員も諮問もありません</b>。ただし簡易でも、申立てがあれば口頭意見陳述の機会は与えなければならず、執行停止の規定も準用されます(61条)。<b>不作為に再調査はありません</b>——調べ直す「処分」がまだ無いからです。</p>
+
+  <h3>再審査請求 ── 裁決の後に続ける手続</h3>
+
+<div class="art"><h4><a class="cite" href="テキスト/資料/条文/行政不服審査法6条.html">行政不服審査法6条</a>（再審査請求）</h4><div class="ain"><p class="atext">行政庁の処分につき法律に再審査請求をすることができる旨の定めがある場合には、当該処分についての審査請求の裁決に不服がある者は、再審査請求をすることができる。
+2 再審査請求は、原裁決（再審査請求をすることができる処分についての審査請求の裁決をいう。以下同じ。）又は当該処分（以下「原裁決等」という。）を対象として、前項の法律に定める行政庁に対してするものとする。</p><p class="an">2項が<b>「原裁決……又は当該処分」</b>と並べている点が要である。再審査請求では、裁決を攻めることも、もとの処分を攻めることもできる。どちらを選ぶかは請求人が決める。宛先は<b>法律が定める行政庁</b>であって、行政不服審査会ではない。行政不服審査会は審査庁からの諮問を受けて答申する機関であり、不服申立ての宛先になる機関ではない。</p><p class="al">この法律の全文は<a href="テキスト/資料/索引.html">条文の索引</a>から引けます</p></div></div>
+
+  <p>裁決になお不服があるとき、<b>法律に定めがある場合に限り</b>、法律が定める行政庁に再審査請求できます。相手は行政不服審査会では<b>ありません</b>。的は<b>原裁決でも原処分でもどちらでもよい</b>(6条2項)。期間は<b>裁決を知った日の翌日から1か月</b>で、起算点が処分でなく裁決に移ります。</p>
+  <p>注意すべき裁決の型が1つ: <b>原裁決が違法でも、原処分が適法なら棄却</b>(64条3項)。救済の対象はあくまで処分に対する権利利益なので、裁決の手続きの傷だけでは処分は覆りません。</p>
+  <div class="refs"><h4>過去問での出題</h4><span class="rid">R3-15-1</span><span class="rid">R3-15-2</span><span class="rid">R7-15-エ</span><span class="rid">R2-15-3</span><span class="rid">R2-15-2</span></div></section>
+
+<section id="c4">
+  <h2><span class="ch">四</span>誰に・いつまでに</h2>
+
+  <h3>誰に ── 4条の分岐</h3>
+
+<div class="art"><h4><a class="cite" href="テキスト/資料/条文/行政不服審査法4条.html">行政不服審査法4条</a>（審査請求をすべき行政庁）</h4><div class="ain"><p class="atext">審査請求は、法律（条例に基づく処分については、条例）に特別の定めがある場合を除くほか、次の各号に掲げる場合の区分に応じ、当該各号に定める行政庁に対してするものとする。
+一 処分庁等に上級行政庁がない場合又は処分庁等が主任の大臣若しくは宮内庁長官若しくは内閣府設置法第四十九条第一項若しくは第二項若しくは国家行政組織法第三条第二項に規定する庁の長である場合　当該処分庁等
+二 宮内庁長官又は内閣府設置法第四十九条第一項若しくは第二項若しくは国家行政組織法第三条第二項に規定する庁の長が処分庁等の上級行政庁である場合　宮内庁長官又は当該庁の長
+三 主任の大臣が処分庁等の上級行政庁である場合（前二号に掲げる場合を除く。）　当該主任の大臣
+四 前三号に掲げる場合以外の場合　当該処分庁等の最上級行政庁</p><p class="an">柱書の<b>「法律（条例に基づく処分については、条例）に特別の定めがある場合を除くほか」</b>が最優先で働く。個別の法律や条例が宛先を決めていれば、各号の分岐に入る前にそちらによる。各号は、その定めがないときの受け皿である。四号が原則で、一号から三号がその例外という並びになっている。</p><p class="al">この法律の全文は<a href="テキスト/資料/索引.html">条文の索引</a>から引けます</p></div></div>
+
+<figure>
+<svg viewBox="0 0 840 330" role="img" aria-label="処分庁に上級行政庁があるかで分岐し、無ければ処分庁自身、大臣や庁の長ならその者、それ以外は最上級行政庁が審査請求先になる">
+<defs><marker id="a3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs>
+<rect x="300" y="18" width="240" height="52" rx="4" fill="var(--fill)" stroke="currentColor" stroke-width="1.3"/>
+<text x="420" y="42" text-anchor="middle" font-size="14" font-weight="700" fill="currentColor">処分庁に上級行政庁は?</text>
+<text x="420" y="60" text-anchor="middle" font-size="11" fill="var(--ink-sub)">※法律・条例に特別の定めがあればそちらが最優先</text>
+<line x1="360" y1="70" x2="160" y2="122" stroke="currentColor" stroke-width="1.8" marker-end="url(#a3)"/>
+<text x="230" y="88" font-size="12" font-weight="700" fill="var(--shu)">ない</text>
+<line x1="420" y1="70" x2="420" y2="122" stroke="currentColor" stroke-width="1.8" marker-end="url(#a3)"/>
+<text x="432" y="100" font-size="12" font-weight="700" fill="var(--seiji)">ある(大臣・庁の長が上級庁)</text>
+<line x1="490" y1="70" x2="690" y2="122" stroke="currentColor" stroke-width="1.8" marker-end="url(#a3)"/>
+<text x="640" y="88" font-size="12" font-weight="700" fill="var(--midori)">ある(それ以外)</text>
+<rect x="40" y="126" width="240" height="76" rx="4" fill="var(--card)" stroke="currentColor" stroke-width="1.3"/>
+<text x="160" y="152" text-anchor="middle" font-size="14" font-weight="700" fill="currentColor">処分庁自身(1号)</text>
+<text x="160" y="172" text-anchor="middle" font-size="11" fill="var(--ink-sub)">知事・市長の処分など。</text>
+<text x="160" y="190" text-anchor="middle" font-size="11" fill="var(--ink-sub)">処分庁が大臣・庁の長のときも自身</text>
+<rect x="310" y="126" width="220" height="76" rx="4" fill="var(--card)" stroke="currentColor" stroke-width="1.3"/>
+<text x="420" y="152" text-anchor="middle" font-size="14" font-weight="700" fill="currentColor">その大臣・庁の長(2・3号)</text>
+<text x="420" y="172" text-anchor="middle" font-size="11" fill="var(--ink-sub)">大臣の上は内閣だが、</text>
+<text x="420" y="190" text-anchor="middle" font-size="11" fill="var(--ink-sub)">内閣を審査庁にはしない</text>
+<rect x="560" y="126" width="240" height="76" rx="4" fill="var(--seiji-soft)" stroke="var(--seiji)" stroke-width="2"/>
+<text x="680" y="152" text-anchor="middle" font-size="14" font-weight="700" fill="var(--seiji)">最上級行政庁(4号)＝原則</text>
+<text x="680" y="172" text-anchor="middle" font-size="11" fill="var(--seiji)">途中の階層で止めず頂点へ。</text>
+<text x="680" y="190" text-anchor="middle" font-size="11" fill="var(--seiji)">組織としての結論を一本にする</text>
+<rect x="40" y="240" width="760" height="66" rx="4" fill="var(--shu-soft)" stroke="var(--shu)" stroke-width="1.4"/>
+<text x="420" y="266" text-anchor="middle" font-size="13" font-weight="700" fill="var(--shu)">この答えが後で3回効く ── 審査庁が「上級庁・処分庁」か「それ以外」かで権限が変わる</text>
+<text x="420" y="288" text-anchor="middle" font-size="12" fill="var(--shu)">職権の執行停止(六章) / 変更裁決(七章) / 不作為での命令(七章)</text>
+</svg>
+<figcaption>審査請求先の決定図。例外はすべて「内閣に持ち込まない」の現れ。下段の赤帯が、この分岐を覚える本当の理由。</figcaption>
+</figure>
+
+  <h3>どこへ出すか ── 処分庁を経由してもよい</h3>
+
+  <p>審査請求先が処分庁と違う場合、審査請求書を審査庁に直接持ち込むしかないとすると、遠方の役所まで出向かなければならないことがあります。そこで、<span class="key">身近な処分庁を経由して出す道</span>が用意されています。</p>
+
+<div class="art"><h4><a class="cite" href="テキスト/資料/条文/行政不服審査法21条.html">行政不服審査法21条</a>（処分庁等を経由する審査請求）</h4><div class="ain"><p class="atext">審査請求をすべき行政庁が処分庁等と異なる場合における審査請求は、処分庁等を経由してすることができる。この場合において、審査請求人は、処分庁等に審査請求書を提出し、又は処分庁等に対し第十九条第二項から第五項までに規定する事項を陳述するものとする。
+2 前項の場合には、処分庁等は、直ちに、審査請求書又は審査請求録取書を審査庁となるべき行政庁に送付しなければならない。
+3 第一項の場合における審査請求期間の計算については、処分庁に審査請求書を提出し、又は処分庁に対し当該事項を陳述した時に、処分についての審査請求があったものとみなす。</p><p class="an">三つの点が要である。第一に、経由は<b>「することができる」</b>であって義務ではない。審査庁に直接出してもよい。第二に、処分庁は受け取った書面を<b>直ちに</b>審査庁となるべき行政庁に送付しなければならない。ここは義務である。第三に、期間の計算は<b>処分庁に提出した時</b>を基準にする。処分庁が送付を怠って審査庁への到達が遅れても、請求人が期間を過ぎたことにはならない。</p><p class="al">この法律の全文は<a href="テキスト/資料/索引.html">条文の索引</a>から引けます</p></div></div>
+
+  <p><span class="warn">処分庁を経由しなければならない、というものではありません。</span>21条1項は「することができる」と書いており、審査庁に直接提出することもできます。他方、<span class="key">経由を選んだ場合に処分庁が負う送付の義務は「直ちに」という強いもの</span>です。役所の内部の遅れを請求人に負担させない、という考え方が、3項の期間計算の特則にも表れています。</p>
+
+  <h3>いつまでに ── 主観と客観の二本立て</h3>
+
+<div class="art"><h4><a class="cite" href="テキスト/資料/条文/行政不服審査法18条.html">行政不服審査法18条</a>（審査請求期間）</h4><div class="ain"><p class="atext">処分についての審査請求は、処分があったことを知った日の翌日から起算して三月（当該処分について再調査の請求をしたときは、当該再調査の請求についての決定があったことを知った日の翌日から起算して一月）を経過したときは、することができない。ただし、正当な理由があるときは、この限りでない。
+2 処分についての審査請求は、処分（当該処分について再調査の請求をしたときは、当該再調査の請求についての決定）があった日の翌日から起算して一年を経過したときは、することができない。ただし、正当な理由があるときは、この限りでない。
+3 次条に規定する審査請求書を郵便又は……信書便で提出した場合における前二項に規定する期間（以下「審査請求期間」という。）の計算については、送付に要した日数は、算入しない。</p><p class="an">1項が主観的期間、2項が客観的期間である。どちらも<b>「翌日から起算して」</b>と書かれており、初日を数えない。行政事件訴訟法14条の出訴期間には「翌日から」という文言がなく、初日不算入は民法140条の一般原則によることになる。<b>行政不服審査法だけが条文の中に翌日起算を書き込んでいる</b>点が、両者を並べたときの違いである。3項は、郵送に要した日数を期間から除く定めで、遠方に住む者が不利にならないようにするものである。</p><p class="al">この法律の全文は<a href="テキスト/資料/索引.html">条文の索引</a>から引けます</p></div></div>
+
+  <div class="scroll"><table>
+    <caption>いずれも「正当な理由があるとき」を除く</caption>
+    <thead><tr><th>手続</th><th>主観(知った日の翌日から)</th><th>客観(あった日の翌日から)</th><th>条文</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">審査請求</th><td><b>3か月</b></td><td>1年</td><td>18条</td></tr>
+      <tr><th scope="row">再調査の請求</th><td><b>3か月</b></td><td>1年</td><td>54条</td></tr>
+      <tr><th scope="row">再審査請求</th><td><b>1か月</b>(裁決を知った日)</td><td>1年(裁決の日)</td><td>62条</td></tr>
+      <tr><th scope="row">不作為</th><td colspan="2">期間制限なし。不作為が続く限りいつでも(待たされている人を締め切る理由がない)</td><td>─</td></tr>
+    </tbody>
+  </table></div>
+  <p>18条1項の条文は「知った日の<b>翌日</b>から起算して」。初日は数えません。なお、期間を過ぎた後の受け皿として「無効確認の審査請求」という制度は<b>ありません</b>。無効を主張したければ訴訟(無効等確認訴訟)へ行きます。</p>
+  <div class="refs"><h4>過去問での出題</h4><span class="rid">R2-14-イ</span><span class="rid">R3-16-ア</span><span class="rid">R5-14-3</span></div></section>
+<section id="c5">
+  <h2><span class="ch">五</span>審理 ── 審理員は何ができるか</h2>
+
+  <h3>審理員 ── 「身内だが、当事者ではない」</h3>
+  <p><span class="chip gen">原則</span>審査庁は、<b>審査庁に所属する職員</b>のうちから審理員を指名します(9条1項)。<span class="warn">処分庁に所属する職員から指名するのではありません。</span>審査庁の職員、つまり同じ役所の人間でかまいません。ただし<b>その処分に関与した者は指名できません</b>(9条2項)。求められているのは組織からの独立ではなく、<b>事件からの独立</b>です。</p>
+  <p>審理員となるべき者の<b>名簿</b>は、作成は努力義務ですが、<b>作成したら公にする義務</b>があります(17条)。<span class="warn">名簿を作成することについて、議会の議決を経なければならないという定めはありません。</span>審理員を誰にするかは審査庁の内部の人事の問題であり、議会が関与する事柄として組み立てられていないからです。17条が求めているのは、作るよう努めることと、作ったら公にすることの二つだけです。標準審理期間も同じ構造で、<b>定めるのは努力義務・定めたら公にするのは義務</b>(16条)です。<span class="warn">どちらも「必ず定めなければならない」という義務ではありません。</span>審理にどれだけかかるかは事案によって幅があるため、期間の設定そのものまでは義務づけられていないのです。</p>
+
+  <h3>形式に不備があるとき ── 補正と、審理を経ない却下</h3>
+
+  <p>審査請求書の記載に不備があったとき、行政庁はいきなり門前払いにしてよいわけではありません。</p>
+
+<div class="art"><h4><a class="cite" href="テキスト/資料/条文/行政不服審査法23条.html">行政不服審査法23条</a>（審査請求書の補正）</h4><div class="ain"><p class="atext">審査請求書が第十九条の規定に違反する場合には、審査庁は、相当の期間を定め、その期間内に不備を補正すべきことを命じなければならない。</p><p class="an">語尾が<b>「命じなければならない」</b>で義務である。形式の不備を理由にいきなり却下することは認められない。書き方の不備で救済の道が閉ざされることを避ける趣旨である。</p><p class="al">この法律の全文は<a href="テキスト/資料/索引.html">条文の索引</a>から引けます</p></div></div>
+
+<div class="art"><h4><a class="cite" href="テキスト/資料/条文/行政不服審査法24条.html">行政不服審査法24条</a>（審理手続を経ないでする却下裁決）</h4><div class="ain"><p class="atext">前条の場合において、審査請求人が同条の期間内に不備を補正しないときは、審査庁は、次節に規定する審理手続を経ないで、第四十五条第一項又は第四十九条第一項の規定に基づき、裁決で、当該審査請求を却下することができる。
+2 審査請求が不適法であって補正することができないことが明らかなときも、前項と同様とする。</p><p class="an">1項は補正命令に応じなかった場合、2項は<b>そもそも補正のしようがないほど不適法であることが明らかな場合</b>である。どちらも<b>審理員による審理手続を経ないで</b>却下できる。中身に入る余地がないものに審理員を指名して手続を回しても意味がないからである。なお語尾は「できる」であって、審理手続を経てから却下することも妨げられない。</p><p class="al">この法律の全文は<a href="テキスト/資料/索引.html">条文の索引</a>から引けます</p></div></div>
+
+  <p>ここは二段になっています。<span class="key">まず補正を命じるのが原則</span>（23条）で、<span class="key">それに応じないとき、または補正のしようがないことが明らかなときに、審理手続を経ないで却下できる</span>（24条）という順序です。</p>
+
+  <p><span class="warn">形式上の不備があれば直ちに却下できる、というわけではありません。</span>先に補正を命じる必要があります。逆に、<span class="warn">どんな場合でも審理員を指名して審理手続を開始しなければならない、というわけでもありません。</span>24条に当たる場合は、審理員を指名せずに却下できます。9条1項ただし書が、24条により却下する場合を審理員指名の例外として挙げているのも、これに対応しています。</p>
+
+  <h3>口頭で述べる機会と、補佐人</h3>
+
+  <p>審理は書面で進めるのが基本ですが、<span class="key">申立てがあれば口頭で述べる機会を与えなければなりません</span>。</p>
+
+<div class="art"><h4><a class="cite" href="テキスト/資料/条文/行政不服審査法31条.html">行政不服審査法31条</a>（口頭意見陳述）</h4><div class="ain"><p class="atext">審査請求人又は参加人の申立てがあった場合には、審理員は、当該申立てをした者に口頭で審査請求に係る事件に関する意見を述べる機会を与えなければならない。ただし、当該申立人の所在その他の事情により当該意見を述べる機会を与えることが困難であると認められる場合には、この限りでない。
+2 前項本文の規定による意見の陳述は、審理員が期日及び場所を指定し、全ての審理関係人を招集してさせるものとする。
+3 口頭意見陳述において、申立人は、審理員の許可を得て、補佐人とともに出頭することができる。
+4 口頭意見陳述において、審理員は、申立人のする陳述が事件に関係のない事項にわたる場合その他相当でない場合には、これを制限することができる。
+5 口頭意見陳述に際し、申立人は、審理員の許可を得て、審査請求に係る事件に関し、処分庁等に対して、質問を発することができる。</p><p class="an">1項の要は、申立てがあれば<b>与えなければならない</b>という義務である点と、申し立てられるのが<b>審査請求人だけでなく参加人も</b>である点である。3項の<b>補佐人</b>とは、専門的な事柄について申立人を助けるために同行する者をいう。医師や技術者などがこれに当たる。3項と5項はどちらも<b>審理員の許可</b>を条件としており、許可なしに連れて行ったり質問したりできるわけではない。</p><p class="al">この法律の全文は<a href="テキスト/資料/索引.html">条文の索引</a>から引けます</p></div></div>
+
+  <p>三つのことを押さえてください。第一に、<span class="key">口頭意見陳述の機会を求められるのは、審査請求人だけでなく参加人も</span>です（31条1項）。第二に、<span class="key">補佐人とともに出頭することができます</span>（同条3項）。<span class="term-b">補佐人</span>とは、専門的な事柄について申立人を助けるために付き添う者のことで、医師や技術者などが想定されています。第三に、<span class="warn">補佐人の同行にも、処分庁等への質問にも、審理員の許可が要ります</span>（同条3項・5項）。</p>
+
+  <p>2項が<span class="key">「全ての審理関係人を招集して」</span>と書いている点も要です。申立人と審理員だけで行うのではなく、処分庁等も呼んだ場で行われます。5項で処分庁等に質問できるとされているのは、その場に処分庁等がいることが前提になっているからです。</p>
+
+  <h3>審理員の職権 ── 申立てを待たずにできる</h3>
+  <p>審理は書面が基本ですが、審理員は<b>職権で</b>証拠集めができます。<b>物件の提出要求と留置き(33条)・検証(35条)・審理関係人への質問(36条)</b>、いずれも「申立てにより又は職権で」と書かれています。<span class="warn">審理関係人の申立てがなければできない、というものではありません。</span>不服審査は行政の自己統制でもあるので、当事者任せにしない建て付けになっているのです。</p>
+  <p>逆に<b>申立てがあったら拒めない</b>ものが2つ: <b>口頭意見陳述(31条)</b>と<b>提出書類等の閲覧・写しの交付(38条)</b>。防御の機会の根っこなので、審理員の裁量に係らせません。「必要と認めるときに限り認める」に変えたら誤りです。審理手続の<b>併合・分離</b>はどちらも可能(39条)。「一度併合したら分離できない」は誤りです。</p>
+  <div class="refs"><h4>過去問での出題</h4><span class="rid">R4-15-1</span><span class="rid">R4-15-2</span><span class="rid">H30-15-ウ</span><span class="rid">R7-14-3</span></div></section>
+
+<section id="c6">
+  <h2><span class="ch">六</span>執行停止 ── その間、処分を止められるか</h2>
+
+<div class="art"><h4><a class="cite" href="テキスト/資料/条文/行政不服審査法25条.html">行政不服審査法25条</a>（執行停止）</h4><div class="ain"><p class="atext">審査請求は、処分の効力、処分の執行又は手続の続行を妨げない。
+2 処分庁の上級行政庁又は処分庁である審査庁は、必要があると認める場合には、審査請求人の申立てにより又は職権で、処分の効力、処分の執行又は手続の続行の全部又は一部の停止その他の措置（以下「執行停止」という。）をとることができる。
+3 処分庁の上級行政庁又は処分庁のいずれでもない審査庁は、必要があると認める場合には、審査請求人の申立てにより、処分庁の意見を聴取した上、執行停止をすることができる。ただし、処分の効力、処分の執行又は手続の続行の全部又は一部の停止以外の措置をとることはできない。
+4 前二項の規定による審査請求人の申立てがあった場合において、処分、処分の執行又は手続の続行により生ずる重大な損害を避けるために緊急の必要があると認めるときは、審査庁は、執行停止をしなければならない。ただし、公共の福祉に重大な影響を及ぼすおそれがあるとき、又は本案について理由がないとみえるときは、この限りでない。
+6 第二項から第四項までの場合において、処分の効力の停止は、処分の効力の停止以外の措置によって目的を達することができるときは、することができない。</p><p class="an">1項が<b>執行不停止の原則</b>である。審査請求をしただけでは処分は止まらない。止めたければ執行停止の手続を別に取る必要がある。2項と3項で、<b>審査庁が誰であるかによって権限の幅が変わる</b>。処分庁の上級行政庁または処分庁自身が審査庁なら、申立てがなくても職権でできるうえ、停止以外の措置もとれる。それ以外の審査庁なら、申立てが要るうえ、処分庁の意見を聴かなければならず、とれるのは停止だけである。監督権を持たない者が処分に手を突っ込むことになるからである。4項は、要件がそろえば<b>しなければならない</b>という義務になる点が2項・3項と違う。6項は、効力の停止が最も重い措置なので最後に置く、という順序を定めている。</p><p class="al">この法律の全文は<a href="テキスト/資料/索引.html">条文の索引</a>から引けます</p></div></div>
+
+  <p><span class="chip gen">原則</span><b>執行不停止</b>(25条1項)。争っただけで処分が止まるなら、引き延ばし目的の申立てが殺到するからです。止めるには別途の判断が要り、<b>誰がどこまで止められるかは審査庁の立場で変わります</b>——四章の分岐がここで効きます。</p>
+  <div class="scroll"><table>
+    <thead><tr><th>審査庁の立場</th><th>職権で</th><th>申立てで</th><th>できる措置</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">上級行政庁 または 処分庁</th><td class="ok">できる</td><td class="ok">できる</td><td>効力・執行・手続続行の停止<b>その他の措置</b></td></tr>
+      <tr><th scope="row">それ以外(第三者的な審査庁)</th><td class="ng">できない</td><td class="ok">できる</td><td>停止のみ。<b>「その他の措置」は不可</b></td></tr>
+    </tbody>
+  </table></div>
+  <p>指揮命令権を持たない審査庁は、頼まれた範囲でしか手を出せない——理屈は変更裁決(七章)と同じ一本です。申立てができるのは<b>審査請求人だけ</b>で、参加人にはありません。</p>
+  <p><span class="chip rei">義務的執行停止</span>申立てがあり、<b>重大な損害を避けるために緊急の必要がある</b>と認めるときは、審査庁は執行停止を<b>しなければならない</b>(25条4項)。ただし2つの出口があります: <b>公共の福祉に重大な影響を及ぼすおそれがあるとき</b>と、<b>本案について理由がないとみえるとき</b>。「理由がないとみえるときでも停止義務がある」に変えたら誤りです。</p>
+  <h3>いったん止めた後に取り消せる場合</h3>
+
+<div class="art"><h4><a class="cite" href="テキスト/資料/条文/行政不服審査法26条.html">行政不服審査法26条</a>（執行停止の取消し）</h4><div class="ain"><p class="atext">執行停止をした後において、執行停止が公共の福祉に重大な影響を及ぼすことが明らかとなったとき、その他事情が変更したときは、審査庁は、その執行停止を取り消すことができる。</p><p class="an">取消しの事由は二つ書かれている。<b>執行停止が公共の福祉に重大な影響を及ぼすことが明らかとなったとき</b>と、<b>その他事情が変更したとき</b>である。前者は25条4項ただし書と同じ言い回しで、止め続けることの弊害が後から判明した場合を指す。後者は事情の変更一般を受ける包括的な定めである。</p><p class="al">この法律の全文は<a href="テキスト/資料/索引.html">条文の索引</a>から引けます</p></div></div>
+
+  <p>ここは言い回しを取り違えやすい箇所です。<span class="warn">「審査請求に理由がないことが明らかとなったとき」という取消事由は、26条に置かれていません。</span>似た文言は25条4項ただし書の<span class="key">「本案について理由がないとみえるとき」</span>ですが、こちらは<span class="key">義務的執行停止をしない場合の要件</span>であって、いったんした執行停止を取り消す要件ではありません。</p>
+
+  <p>もう一つ、<span class="warn">「公の利益に著しい障害を生ずることが明らかとなったとき」という取消事由もありません。</span>「公の利益に著しい障害」という言い回しは、45条3項の事情裁決のものです。<span class="key">26条は「公共の福祉に重大な影響」</span>であり、条文が違えば言葉も違います。</p>
+
+  <p>審理員には執行停止をすべき旨の意見書の提出権があり（40条）、提出を受けた審査庁は<b>速やかに</b>執行停止をするかどうかを決めなければなりません（25条7項）。</p>
+  <div class="refs"><h4>過去問での出題</h4><span class="rid">R3-14-1</span><span class="rid">R3-14-5</span><span class="rid">R3-14-2</span><span class="rid">R3-14-3</span></div></section>
+
+<section id="c7">
+  <h2><span class="ch">七</span>裁決 ── 結論とその力</h2>
+
+  <h3>結論は3つ＋特殊形1つ</h3>
+
+<div class="art"><h4><a class="cite" href="テキスト/資料/条文/行政不服審査法45条.html">行政不服審査法45条</a>（処分についての審査請求の却下又は棄却）</h4><div class="ain"><p class="atext">処分についての審査請求が法定の期間経過後にされたものである場合その他不適法である場合には、審査庁は、裁決で、当該審査請求を却下する。
+2 処分についての審査請求が理由がない場合には、審査庁は、裁決で、当該審査請求を棄却する。
+3 審査請求に係る処分が違法又は不当ではあるが、これを取り消し、又は撤廃することにより公の利益に著しい障害を生ずる場合において、審査請求人の受ける損害の程度、その損害の賠償又は防止の程度及び方法その他一切の事情を考慮した上、処分を取り消し、又は撤廃することが公共の福祉に適合しないと認めるときは、審査庁は、裁決で、当該審査請求を棄却することができる。この場合には、審査庁は、裁決の主文で、当該処分が違法又は不当であることを宣言しなければならない。</p><p class="an">1項が却下、2項が棄却、3項が<b>事情裁決</b>である。事情裁決は3項の位置に置かれていることから分かるとおり、<b>棄却の一種</b>であって、四つ目の結論ではない。処分が違法または不当であることを認めながら請求を退けるので、せめて主文でその旨を宣言させる、という組み立てになっている。宣言は「しなければならない」であって、審査庁の裁量ではない。</p><p class="al">この法律の全文は<a href="テキスト/資料/索引.html">条文の索引</a>から引けます</p></div></div>
+
+<div class="art"><h4><a class="cite" href="テキスト/資料/条文/行政不服審査法46条.html">行政不服審査法46条</a>（処分についての審査請求の認容）</h4><div class="ain"><p class="atext">処分についての審査請求が理由がある場合（前条第三項の規定の適用がある場合を除く。）には、審査庁は、裁決で、当該処分の全部若しくは一部を取り消し、又はこれを変更する。ただし、審査庁が処分庁の上級行政庁又は処分庁のいずれでもない場合には、当該処分を変更することはできない。</p><p class="an">ただし書が要である。<b>処分を変更できるのは、審査庁が処分庁の上級行政庁または処分庁自身である場合に限られる。</b>執行停止の25条2項・3項と同じ切り分けで、監督権を持たない審査庁は、処分を消すことはできても、別の内容に作り替えることはできない。なお、審査請求人に不利益な方向へ変更することは許されない（48条の不利益変更の禁止）。</p><p class="al">この法律の全文は<a href="テキスト/資料/索引.html">条文の索引</a>から引けます</p></div></div>
+
+<figure>
+<svg viewBox="0 0 840 300" role="img" aria-label="入口の要件を欠けば却下、中身に理由がなければ棄却、理由があれば認容。理由があるのに公共の福祉のため棄却する事情裁決が特殊形としてある">
+<defs><marker id="a4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs>
+<rect x="330" y="16" width="180" height="50" rx="4" fill="var(--fill)" stroke="currentColor" stroke-width="1.3"/>
+<text x="420" y="47" text-anchor="middle" font-size="14" font-weight="700" fill="currentColor">審査請求</text>
+<line x1="380" y1="66" x2="160" y2="112" stroke="currentColor" stroke-width="1.8" marker-end="url(#a4)"/>
+<text x="240" y="82" font-size="12" fill="var(--hai)">入口が駄目</text>
+<line x1="420" y1="66" x2="420" y2="112" stroke="currentColor" stroke-width="1.8" marker-end="url(#a4)"/>
+<text x="432" y="94" font-size="12" fill="var(--hai)">中身に理由なし</text>
+<line x1="460" y1="66" x2="680" y2="112" stroke="currentColor" stroke-width="1.8" marker-end="url(#a4)"/>
+<text x="600" y="82" font-size="12" fill="var(--hai)">理由あり</text>
+<rect x="60" y="116" width="200" height="64" rx="4" fill="var(--card)" stroke="currentColor" stroke-width="1.3"/>
+<text x="160" y="142" text-anchor="middle" font-size="14" font-weight="700" fill="currentColor">却下(45条1項)</text>
+<text x="160" y="163" text-anchor="middle" font-size="11" fill="var(--ink-sub)">期間徒過・対象外など</text>
+<rect x="320" y="116" width="200" height="64" rx="4" fill="var(--card)" stroke="currentColor" stroke-width="1.3"/>
+<text x="420" y="142" text-anchor="middle" font-size="14" font-weight="700" fill="currentColor">棄却(45条2項)</text>
+<text x="420" y="163" text-anchor="middle" font-size="11" fill="var(--ink-sub)">処分は維持される</text>
+<rect x="580" y="116" width="220" height="64" rx="4" fill="var(--midori-soft)" stroke="var(--midori)" stroke-width="2"/>
+<text x="690" y="142" text-anchor="middle" font-size="14" font-weight="700" fill="var(--midori)">認容(46条〜)</text>
+<text x="690" y="163" text-anchor="middle" font-size="11" fill="var(--midori)">取消し・変更・命令・撤廃</text>
+<rect x="260" y="216" width="320" height="64" rx="4" fill="var(--shu-soft)" stroke="var(--shu)" stroke-width="1.5"/>
+<text x="420" y="240" text-anchor="middle" font-size="13" font-weight="700" fill="var(--shu)">事情裁決(45条3項) ── 棄却の特殊形</text>
+<text x="420" y="261" text-anchor="middle" font-size="11" fill="var(--shu)">主文で違法・不当を宣言したうえで棄却。審査請求だけの制度</text>
+<line x1="420" y1="180" x2="420" y2="212" stroke="var(--shu)" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#a4)"/>
+</svg>
+<figcaption>裁決の分岐。事情裁決は「理由はあるが、取り消すと公共の福祉に著しい障害」のときの棄却で、違法・不当の宣言が主文に残る点が値打ち。再調査の決定にこの制度は無い。</figcaption>
+</figure>
+  <p>再調査の決定も<b>却下・棄却・認容の3類型</b>です(58・59条)。「期間の定めがないから2類型」は二重に誤り——期間はあるし(54条)、却下もあります。ただし<b>事情裁決に相当する制度は無い</b>。処分庁自身の簡易な手続に、公共の福祉を理由とする例外まで持たせない趣旨です。</p>
+
+  <h3>認容で何ができるかは、また立場で変わる</h3>
+  <div class="scroll"><table>
+    <thead><tr><th>認容の中身</th><th>誰ができるか</th><th>条文</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">処分の取消し</th><td>どの審査庁でも</td><td>46条1項</td></tr>
+      <tr><th scope="row">処分の変更</th><td><b>上級行政庁または処分庁だけ。</b>しかも不利益変更は禁止</td><td>46条1項ただし書・48条</td></tr>
+      <tr><th scope="row">事実上の行為の撤廃・変更</th><td>違法・不当を宣言したうえで撤廃・変更</td><td>47条</td></tr>
+      <tr><th scope="row">不作為→処分を命じる</th><td><b>上級行政庁だけ。</b>まず不作為の違法・不当を宣言する</td><td>49条3項</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>裁決の力 ── 3つ持っている</h3>
+  <p><b>① 形成力。</b>取消裁決が出ると、処分は<b>裁決の効果として直ちに消えます</b>。処分庁が改めて取り消す行為は要りません。<span class="warn">処分庁が裁決の趣旨に従って改めて当該処分を取り消さなければならない、というものではありません。</span>裁決そのものが処分を消すからです。</p>
+  <p><b>② 拘束力(52条)。</b>裁決は<b>関係行政庁を拘束します</b>。だから処分庁は、<b>同じ事情のもとで同じ理由により同じ処分をやり直すことはできません</b>。ただし拒否処分が取り消されても<b>申請が認められたことにはならない</b>——処分庁が裁決の趣旨に従って<b>改めて</b>申請に応答します(52条2項)。取消しは白紙に戻すだけで、白紙の埋め方までは裁決が書かない、と整理してください。拘束力の規定は再審査請求に準用されますが、<b>再調査の決定には準用されません</b>(処分庁が自分を拘束しても意味がないため)。</p>
+  <p><b>③ 理由付記(50条)。</b>裁決書には理由を記載し、主文が<b>審理員意見書または審査会の答申と異なる場合には、異なることとなった理由</b>まで書かなければなりません。三段構えを飾りにしないための仕組みです。</p>
+  <div class="refs"><h4>過去問での出題</h4><span class="rid">R5-15-1</span><span class="rid">R5-15-2</span><span class="rid">R5-15-5</span><span class="rid">R3-16-エ</span><span class="rid">R5-14-2</span></div></section>
+
+<section id="c8">
+  <h2><span class="ch">八</span>教示、そして行訴法との異同</h2>
+
+  <h3>教示 ── 知らせなければ制度は無いのと同じ</h3>
+
+<div class="art"><h4><a class="cite" href="テキスト/資料/条文/行政不服審査法82条.html">行政不服審査法82条</a>（不服申立てをすべき行政庁等の教示）</h4><div class="ain"><p class="atext">行政庁は、審査請求若しくは再調査の請求又は他の法令に基づく不服申立て（以下この条において「不服申立て」と総称する。）をすることができる処分をする場合には、処分の相手方に対し、当該処分につき不服申立てをすることができる旨並びに不服申立てをすべき行政庁及び不服申立てをすることができる期間を書面で教示しなければならない。ただし、当該処分を口頭でする場合は、この限りでない。
+2 行政庁は、利害関係人から、当該処分が不服申立てをすることができる処分であるかどうか並びに当該処分が不服申立てをすることができるものである場合における不服申立てをすべき行政庁及び不服申立てをすることができる期間につき教示を求められたときは、当該事項を教示しなければならない。
+3 前項の場合において、教示を求めた者が書面による教示を求めたときは、当該教示は、書面でしなければならない。</p><p class="an">1項と2項で相手方が違う。1項は<b>処分の相手方</b>に対して、求められなくても行政庁の側から教示する義務である。2項は<b>利害関係人</b>に対して、求められたときに教示する義務である。処分の相手方でない者にまで行政庁の側から知らせるのは現実的でないので、求めを待つ形にしている。1項のただし書により、<b>口頭でする処分には教示義務がない</b>。教示すべき事項は三つ、すなわち不服申立てができること、宛先の行政庁、申立てができる期間である。</p><p class="al">この法律の全文は<a href="テキスト/資料/索引.html">条文の索引</a>から引けます</p></div></div>
+
+  <div class="scroll"><table>
+    <thead><tr><th>場面</th><th>義務の中身</th><th>条文</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">書面で処分するとき</th><td>①不服申立てができる旨 ②すべき行政庁 ③期間 を<b>書面で</b>教示。<b>口頭で処分するときは義務なし</b></td><td>82条1項</td></tr>
+      <tr><th scope="row">利害関係人に求められたとき</th><td>教示する。<b>書面で求められたら書面で</b></td><td>82条2項・3項</td></tr>
+      <tr><th scope="row">教示しなかったとき</th><td>処分庁に<b>不服申立書を提出</b>できる(そこから正しい手続へ回送)</td><td>83条</td></tr>
+      <tr><th scope="row">誤った教示をしたとき</th><td>誤った先に出しても、その行政庁が正しい審査庁へ<b>送付</b>し、<b>初めから適法に請求した</b>とみなす</td><td>22条</td></tr>
+      <tr><th scope="row">再審査請求できる裁決をするとき</th><td>裁決書に再審査請求できる旨・行政庁・期間を記載して教示</td><td>50条3項</td></tr>
+    </tbody>
+  </table></div>
+  <p>教示事項は上の3点だけ。<b>執行停止を申し立てられる旨は教示事項ではありません</b>。誤教示の救済は<b>送付</b>であって<b>返送ではない</b>——申立人に手戻りさせないのがこの制度の芯です。</p>
+
+  <h3>地方公共団体はどこに諮問するのか</h3>
+
+  <p>審査庁は、審理員意見書の提出を受けたら、原則として第三者機関に諮問しなければなりません（43条1項）。<span class="key">その諮問先が、国と地方公共団体で違います。</span></p>
+
+  <div class="scroll"><table>
+    <thead><tr><th>審査庁</th><th>諮問先</th><th>根拠</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">主任の大臣、宮内庁長官、庁の長</th><td>総務省に置かれる<b>行政不服審査会</b>に諮問します。</td><td>43条1項</td></tr>
+      <tr><th scope="row">地方公共団体の長</th><td>その地方公共団体が置く<b>81条1項または2項の機関</b>に諮問します。</td><td>43条1項</td></tr>
+    </tbody>
+  </table></div>
+
+  <p><span class="warn">地方公共団体の長が審査庁である場合に、国の行政不服審査会へ諮問するのではありません。</span>地方公共団体は、自前の第三者機関を置くことになっています。</p>
+
+<div class="art"><h4><a class="cite" href="テキスト/資料/条文/行政不服審査法81条.html">行政不服審査法81条</a>（地方公共団体に置かれる機関）</h4><div class="ain"><p class="atext">地方公共団体に、執行機関の附属機関として、この法律の規定によりその権限に属させられた事項を処理するための機関を置く。
+2 前項の規定にかかわらず、地方公共団体は、当該地方公共団体における不服申立ての状況等に鑑み同項の機関を置くことが不適当又は困難であるときは、条例で定めるところにより、事件ごとに、執行機関の附属機関として、この法律の規定によりその権限に属させられた事項を処理するための機関を置くこととすることができる。
+3 前節第二款の規定は、前二項の機関について準用する。この場合において、第七十八条第四項及び第五項中「政令」とあるのは、「条例」と読み替えるものとする。
+4 前三項に定めるもののほか、第一項又は第二項の機関の組織及び運営に関し必要な事項は、当該機関を置く地方公共団体の条例で定める。</p><p class="an">1項が原則で、地方公共団体は常設の機関を<b>置く</b>。2項が例外で、不服申立ての件数が少ないなど常設が不適当または困難なときは、<b>事件ごとに</b>置くことができる。<b>どちらの場合も、その地方公共団体が自分で機関を置く</b>のであって、国の行政不服審査会に諮問するのではない。4項により、組織および運営に必要な事項は<b>条例</b>で定める。</p><p class="al">この法律の全文は<a href="テキスト/資料/索引.html">条文の索引</a>から引けます</p></div></div>
+
+  <p>81条の構造は、<span class="key">1項が原則の常設、2項がその例外としての事件ごとの設置</span>です。<span class="warn">常設の機関を置くことが不適当または困難だからといって、国の行政不服審査会に諮問できるようになるわけではありません。</span>2項が用意しているのは、あくまで自前の機関を事件ごとに置くという道です。</p>
+
+  <p>また、<span class="key">機関の組織および運営に必要な事項は、その地方公共団体の条例で定めます</span>（81条4項）。政令ではありません。3項の読替えも「政令」を「条例」に置き換えるものになっており、<span class="key">地方公共団体のことは地方公共団体が条例で決める</span>という筋が通されています。</p>
+
+  <p>なお、行政手続法46条は、適用が除外された部分について地方公共団体に必要な措置を講ずるよう<b>努めなければならない</b>としていました。<span class="warn">行政不服審査法には、これに相当する努力義務の規定は置かれていません。</span>行政不服審査法は地方公共団体の機関がする処分にも直接適用されるので、努力義務で補う必要がないからです。</p>
+
+  <h3>行審法と行訴法の異同</h3>
+  <div class="scroll"><table>
+    <thead><tr><th>項目</th><th>行審法(審査請求)</th><th>行訴法(取消訴訟)</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">争える中身</th><td class="ok">違法+<b>不当</b>まで</td><td>違法のみ</td></tr>
+      <tr><th scope="row">期間</th><td>3か月/1年。<b>正当な理由</b>のただし書あり</td><td>6か月/1年。<b>同じくただし書あり</b>(「行訴だけ」は誤り)</td></tr>
+      <tr><th scope="row">期間の但書</th><td>18条1項・2項のいずれにも「ただし、正当な理由があるときは、この限りでない」という但書が置かれている</td><td class="ok">行政事件訴訟法14条1項・2項にも同じ但書が置かれている。<b>但書があるのは行訴法だけではない</b></td></tr>
+<tr><th scope="row">教示</th><td>行政不服審査法82条に規定されている</td><td class="ok">行政事件訴訟法46条にも教示の規定が置かれている。<b>教示の制度は行政不服審査法にしかない、というわけではない</b></td></tr>
+      <tr><th scope="row">拘束力</th><td>「裁決は、関係行政庁を拘束する」(52条)</td><td>「その事件について…関係行政庁を拘束する」(33条)</td></tr>
+      <tr><th scope="row">内閣総理大臣の異議</th><td class="ng">この制度は置かれていない</td><td>執行停止に対してあり(27条)</td></tr>
+      <tr><th scope="row">差止め</th><td class="ng">明文の制度は置かれていない</td><td>差止めの訴えあり(37条の4)</td></tr>
+      <tr><th scope="row">仮の救済</th><td>執行停止のみ</td><td>執行停止+仮の義務付け・仮の差止め</td></tr>
+    </tbody>
+  </table></div>
+  <div class="refs"><h4>過去問での出題</h4><span class="rid">R4-16-1</span><span class="rid">R4-16-4</span><span class="rid">R7-16-4</span><span class="rid">R6-16-オ</span></div></section>
+
+<footer>
+  <p>条文は e-Gov の現行法令から機械取得したものを引用しています。関連: <a href="行政法の全体地図.html">行政法の全体地図</a></p>
+</footer>
+</div>

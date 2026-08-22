@@ -1,0 +1,183 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>救済の三つの争訟方法</title>
+<link rel="stylesheet" href="style.css">
+<style>.cite{color:var(--seiji); text-decoration:none; border-bottom:1px dotted var(--seiji); font-weight:600}
+.cite:hover{background:var(--seiji-soft); border-bottom-style:solid}
+/* ── サイドナビ ───────────────────────────── */
+body{display:flex; align-items:flex-start}
+#nav{
+  position:sticky; top:0; flex:none; width:15rem; height:100vh; overflow-y:auto;
+  background:var(--card); border-right:1px solid var(--line2); padding:1.2rem 0 3rem;
+  font-size:.86rem; line-height:1.6;
+}
+#nav .brand{display:block; padding:0 1.1rem 1rem; font-weight:700; font-size:.95rem;
+  color:var(--ink); text-decoration:none; border-bottom:1px solid var(--line); margin-bottom:.8rem}
+#nav .brand small{display:block; font-weight:400; font-size:.72rem; color:var(--hai); margin-top:.2rem}
+#nav h4{margin:1.1rem 1.1rem .35rem; font-size:.68rem; letter-spacing:.14em; color:var(--hai); font-weight:700}
+#nav a{display:block; padding:.4rem 1.1rem; color:var(--ink-sub); text-decoration:none; border-left:3px solid transparent}
+#nav a:hover{background:var(--fill); color:var(--ink)}
+#nav a.cur{border-left-color:var(--seiji); color:var(--seiji); font-weight:700; background:var(--seiji-soft)}
+#nav .sub{padding-left:1.9rem; font-size:.82rem}
+#nav .todo{color:var(--hai); opacity:.55; pointer-events:none}
+#navbtn{display:none}
+.wrap{flex:1; min-width:0}
+@media(max-width:900px){
+  body{display:block}
+  #nav{position:fixed; left:-15rem; top:0; z-index:50; transition:left .2s; box-shadow:2px 0 12px rgba(0,0,0,.15)}
+  #nav.open{left:0}
+  #navbtn{display:flex; position:fixed; left:.7rem; top:.7rem; z-index:60; width:2.5rem; height:2.5rem;
+    align-items:center; justify-content:center; background:var(--card); border:1px solid var(--line2);
+    border-radius:6px; cursor:pointer; font-size:1.1rem; color:var(--ink); box-shadow:0 1px 4px rgba(0,0,0,.1)}
+  .wrap{padding-top:3.4rem}
+}
+</style>
+
+<div id="navbtn" onclick="document.getElementById('nav').classList.toggle('open')">☰</div>
+<nav id="nav">
+<a class="brand" href="index.html">行政法テキスト<small>条文と判例から</small></a>
+<h4>入口</h4>
+<a href="index.html">目次</a>
+<a href="全体像.html">行政法の全体像</a>
+<a href="救済の三つの道.html" class="cur">救済の三つの争訟方法</a>
+<a href="用語集.html">用語集</a>
+<a href="義務のレベル.html">義務のレベル</a>
+<h4>第2章 行政法総論</h4>
+<a href="02-行政法総論1-効力と瑕疵.html">行政行為の効力と瑕疵</a>
+<a class="todo">土台と行為形式</a>
+<h4>第3章 行政手続法</h4>
+<a href="03-行政手続法1-定義と適用範囲.html">定義と適用範囲</a>
+<a href="03-行政手続法2-申請と不利益処分.html">申請と不利益処分</a>
+<a class="todo">行政指導・意見公募</a>
+<h4>第4章 行政不服審査法</h4>
+<a href="../行政不服審査法.html">行政不服審査法</a>
+<h4>第5章 行政事件訴訟法</h4>
+<a href="05-行政事件訴訟法1-処分性.html">処分性</a>
+<a class="todo">原告適格・訴えの利益</a>
+<h4>第6章 国家賠償法</h4>
+<a href="06-国家賠償法1-国家賠償.html">国家賠償</a>
+<a class="todo">損失補償</a>
+<h4>第7章 地方自治法</h4>
+<a href="07-地方自治法1-条例と規則.html">条例と規則</a>
+<a class="todo">住民の権利・議会と長</a>
+<h4>資料</h4>
+<a href="資料/索引.html">条文・判例の全文</a>
+<a href="論点台帳.md">論点台帳</a>
+<a href="執筆計画.md">執筆計画</a>
+</nav>
+<div class="wrap">
+<header>
+  <p class="eyebrow">処分をされた後の地図 ── 全章の背骨</p>
+  <h1>救済の三つの争訟方法</h1>
+  <p class="lede">処分に不服がある人が進める道は3本しかありません。<strong>行政の中で争う(審査請求)・裁判所で争う(取消訴訟)・金で償わせる(国家賠償)</strong>。この図が頭に入ると、行政不服審査法と行政事件訴訟法は「別々の科目」ではなく「隣り合う2本の道」になります。</p>
+</header>
+
+<section>
+  <div class="note">
+    <p><b>先に誤解を1つ潰します。</b><a href="用語集.html#tracks">不利益処分</a>も、<a href="用語集.html#tracks">申請に対する処分</a>も、<b>どちらも<a href="用語集.html#shobun">処分</a>そのもの</b>です(処分という大きな箱の中の種類分け)。この種類分けが役に立つのは、処分を<b>される前</b>の場面だけです——行政手続法が、不利益処分なら聴聞・弁明、申請に対する処分なら審査基準と応答義務、というように<b>種類ごとに踏むべき手続を割り当てている</b>からです。処分が<b>された後</b>の救済では、種類による扱いの違いはありません。どの種類の処分でも、等しく「処分」として下の3本のどの道にも乗れます。</p>
+  </div>
+
+<figure>
+<svg viewBox="0 0 880 1010" role="img" aria-label="処分から3本の道が分かれる。左は審査請求で行政の中の道、右は取消訴訟で裁判所の道。両者は原則自由選択で、裁決に不服なら取消訴訟へ進める。下段は国家賠償で、処分を消さずに金銭賠償を求める道">
+<defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker>
+<marker id="ars" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--seiji)"/></marker></defs>
+
+<rect x="330" y="16" width="220" height="66" rx="4" fill="var(--fill)" stroke="currentColor" stroke-width="1.5"/>
+<text x="440" y="44" text-anchor="middle" font-size="17" font-weight="700" fill="currentColor">処分をされた</text>
+<text x="440" y="66" text-anchor="middle" font-size="11" fill="var(--ink-sub)">不利益処分でも申請拒否でも同じ</text>
+
+<line x1="380" y1="82" x2="240" y2="140" stroke="currentColor" stroke-width="2.2" marker-end="url(#ar)"/>
+<line x1="500" y1="82" x2="640" y2="140" stroke="currentColor" stroke-width="2.2" marker-end="url(#ar)"/>
+<rect x="330" y="104" width="220" height="40" rx="20" fill="var(--seiji-soft)" stroke="var(--seiji)" stroke-width="1.4"/>
+<text x="440" y="129" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--seiji)">原則 自由選択(行訴法8条1項)</text>
+<text x="440" y="162" text-anchor="middle" font-size="11" fill="var(--shu)">例外: 個別の法律が「先に審査請求を経よ」と定める場合(審査請求前置)</text>
+
+<!-- 左の道: 審査請求 -->
+<rect x="60" y="186" width="360" height="560" rx="6" fill="var(--fill)" fill-opacity="0.45" stroke="var(--line2)" stroke-width="1"/>
+<text x="240" y="216" text-anchor="middle" font-size="15" font-weight="700" fill="currentColor">行政の中で争う ── 審査請求</text>
+<text x="240" y="237" text-anchor="middle" font-size="11" fill="var(--ink-sub)">行政不服審査法。裁判所は関与しない</text>
+
+<rect x="100" y="256" width="280" height="58" rx="4" fill="var(--card)" stroke="currentColor" stroke-width="1.2"/>
+<text x="240" y="280" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor">宛先を決める(4条)</text>
+<text x="240" y="300" text-anchor="middle" font-size="11" fill="var(--ink-sub)">原則は最上級行政庁。上級庁が無ければ処分庁</text>
+<line x1="240" y1="314" x2="240" y2="342" stroke="currentColor" stroke-width="1.8" marker-end="url(#ar)"/>
+<rect x="100" y="346" width="280" height="58" rx="4" fill="var(--card)" stroke="currentColor" stroke-width="1.2"/>
+<text x="240" y="370" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor">期間内に書面で出す(18条・19条)</text>
+<text x="240" y="390" text-anchor="middle" font-size="11" fill="var(--ink-sub)">知った日の翌日から3か月(正当な理由の救済あり)</text>
+<line x1="240" y1="404" x2="240" y2="432" stroke="currentColor" stroke-width="1.8" marker-end="url(#ar)"/>
+<rect x="100" y="436" width="280" height="58" rx="4" fill="var(--card)" stroke="var(--seiji)" stroke-width="1.6"/>
+<text x="240" y="460" text-anchor="middle" font-size="13" font-weight="700" fill="var(--seiji)">審理員の審理 → 審査会へ諮問</text>
+<text x="240" y="480" text-anchor="middle" font-size="11" fill="var(--ink-sub)">違法だけでなく「不当」まで審理できる</text>
+<line x1="240" y1="494" x2="240" y2="522" stroke="currentColor" stroke-width="1.8" marker-end="url(#ar)"/>
+<rect x="100" y="526" width="280" height="58" rx="4" fill="var(--card)" stroke="currentColor" stroke-width="1.2"/>
+<text x="240" y="550" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor">裁決(45条〜)</text>
+<text x="240" y="570" text-anchor="middle" font-size="11" fill="var(--ink-sub)">却下 / 棄却(＋事情裁決) / 認容</text>
+
+<rect x="100" y="618" width="280" height="88" rx="4" fill="var(--seiji-soft)" stroke="var(--seiji)" stroke-width="1.2"/>
+<text x="240" y="642" text-anchor="middle" font-size="12" font-weight="700" fill="var(--seiji)">この道の持ち味</text>
+<text x="240" y="663" text-anchor="middle" font-size="11" fill="var(--ink-sub)">安い・速い・不当まで争える</text>
+<text x="240" y="682" text-anchor="middle" font-size="11" fill="var(--ink-sub)">ただし判断するのは行政自身</text>
+
+<!-- 右の道: 取消訴訟 -->
+<rect x="460" y="186" width="360" height="560" rx="6" fill="none" stroke="var(--line2)" stroke-width="1"/>
+<text x="640" y="216" text-anchor="middle" font-size="15" font-weight="700" fill="currentColor">裁判所で争う ── 取消訴訟</text>
+<text x="640" y="237" text-anchor="middle" font-size="11" fill="var(--ink-sub)">行政事件訴訟法。行政の外の第三者が裁く</text>
+
+<rect x="500" y="256" width="280" height="102" rx="4" fill="var(--card)" stroke="currentColor" stroke-width="1.2"/>
+<text x="640" y="280" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor">第1の関門: 訴訟要件</text>
+<text x="640" y="301" text-anchor="middle" font-size="11" fill="var(--ink-sub)">処分性・原告適格・訴えの利益・被告適格</text>
+<text x="640" y="319" text-anchor="middle" font-size="11" fill="var(--ink-sub)">出訴期間(知った日から6か月)・管轄</text>
+<text x="640" y="343" text-anchor="middle" font-size="11" font-weight="700" fill="var(--shu)">1つでも欠けると却下(門前払い)</text>
+<line x1="640" y1="358" x2="640" y2="386" stroke="currentColor" stroke-width="1.8" marker-end="url(#ar)"/>
+<rect x="500" y="390" width="280" height="76" rx="4" fill="var(--card)" stroke="var(--seiji)" stroke-width="1.6"/>
+<text x="640" y="414" text-anchor="middle" font-size="13" font-weight="700" fill="var(--seiji)">第2の関門: 本案の審理</text>
+<text x="640" y="435" text-anchor="middle" font-size="11" fill="var(--ink-sub)">処分は違法か(不当は守備範囲外)</text>
+<text x="640" y="454" text-anchor="middle" font-size="11" fill="var(--ink-sub)">違法性の承継はここの論点。執行停止は並走</text>
+<line x1="640" y1="466" x2="640" y2="494" stroke="currentColor" stroke-width="1.8" marker-end="url(#ar)"/>
+<rect x="500" y="498" width="280" height="86" rx="4" fill="var(--card)" stroke="currentColor" stroke-width="1.2"/>
+<text x="640" y="522" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor">判決</text>
+<text x="640" y="543" text-anchor="middle" font-size="11" fill="var(--ink-sub)">却下 / 棄却(＋事情判決) / 認容(取り消す)</text>
+<text x="640" y="562" text-anchor="middle" font-size="11" fill="var(--ink-sub)">認容の力: 形成力・第三者効・拘束力</text>
+
+<rect x="500" y="618" width="280" height="88" rx="4" fill="var(--seiji-soft)" stroke="var(--seiji)" stroke-width="1.2"/>
+<text x="640" y="642" text-anchor="middle" font-size="12" font-weight="700" fill="var(--seiji)">この道の持ち味</text>
+<text x="640" y="663" text-anchor="middle" font-size="11" fill="var(--ink-sub)">行政から独立した裁判所が裁く</text>
+<text x="640" y="682" text-anchor="middle" font-size="11" fill="var(--ink-sub)">ただし違法しか争えず、時間も費用もかかる</text>
+
+<!-- 裁決→取消訴訟への乗り換え -->
+<polyline points="380,545 440,545 440,285 496,285" stroke="var(--seiji)" stroke-width="2" fill="none" stroke-dasharray="7 5" marker-end="url(#ars)"/>
+<text x="440" y="712" text-anchor="middle" font-size="11" font-weight="700" fill="var(--seiji)">青の点線: 裁決になお不服なら取消訴訟へ ── 第1の関門からやり直す</text>
+<text x="440" y="731" text-anchor="middle" font-size="10.5" fill="var(--ink-sub)">このとき出訴期間は「裁決があったことを知った日から6か月」で数え直す(行訴法14条3項)。</text>
+<text x="440" y="748" text-anchor="middle" font-size="10.5" fill="var(--ink-sub)">元の処分の違法は元の処分の取消訴訟で争う(原処分主義・行訴法10条2項)</text>
+
+<!-- 第三の道: 国家賠償 -->
+<rect x="60" y="790" width="760" height="120" rx="6" fill="var(--shu-soft)" fill-opacity="0.6" stroke="var(--shu)" stroke-width="1.2"/>
+<text x="440" y="820" text-anchor="middle" font-size="15" font-weight="700" fill="var(--shu)">金で償わせる ── 国家賠償</text>
+<text x="440" y="845" text-anchor="middle" font-size="12" fill="var(--ink)">処分そのものは消さない。受けた損害を金銭で賠償させる(国家賠償法)</text>
+<text x="440" y="868" text-anchor="middle" font-size="12" fill="var(--ink)">上の2本と違い、処分を先に取り消してもらう必要はない(最判昭和36年4月21日)</text>
+<text x="440" y="891" text-anchor="middle" font-size="11" fill="var(--ink-sub)">出訴期間が過ぎて上の2本に乗れなくなっても、この道は残る</text>
+<line x1="440" y1="750" x2="440" y2="786" stroke="var(--shu)" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#ar)"/>
+
+<text x="440" y="950" text-anchor="middle" font-size="12" fill="var(--ink-sub)">左の道の詳細 → 「行政不服審査法の教科書」 / 右の道の詳細 → 第5章(執筆中)</text>
+<text x="440" y="974" text-anchor="middle" font-size="12" fill="var(--ink-sub)">左右は構造が同じ(入口の要件 → 審理 → 結論)。片方を覚えれば、もう片方は差分で覚えられる</text>
+</svg>
+<figcaption>3本の道の全体図。左右の2本は「処分の効力を消しに行く」道で、原則どちらを選んでもよい。下の1本は「効力は消さず金銭で償わせる」道で、期間切れの後も使える。</figcaption>
+</figure>
+  <div class="note">
+    <p><b>「原則 自由選択」の例外 ── 審査請求前置。</b>(原則と例外の読み方は<a href="用語集.html#gensoku">用語集の約束</a>) 個別の法律が「審査請求の裁決を経た後でなければ取消訴訟を提起できない」と定めている場合は、順番が強制される(行訴法8条1項ただし書)。国税に関する処分のように、大量に発生し専門技術的な分野に多い。</p>
+    <p><b>右の関門にも救済(例外)がある。</b>被告とすべき者を誤っても、原告に故意または重大な過失がなければ、裁判所は申立てにより被告の変更を許可できる(行訴法15条)。出訴期間には「正当な理由」のただし書がある(14条)。処分の効果が期間の経過で消えた後でも、「回復すべき法律上の利益」が残るなら訴えの利益は失われない(9条1項かっこ書)。関門は落とすための壁ではなく、直せる誤りは直させる作りになっている。</p>
+    <p><b>例外の例外(行訴法8条2項)。</b>前置とされていても、①審査請求から3か月を経ても裁決がないとき ②著しい損害を避けるため緊急の必要があるとき ③その他正当な理由があるときは、裁決を待たずに取消訴訟を提起できる。行政が抱え込んで放置したら次の段階へ進ませる——再調査の請求の3か月ルール(行審法5条2項ただし書)と同じ発想である。</p>
+  </div>
+</section>
+
+<section>
+  <h2>審査請求とは、結局なにか</h2>
+  <p><b>行政庁に対する不服申立てです。訴訟ではありません。</b>裁判所は登場せず、行政の組織の中で、処分をやり直すかどうかをもう一度判断させる手続です。だから判断者は裁判官ではなく審査庁(行政庁)であり、答えの名前も判決ではなく<b><a href="用語集.html#saiketsu">裁決</a></b>です(裁決・決定・判決の使い分けは用語集の「裁決」)。</p>
+  <p>「審査庁か処分庁か」はあなたの理解で合っています。宛先は<a href="../行政不服審査法.html#c4"><a class="cite" href="資料/条文/%E8%A1%8C%E6%94%BF%E4%B8%8D%E6%9C%8D%E5%AF%A9%E6%9F%BB%E6%B3%954%E6%9D%A1.html">行政不服審査法4条</a></a>で決まり、<b>原則は処分庁の最上級行政庁、処分庁に上級行政庁がなければ処分庁自身</b>です。処分庁自身が宛先になる場合でも、それは「訴訟」になったわけではなく、審査請求の宛先がたまたま本人だったというだけです。</p>
+  <p>そして対象は「処分」(と不作為)です。事前の区分(不利益処分か、申請に対する処分か)は問いません。営業停止命令(不利益処分)にも、営業許可の拒否(申請に対する処分)にも、同じように審査請求ができます。</p>
+</section>
+
+<footer>
+  <p>関連: <a href="用語集.html">用語集</a> ／ <a href="../行政不服審査法.html">行政不服審査法の教科書</a> ／ <a href="../行政法の全体地図.html">行政法の全体地図</a></p>
+</footer>
+</div>

@@ -1,0 +1,321 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>不服申立ての七つの軸</title>
+<style>
+:root{
+  --paper:#FAFAF7; --card:#FFFFFF; --ink:#1C1B18; --ink-sub:#55524A; --hai:#8A867C;
+  --line:#E3E1D9; --line2:#B5B1A6; --fill:#EAE7DE; --tap:#F2F0E9;
+  --seiji:#2F6E7A; --seiji-soft:#E7EFF0;
+  --shu:#C3422F; --shu-soft:#F9ECE9;
+  --midori:#2E6E4E; --midori-soft:#E9F1EC;
+  --mincho:"Hiragino Mincho ProN","Yu Mincho","YuMincho","Noto Serif JP",serif;
+  --gothic:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#17161A; --card:#211F26; --ink:#E8E6E0; --ink-sub:#B0ADA4; --hai:#7C7970;
+    --line:#33323A; --line2:#4A4854; --fill:#35333D; --tap:#2B2932;
+    --seiji:#74BDC9; --seiji-soft:#22333A;
+    --shu:#E06A57; --shu-soft:#3A2523;
+    --midori:#5FA983; --midori-soft:#20302A;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#17161A; --card:#211F26; --ink:#E8E6E0; --ink-sub:#B0ADA4; --hai:#7C7970;
+  --line:#33323A; --line2:#4A4854; --fill:#35333D; --tap:#2B2932;
+  --seiji:#74BDC9; --seiji-soft:#22333A;
+  --shu:#E06A57; --shu-soft:#3A2523;
+  --midori:#5FA983; --midori-soft:#20302A;
+}
+*{box-sizing:border-box}
+body{
+  background:var(--paper); color:var(--ink); font-family:var(--gothic);
+  margin:0; padding:0; line-height:1.75; -webkit-text-size-adjust:100%;
+  font-feature-settings:"palt" 1;
+}
+.wrap{max-width:44rem; margin:0 auto; padding:clamp(1.5rem,5vw,3.5rem) clamp(1.1rem,4vw,2rem) 5rem}
+
+header{border-bottom:2px solid var(--line2); padding-bottom:1.6rem; margin-bottom:2.4rem}
+.eyebrow{
+  font-size:.72rem; letter-spacing:.18em; color:var(--seiji);
+  font-weight:700; margin:0 0 .7rem
+}
+h1{
+  font-family:var(--mincho); font-size:clamp(1.9rem,6vw,2.6rem); line-height:1.35;
+  margin:0 0 .9rem; font-weight:600; text-wrap:balance; letter-spacing:.02em;
+}
+.lede{margin:0; color:var(--ink-sub); font-size:1rem}
+.lede strong{color:var(--ink); font-weight:700}
+
+.axis{margin:0 0 3rem; scroll-margin-top:1rem}
+.axis-head{display:flex; align-items:baseline; gap:.8rem; margin-bottom:.5rem}
+.num{
+  font-family:var(--mincho); font-size:.95rem; color:var(--seiji);
+  border:1px solid var(--seiji); border-radius:2px;
+  min-width:1.9rem; height:1.9rem; display:inline-flex; align-items:center;
+  justify-content:center; flex:none; font-variant-numeric:tabular-nums;
+}
+h2{
+  font-family:var(--mincho); font-size:clamp(1.2rem,4vw,1.45rem); margin:0;
+  font-weight:600; line-height:1.45; text-wrap:balance;
+}
+.why{
+  color:var(--ink-sub); font-size:.92rem; margin:.55rem 0 1.1rem;
+  padding-left:2.7rem;
+}
+.why b{color:var(--ink)}
+
+.scroll{overflow-x:auto; -webkit-overflow-scrolling:touch; margin-bottom:.9rem}
+table{border-collapse:collapse; width:100%; font-size:.9rem; min-width:20rem}
+caption{
+  text-align:left; font-size:.72rem; letter-spacing:.14em; color:var(--hai);
+  padding-bottom:.5rem; font-weight:700;
+}
+th,td{
+  border-bottom:1px solid var(--line); padding:.62rem .7rem; text-align:left;
+  vertical-align:top;
+}
+thead th{
+  border-bottom:1px solid var(--line2); font-size:.76rem; letter-spacing:.06em;
+  color:var(--hai); font-weight:700; white-space:nowrap;
+}
+tbody tr:last-child th,tbody tr:last-child td{border-bottom:none}
+td.art{
+  color:var(--hai); font-size:.82rem; white-space:nowrap;
+  font-variant-numeric:tabular-nums;
+}
+th[scope="row"]{font-weight:700; white-space:nowrap}
+tr.sub th[scope="row"]{padding-left:1.6rem; font-weight:400; color:var(--ink-sub)}
+tr.sub th[scope="row"]::before{content:"└ "; color:var(--hai)}
+
+.can{color:var(--midori); font-weight:700}
+.cant{color:var(--shu); font-weight:700}
+
+.note{
+  border-left:3px solid var(--seiji); background:var(--seiji-soft);
+  padding:.85rem 1rem; margin:0 0 1rem; font-size:.9rem; border-radius:0 3px 3px 0;
+}
+.note p{margin:0}
+.note p+p{margin-top:.5rem}
+.note b{font-weight:700}
+
+.spine{
+  background:var(--card); border:1px solid var(--line); border-radius:4px;
+  padding:1.1rem 1.2rem; margin:0 0 2.6rem;
+}
+.spine h3{
+  font-size:.72rem; letter-spacing:.16em; color:var(--hai); margin:0 0 .8rem; font-weight:700;
+}
+.spine ol{margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:.42rem}
+.spine li{display:flex; gap:.7rem; align-items:baseline; font-size:.92rem}
+.spine .i{
+  color:var(--seiji); font-family:var(--mincho); font-variant-numeric:tabular-nums;
+  min-width:1.2rem; flex:none;
+}
+.spine a{color:inherit; text-decoration:none; border-bottom:1px solid var(--line2)}
+.spine a:hover,.spine a:focus-visible{border-bottom-color:var(--seiji); color:var(--seiji)}
+
+footer{
+  border-top:1px solid var(--line); margin-top:3rem; padding-top:1.2rem;
+  color:var(--hai); font-size:.84rem;
+}
+a:focus-visible{outline:2px solid var(--seiji); outline-offset:3px}
+
+/* ── サイドナビ ───────────────────────────── */
+body{display:flex; align-items:flex-start}
+#nav{
+  position:sticky; top:0; flex:none; width:15rem; height:100vh; overflow-y:auto;
+  background:var(--card); border-right:1px solid var(--line2); padding:1.2rem 0 3rem;
+  font-size:.86rem; line-height:1.6;
+}
+#nav .brand{display:block; padding:0 1.1rem 1rem; font-weight:700; font-size:.95rem;
+  color:var(--ink); text-decoration:none; border-bottom:1px solid var(--line); margin-bottom:.8rem}
+#nav .brand small{display:block; font-weight:400; font-size:.72rem; color:var(--hai); margin-top:.2rem}
+#nav h4{margin:1.1rem 1.1rem .35rem; font-size:.68rem; letter-spacing:.14em; color:var(--hai); font-weight:700}
+#nav a{display:block; padding:.4rem 1.1rem; color:var(--ink-sub); text-decoration:none; border-left:3px solid transparent}
+#nav a:hover{background:var(--fill); color:var(--ink)}
+#nav a.cur{border-left-color:var(--seiji); color:var(--seiji); font-weight:700; background:var(--seiji-soft)}
+#nav .sub{padding-left:1.9rem; font-size:.82rem}
+#nav .todo{color:var(--hai); opacity:.55; pointer-events:none}
+#navbtn{display:none}
+.wrap{flex:1; min-width:0}
+@media(max-width:900px){
+  body{display:block}
+  #nav{position:fixed; left:-15rem; top:0; z-index:50; transition:left .2s; box-shadow:2px 0 12px rgba(0,0,0,.15)}
+  #nav.open{left:0}
+  #navbtn{display:flex; position:fixed; left:.7rem; top:.7rem; z-index:60; width:2.5rem; height:2.5rem;
+    align-items:center; justify-content:center; background:var(--card); border:1px solid var(--line2);
+    border-radius:6px; cursor:pointer; font-size:1.1rem; color:var(--ink); box-shadow:0 1px 4px rgba(0,0,0,.1)}
+  .wrap{padding-top:3.4rem}
+}
+</style>
+
+<div id="navbtn" onclick="document.getElementById('nav').classList.toggle('open')">☰</div>
+<nav id="nav">
+<a class="brand" href="テキスト/index.html">行政法テキスト<small>条文と判例から</small></a>
+<h4>入口</h4>
+<a href="テキスト/index.html">目次</a>
+<a href="テキスト/全体像.html">行政法の全体像</a>
+<a href="テキスト/救済の三つの道.html">救済の三つの争訟方法</a>
+<a href="テキスト/用語集.html">用語集</a>
+<a href="テキスト/義務のレベル.html">義務のレベル</a>
+<h4>第2章 行政法総論</h4>
+<a href="テキスト/02-行政法総論1-効力と瑕疵.html">行政行為の効力と瑕疵</a>
+<a class="todo">土台と行為形式</a>
+<h4>第3章 行政手続法</h4>
+<a href="テキスト/03-行政手続法1-定義と適用範囲.html">定義と適用範囲</a>
+<a href="テキスト/03-行政手続法2-申請と不利益処分.html">申請と不利益処分</a>
+<a class="todo">行政指導・意見公募</a>
+<h4>第4章 行政不服審査法</h4>
+<a href="行政不服審査法.html">行政不服審査法</a>
+<h4>第5章 行政事件訴訟法</h4>
+<a href="テキスト/05-行政事件訴訟法1-処分性.html">処分性</a>
+<a class="todo">原告適格・訴えの利益</a>
+<h4>第6章 国家賠償法</h4>
+<a class="todo">国家賠償・損失補償</a>
+<h4>第7章 地方自治法</h4>
+<a href="テキスト/07-地方自治法1-条例と規則.html">条例と規則</a>
+<a class="todo">住民の権利・議会と長</a>
+<h4>資料</h4>
+<a href="テキスト/資料/索引.html">条文・判例の全文</a>
+<a href="テキスト/論点台帳.md">論点台帳</a>
+<a href="テキスト/執筆計画.md">執筆計画</a>
+</nav>
+<div class="wrap">
+<header>
+  <p class="eyebrow">行政不服審査法</p>
+  <h1>不服申立ての七つの軸</h1>
+  <p class="lede">この法律が複雑に見えるのは、条文が多いからではありません。<strong>複数の軸が同時に動いているのを、ひとかたまりで覚えようとするから</strong>です。軸を分けると、それぞれは2つか3つで尽きます。</p>
+</header>
+
+<nav class="spine">
+  <h3>事件が進む順に並べた七つの軸</h3>
+  <ol>
+    <li><span class="i">一</span><a href="#a1">何を争うか</a></li>
+    <li><span class="i">二</span><a href="#a2">どの手続で争うか</a></li>
+    <li><span class="i">三</span><a href="#a3">いつまでに出すか</a></li>
+    <li><span class="i">四</span><a href="#a4">誰が審理するか</a></li>
+    <li><span class="i">五</span><a href="#a5">その間、処分を止められるか</a></li>
+    <li><span class="i">六</span><a href="#a6">結論は何になるか</a></li>
+    <li><span class="i">七</span><a href="#a7">そもそも教えてもらえるか</a></li>
+  </ol>
+</nav>
+
+<section class="axis" id="a1">
+  <div class="axis-head"><span class="num">一</span><h2>何を争うか</h2></div>
+  <p class="why">行政は「やった」か「やらない」かのどちらかしかありません。<b>だからこの軸は2つで尽きます。</b></p>
+  <div class="scroll"><table>
+    <thead><tr><th>争う対象</th><th>どういう状態か</th><th>条文</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">処分</th><td>行政庁が何かをした。その内容に不服がある</td><td class="art">2条</td></tr>
+      <tr><th scope="row">不作為</th><td>申請したのに、相当の期間が過ぎても何の処分もされない</td><td class="art">3条</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note"><p>この二つは<b>最後まで別々の道を進みます</b>。裁決の中身も別の条文で決まっています（処分は45〜48条、不作為は49条）。混ぜて覚えると、ここで必ず崩れます。</p></div>
+</section>
+
+<section class="axis" id="a2">
+  <div class="axis-head"><span class="num">二</span><h2>どの手続で争うか</h2></div>
+  <p class="why">原則が一つ、<b>個別の法律に定めがあるときだけ使えるものが二つ</b>。この分け方で尽きます。</p>
+  <div class="scroll"><table>
+    <thead><tr><th>手続</th><th>使えるとき</th><th>誰に出すか</th><th>条文</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">審査請求</th><td><span class="can">原則</span>。常に使える</td><td>処分庁の最上級行政庁など</td><td class="art">2条・3条<br>4条</td></tr>
+      <tr><th scope="row">再調査の請求</th><td>個別法に定めがあるときだけ</td><td>処分庁</td><td class="art">5条</td></tr>
+      <tr><th scope="row">再審査請求</th><td>個別法に定めがあるときだけ</td><td>個別法が定める行政庁</td><td class="art">6条</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note">
+    <p><b>再調査の請求は、審査請求の代わりではありません。</b>処分庁が自分で簡単に事実を調べ直す手続で、大量の課税処分のように、数が多く事実関係の確認で片づくものを想定しています。</p>
+    <p>再調査の請求をしたときは、原則としてその決定を経た後でなければ審査請求できません（5条2項本文）。ただし決定が3か月を過ぎても出ないときなどは、待たずに進めます。</p>
+  </div>
+</section>
+
+<section class="axis" id="a3">
+  <div class="axis-head"><span class="num">三</span><h2>いつまでに出すか</h2></div>
+  <p class="why">どの手続にも<b>「知った日から」と「あった日から」の二本立て</b>があり、先に来たほうで締め切られます。数字だけを覚えると取り違えます。</p>
+  <div class="scroll"><table>
+    <caption>いずれも正当な理由があるときを除く</caption>
+    <thead><tr><th>手続</th><th>知った日の翌日から</th><th>あった日の翌日から</th><th>条文</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">審査請求</th><td>3か月</td><td>1年</td><td class="art">18条</td></tr>
+      <tr><th scope="row">再調査の請求</th><td>3か月</td><td>1年</td><td class="art">54条</td></tr>
+      <tr><th scope="row">再審査請求</th><td><b>1か月</b><br><span style="color:var(--hai);font-size:.82rem">裁決があったことを知った日</span></td><td>1年<br><span style="color:var(--hai);font-size:.82rem">裁決があった日</span></td><td class="art">62条</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note"><p>再審査請求だけ<b>1か月</b>で、しかも起算点が処分ではなく<b>裁決</b>です。一度審理を経ているので、争点はもう絞れているという理屈です。</p></div>
+</section>
+
+<section class="axis" id="a4">
+  <div class="axis-head"><span class="num">四</span><h2>誰が審理するか</h2></div>
+  <p class="why">平成26年の全部改正でいちばん変わったところです。<b>処分をした側の身内が一人で決める形をやめ、三段構えにしました。</b></p>
+  <div class="scroll"><table>
+    <thead><tr><th>段</th><th>誰が</th><th>何をするか</th><th>条文</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">一段目</th><td>審理員</td><td>処分に関与していない職員が審理し、意見書を書く</td><td class="art">9条・42条</td></tr>
+      <tr><th scope="row">二段目</th><td>行政不服審査会等</td><td>行政の外にいる第三者機関に諮問する</td><td class="art">43条</td></tr>
+      <tr><th scope="row">三段目</th><td>審査庁</td><td>右の二つを踏まえて裁決する</td><td class="art">44条</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note"><p>審理員に指名できないのは、<b>その処分に関与した者</b>や審査請求人自身などです（9条2項）。「同じ役所の職員だから駄目」ではありません。求められているのは組織からの独立ではなく、その事件からの独立だからです。</p></div>
+</section>
+
+<section class="axis" id="a5">
+  <div class="axis-head"><span class="num">五</span><h2>その間、処分を止められるか</h2></div>
+  <p class="why">原則は<b>止まりません</b>。止める道が誰に開かれているかは、<b>審査庁が処分庁とどういう関係にあるか</b>で変わります。</p>
+  <div class="scroll"><table>
+    <thead><tr><th>審査庁の立場</th><th>職権で</th><th>申立てにより</th><th>条文</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">上級行政庁<br>または処分庁</th><td class="can">できる</td><td class="can">できる</td><td class="art">25条2項</td></tr>
+      <tr><th scope="row">それ以外</th><td class="cant">できない</td><td class="can">できる</td><td class="art">25条3項</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note">
+    <p><b>原則は執行不停止</b>（25条1項）。争っただけで処分が止まると、引き延ばし目的の申立てを招くからです。</p>
+    <p>ただし<b>重大な損害を避けるため緊急の必要があるとき</b>は、審査庁は執行停止をしなければなりません（25条4項）。公共の福祉に重大な影響を及ぼすおそれがあるとき、本案について理由がないとみえるときは除きます。</p>
+  </div>
+</section>
+
+<section class="axis" id="a6">
+  <div class="axis-head"><span class="num">六</span><h2>結論は何になるか</h2></div>
+  <p class="why"><b>入口が駄目か、中身が駄目か、通るか。</b>この三つで尽きます。事情裁決は四つ目ではなく、棄却の中の特殊な形です。</p>
+  <div class="scroll"><table>
+    <caption>処分についての審査請求</caption>
+    <thead><tr><th>裁決</th><th>どういうときか</th><th>条文</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">却下</th><td>入口が駄目。期間を過ぎている、対象にならない処分であるなど</td><td class="art">45条1項</td></tr>
+      <tr><th scope="row">棄却</th><td>中身に理由がない</td><td class="art">45条2項</td></tr>
+      <tr class="sub"><th scope="row">事情裁決</th><td>理由はあるが、取り消すと公共の福祉に著しい障害が生じる。<b>主文で違法または不当であることを宣言したうえで</b>棄却する</td><td class="art">45条3項</td></tr>
+      <tr><th scope="row">認容</th><td>理由がある。処分の全部または一部を取り消す、あるいは変更する</td><td class="art">46条・47条</td></tr>
+    </tbody>
+  </table></div>
+  <div class="scroll"><table>
+    <caption>不作為についての審査請求</caption>
+    <thead><tr><th>裁決</th><th>どういうときか</th><th>条文</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">却下・棄却</th><td>入口が駄目、または不作為が違法・不当とはいえない</td><td class="art">49条1項2項</td></tr>
+      <tr><th scope="row">認容</th><td><b>不作為が違法または不当である旨を宣言</b>する。さらに一定の処分をすべきものと認めるときは、その処分をすべき旨を命ずる</td><td class="art">49条3項</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note"><p><b>不利益変更の禁止</b>（48条）。審査庁は、審査請求人に不利益に処分を変更することはできません。救済を求めて申し立てたのに、かえって重くされるなら誰も使わなくなるからです。</p></div>
+</section>
+
+<section class="axis" id="a7">
+  <div class="axis-head"><span class="num">七</span><h2>そもそも教えてもらえるか</h2></div>
+  <p class="why">制度があっても知らなければ使えません。<b>教示は、知らせる義務を行政の側に負わせた規定</b>です。</p>
+  <div class="scroll"><table>
+    <thead><tr><th>場面</th><th>何をするか</th><th>条文</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">書面で処分をするとき</th><td>不服申立てができること、すべき行政庁、できる期間を<b>書面で</b>教示する</td><td class="art">82条1項</td></tr>
+      <tr><th scope="row">利害関係人から<br>求められたとき</th><td>教示する。書面で求められたときは書面で</td><td class="art">82条2項3項</td></tr>
+      <tr><th scope="row">教示しなかったとき</th><td>処分庁に不服申立書を提出できる</td><td class="art">83条</td></tr>
+      <tr><th scope="row">誤って教示したとき</th><td>その教示に従って出せば、正しい行政庁に出したものとみなす救済がある</td><td class="art">22条</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note"><p>口頭で処分をするときは教示義務がありません（82条1項かっこ書）。<b>書面で処分するなら、教示も書面でしなければなりません。</b>口頭でする処分に教示義務がないのは、口頭のやりとりの中で不服申立ての方法まで正確に伝えることが期待できないからです。</p></div>
+</section>
+
+<footer>
+  <p>条文番号はアプリの条文タブから本文を引けます（行政不服審査法51条を収録）。数字だけを覚えるのではなく、その軸が<b>何を分けるための軸なのか</b>から辿ってください。</p>
+</footer>
+</div>

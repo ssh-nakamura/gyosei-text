@@ -1,0 +1,259 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>行政法の全体地図</title>
+<style>
+:root{
+  --paper:#FAFAF7; --card:#FFFFFF; --ink:#1C1B18; --ink-sub:#55524A; --hai:#8A867C;
+  --line:#E3E1D9; --line2:#B5B1A6; --fill:#EAE7DE;
+  --seiji:#2F6E7A; --seiji-soft:#E7EFF0;
+  --shu:#C3422F; --midori:#2E6E4E;
+  --mincho:"Hiragino Mincho ProN","Yu Mincho","YuMincho","Noto Serif JP",serif;
+  --gothic:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#17161A; --card:#211F26; --ink:#E8E6E0; --ink-sub:#B0ADA4; --hai:#7C7970;
+    --line:#33323A; --line2:#4A4854; --fill:#35333D;
+    --seiji:#74BDC9; --seiji-soft:#22333A; --shu:#E06A57; --midori:#5FA983;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#17161A; --card:#211F26; --ink:#E8E6E0; --ink-sub:#B0ADA4; --hai:#7C7970;
+  --line:#33323A; --line2:#4A4854; --fill:#35333D;
+  --seiji:#74BDC9; --seiji-soft:#22333A; --shu:#E06A57; --midori:#5FA983;
+}
+*{box-sizing:border-box}
+body{background:var(--paper); color:var(--ink); font-family:var(--gothic); margin:0;
+  line-height:1.75; font-feature-settings:"palt" 1; -webkit-text-size-adjust:100%}
+.wrap{max-width:50rem; margin:0 auto; padding:clamp(1.5rem,5vw,3rem) clamp(1rem,4vw,2rem) 5rem}
+header{border-bottom:2px solid var(--line2); padding-bottom:1.5rem; margin-bottom:2rem}
+.eyebrow{font-size:.72rem; letter-spacing:.18em; color:var(--seiji); font-weight:700; margin:0 0 .7rem}
+h1{font-family:var(--mincho); font-size:clamp(1.8rem,6vw,2.4rem); line-height:1.35;
+  margin:0 0 .8rem; font-weight:600; text-wrap:balance}
+.lede{margin:0; color:var(--ink-sub); font-size:.98rem}
+.lede strong{color:var(--ink)}
+section{margin:0 0 2.8rem}
+h2{font-family:var(--mincho); font-size:clamp(1.2rem,4vw,1.45rem); margin:0 0 .35rem; font-weight:600}
+.why{color:var(--ink-sub); font-size:.92rem; margin:0 0 1rem}
+.why b{color:var(--ink)}
+figure{margin:0 0 1rem}
+figure svg{max-width:100%; height:auto; display:block}
+figcaption{font-size:.84rem; color:var(--hai); margin-top:.5rem}
+.scroll{overflow-x:auto; -webkit-overflow-scrolling:touch; margin-bottom:.9rem}
+table{border-collapse:collapse; width:100%; font-size:.88rem; min-width:34rem}
+th,td{border-bottom:1px solid var(--line); padding:.55rem .6rem; text-align:left; vertical-align:top}
+thead th{border-bottom:1px solid var(--line2); font-size:.74rem; letter-spacing:.06em;
+  color:var(--hai); font-weight:700; white-space:nowrap}
+tbody tr:last-child th,tbody tr:last-child td{border-bottom:none}
+th[scope="row"]{font-weight:700; white-space:nowrap}
+td.n{text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap}
+.none{color:var(--shu); font-weight:700}
+.ok{color:var(--midori); font-weight:700}
+.note{border-left:3px solid var(--seiji); background:var(--seiji-soft);
+  padding:.8rem 1rem; margin:0 0 1rem; font-size:.9rem; border-radius:0 3px 3px 0}
+.note p{margin:0}
+.note p+p{margin-top:.5rem}
+a{color:var(--seiji)}
+footer{border-top:1px solid var(--line); margin-top:2.5rem; padding-top:1.1rem;
+  color:var(--hai); font-size:.84rem}
+
+/* ── サイドナビ ───────────────────────────── */
+body{display:flex; align-items:flex-start}
+#nav{
+  position:sticky; top:0; flex:none; width:15rem; height:100vh; overflow-y:auto;
+  background:var(--card); border-right:1px solid var(--line2); padding:1.2rem 0 3rem;
+  font-size:.86rem; line-height:1.6;
+}
+#nav .brand{display:block; padding:0 1.1rem 1rem; font-weight:700; font-size:.95rem;
+  color:var(--ink); text-decoration:none; border-bottom:1px solid var(--line); margin-bottom:.8rem}
+#nav .brand small{display:block; font-weight:400; font-size:.72rem; color:var(--hai); margin-top:.2rem}
+#nav h4{margin:1.1rem 1.1rem .35rem; font-size:.68rem; letter-spacing:.14em; color:var(--hai); font-weight:700}
+#nav a{display:block; padding:.4rem 1.1rem; color:var(--ink-sub); text-decoration:none; border-left:3px solid transparent}
+#nav a:hover{background:var(--fill); color:var(--ink)}
+#nav a.cur{border-left-color:var(--seiji); color:var(--seiji); font-weight:700; background:var(--seiji-soft)}
+#nav .sub{padding-left:1.9rem; font-size:.82rem}
+#nav .todo{color:var(--hai); opacity:.55; pointer-events:none}
+#navbtn{display:none}
+.wrap{flex:1; min-width:0}
+@media(max-width:900px){
+  body{display:block}
+  #nav{position:fixed; left:-15rem; top:0; z-index:50; transition:left .2s; box-shadow:2px 0 12px rgba(0,0,0,.15)}
+  #nav.open{left:0}
+  #navbtn{display:flex; position:fixed; left:.7rem; top:.7rem; z-index:60; width:2.5rem; height:2.5rem;
+    align-items:center; justify-content:center; background:var(--card); border:1px solid var(--line2);
+    border-radius:6px; cursor:pointer; font-size:1.1rem; color:var(--ink); box-shadow:0 1px 4px rgba(0,0,0,.1)}
+  .wrap{padding-top:3.4rem}
+}
+</style>
+
+<div id="navbtn" onclick="document.getElementById('nav').classList.toggle('open')">☰</div>
+<nav id="nav">
+<a class="brand" href="テキスト/index.html">行政法テキスト<small>条文と判例から</small></a>
+<h4>入口</h4>
+<a href="テキスト/index.html">目次</a>
+<a href="テキスト/全体像.html">行政法の全体像</a>
+<a href="テキスト/救済の三つの道.html">救済の三つの争訟方法</a>
+<a href="テキスト/用語集.html">用語集</a>
+<a href="テキスト/義務のレベル.html">義務のレベル</a>
+<h4>第2章 行政法総論</h4>
+<a href="テキスト/02-行政法総論1-効力と瑕疵.html">行政行為の効力と瑕疵</a>
+<a class="todo">土台と行為形式</a>
+<h4>第3章 行政手続法</h4>
+<a href="テキスト/03-行政手続法1-定義と適用範囲.html">定義と適用範囲</a>
+<a href="テキスト/03-行政手続法2-申請と不利益処分.html">申請と不利益処分</a>
+<a class="todo">行政指導・意見公募</a>
+<h4>第4章 行政不服審査法</h4>
+<a href="行政不服審査法.html">行政不服審査法</a>
+<h4>第5章 行政事件訴訟法</h4>
+<a href="テキスト/05-行政事件訴訟法1-処分性.html">処分性</a>
+<a class="todo">原告適格・訴えの利益</a>
+<h4>第6章 国家賠償法</h4>
+<a class="todo">国家賠償・損失補償</a>
+<h4>第7章 地方自治法</h4>
+<a href="テキスト/07-地方自治法1-条例と規則.html">条例と規則</a>
+<a class="todo">住民の権利・議会と長</a>
+<h4>資料</h4>
+<a href="テキスト/資料/索引.html">条文・判例の全文</a>
+<a href="テキスト/論点台帳.md">論点台帳</a>
+<a href="テキスト/執筆計画.md">執筆計画</a>
+</nav>
+<div class="wrap">
+<header>
+  <p class="eyebrow">行政法 ─ 最初に持つべき1枚</p>
+  <h1>行政法の全体地図</h1>
+  <p class="lede">行政法が難しいのは、<strong>「行政がやること」の目録と「人民の側の受け皿」の目録が別々にあり、章ごとに片方ずつしか出てこない</strong>からです。この1枚は両方を並べて、線でつなぎます。矢印の太さは、その論点にどれだけの分量が割かれるかの目安です。</p>
+</header>
+
+<section>
+<h2>行政の行為形式と、人民の側の受け皿</h2>
+<p class="why">行政手続法1条が規律の対象を処分・行政指導・届出・命令等の4つに限っていること、行政事件訴訟法3条2項が取消訴訟の対象を「処分その他公権力の行使に当たる行為」としていることが、この図の骨格になっている。</p>
+<figure>
+<svg viewBox="0 0 860 1030" role="img" aria-label="行政から人民への矢印のうち処分だけが太く、手続法の帯は処分・指導・届出・命令等だけを受け止める。人民からは審査請求24問・取消訴訟28問・国家賠償15問の3つの出口が返る">
+<defs>
+  <marker id="ad" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M0 0L10 5L0 10z" fill="currentColor"/>
+  </marker>
+  <marker id="as" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M0 0L10 5L0 10z" fill="var(--seiji)"/>
+  </marker>
+</defs>
+
+<rect x="70" y="24" width="720" height="62" rx="4" fill="var(--fill)" stroke="currentColor" stroke-width="1.4"/>
+<text x="430" y="63" text-anchor="middle" font-size="25" font-weight="700" fill="currentColor" font-family="Hiragino Mincho ProN,serif">行 政</text>
+
+<!-- レーン x: 立法130 / 処分250 / 指導380 / 届出480 / 契約580 / 計画650 / 強制720 / 罰780 -->
+<g stroke="currentColor" fill="none">
+  <line x1="130" y1="86" x2="130" y2="576" stroke-width="3"   marker-end="url(#ad)"/>
+  <line x1="250" y1="86" x2="250" y2="576" stroke-width="8"   marker-end="url(#ad)"/>
+  <line x1="380" y1="86" x2="380" y2="576" stroke-width="4.5" marker-end="url(#ad)"/>
+  <line x1="580" y1="86" x2="580" y2="576" stroke-width="1.2" marker-end="url(#ad)"/>
+  <line x1="650" y1="86" x2="650" y2="576" stroke-width="1.2" stroke-dasharray="5 5" marker-end="url(#ad)"/>
+  <line x1="720" y1="86" x2="720" y2="576" stroke-width="2"   marker-end="url(#ad)"/>
+  <line x1="780" y1="86" x2="780" y2="576" stroke-width="1.2" marker-end="url(#ad)"/>
+</g>
+<line x1="480" y1="582" x2="480" y2="92" stroke="var(--seiji)" stroke-width="2" stroke-dasharray="7 5" fill="none" marker-end="url(#as)"/>
+
+<g font-size="15" font-weight="700" fill="currentColor" text-anchor="middle">
+  <text x="130" y="114">立法</text>
+  <text x="250" y="114">処分</text>
+  <text x="380" y="114">指導</text>
+  <text x="580" y="114">契約</text>
+  <text x="650" y="114">計画</text>
+  <text x="720" y="114">強制</text>
+  <text x="780" y="114">罰</text>
+</g>
+<text x="480" y="114" font-size="15" font-weight="700" fill="var(--seiji)" text-anchor="middle">届出</text>
+
+<g font-size="11" fill="var(--hai)" text-anchor="middle">
+  <text x="130" y="133">総論5問</text>
+  <text x="250" y="133">総論16問+右の3出口</text>
+  <text x="380" y="133">手続法11・総論4</text>
+  <text x="480" y="133">人民→行政</text>
+  <text x="580" y="133">1問</text>
+  <text x="650" y="133">0問</text>
+  <text x="720" y="133">3問</text>
+  <text x="780" y="133">1問</text>
+</g>
+<text x="650" y="152" font-size="10" fill="var(--hai)" text-anchor="middle">処分性でのみ</text>
+
+<!-- 手続法の帯: 立法〜届出のみ -->
+<rect x="84" y="310" width="440" height="94" rx="4" fill="var(--seiji-soft)" stroke="var(--seiji)" stroke-width="2"/>
+<text x="304" y="346" text-anchor="middle" font-size="16" font-weight="700" fill="var(--seiji)">事前の守り ─ 行政手続法（23問）</text>
+<text x="304" y="369" text-anchor="middle" font-size="12" fill="var(--seiji)">審査基準・理由の提示・聴聞/弁明・任意性・意見公募</text>
+<text x="304" y="389" text-anchor="middle" font-size="12" fill="var(--seiji)">規律するのは 処分・行政指導・届出・命令等 の4つだけ</text>
+
+<g font-size="12" font-weight="700" fill="var(--shu)" text-anchor="middle">
+  <text x="680" y="346">← 手続法の定めなし</text>
+</g>
+<g font-size="11" fill="var(--shu)" text-anchor="middle" opacity="0.9">
+  <text x="680" y="366">契約=民事で/計画=処分性なし(原則)</text>
+  <text x="680" y="384">強制=代執行法/罰=刑訴・非訟</text>
+</g>
+
+<rect x="70" y="586" width="720" height="62" rx="4" fill="var(--fill)" stroke="currentColor" stroke-width="1.4"/>
+<text x="430" y="625" text-anchor="middle" font-size="25" font-weight="700" fill="currentColor" font-family="Hiragino Mincho ProN,serif">人 民</text>
+
+<text x="430" y="692" text-anchor="middle" font-size="14" font-weight="700" fill="var(--hai)" letter-spacing="4">された後に争う ─ 3つの出口</text>
+
+<g stroke="currentColor" fill="none">
+  <line x1="200" y1="648" x2="200" y2="726" stroke-width="4"   marker-end="url(#ad)"/>
+  <line x1="430" y1="700" x2="430" y2="726" stroke-width="4.5" marker-end="url(#ad)"/>
+  <line x1="660" y1="648" x2="660" y2="726" stroke-width="2.8" marker-end="url(#ad)"/>
+</g>
+
+<rect x="96" y="732" width="208" height="128" rx="4" fill="var(--card)" stroke="currentColor" stroke-width="1.4"/>
+<text x="200" y="762" text-anchor="middle" font-size="16" font-weight="700" fill="currentColor">審査請求　24問</text>
+<text x="200" y="786" text-anchor="middle" font-size="12" fill="var(--ink-sub)">行政の中でやり直させる</text>
+<text x="200" y="806" text-anchor="middle" font-size="12" fill="var(--ink-sub)">安い・速い・不当も争える</text>
+<text x="200" y="832" text-anchor="middle" font-size="12" font-weight="700" fill="var(--seiji)">行政不服審査法 → 七つの軸へ</text>
+
+<rect x="326" y="732" width="208" height="128" rx="4" fill="var(--card)" stroke="currentColor" stroke-width="1.4"/>
+<text x="430" y="762" text-anchor="middle" font-size="16" font-weight="700" fill="currentColor">取消訴訟など　28問</text>
+<text x="430" y="786" text-anchor="middle" font-size="12" fill="var(--ink-sub)">裁判所に取り消させる</text>
+<text x="430" y="806" text-anchor="middle" font-size="12" fill="var(--ink-sub)">争えるのは違法だけ</text>
+<text x="430" y="832" text-anchor="middle" font-size="12" font-weight="700" fill="var(--seiji)">行政事件訴訟法</text>
+
+<rect x="556" y="732" width="208" height="128" rx="4" fill="var(--card)" stroke="currentColor" stroke-width="1.4"/>
+<text x="660" y="762" text-anchor="middle" font-size="16" font-weight="700" fill="currentColor">国家賠償　15問</text>
+<text x="660" y="786" text-anchor="middle" font-size="12" fill="var(--ink-sub)">行為は覆さず金で償わせる</text>
+<text x="660" y="806" text-anchor="middle" font-size="12" fill="var(--ink-sub)">処分が消えても請求できる</text>
+<text x="660" y="832" text-anchor="middle" font-size="12" font-weight="700" fill="var(--seiji)">国家賠償法</text>
+
+<polyline points="96,792 40,792 40,55 64,55" stroke="var(--seiji)" stroke-width="2" fill="none" stroke-dasharray="7 5" marker-end="url(#as)"/>
+<text x="34" y="440" text-anchor="middle" font-size="12" font-weight="700" fill="var(--seiji)" transform="rotate(-90 34 440)">行政自身に差し戻す</text>
+
+<text x="430" y="906" text-anchor="middle" font-size="13" fill="var(--ink-sub)">3つの出口が受け付けるのは主に「処分」── だから処分の矢印だけが太い</text>
+<text x="430" y="932" text-anchor="middle" font-size="13" fill="var(--ink-sub)">細い矢印(契約・計画・強制・罰)には、行政手続法の定めが置かれていない</text>
+<text x="430" y="972" text-anchor="middle" font-size="12" fill="var(--hai)">実測: 行政法エリア147問/385問。ほかに地方自治法26問(行政の側の組織法)</text>
+</svg>
+<figcaption>行政のやること(7つ)と、行政手続法が規律する範囲(4つ)。処分に分量の半分が集中し、手続法の帯は左の4本しか覆わない。右の4本は帯の外にある。</figcaption>
+</figure>
+</section>
+
+<section>
+  <h2>時間配分表 ── どこを厚く勉強するか</h2>
+  <p class="why">上の図を、学習の分量に翻訳した表です。<b>分量の目安は収録8年分の実測</b>から出しており、推測は入っていません。</p>
+  <div class="scroll"><table>
+    <thead><tr><th>テーマ</th><th>8年間</th><th>厚さ</th><th>何を押さえるか</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">行政行為(処分)</th><td class="n">総論16問</td><td class="ok">最厚</td><td>公定力・無効と取消しの違い・職権取消しと撤回・附款・裁量。総論の半分がここ</td></tr>
+      <tr><th scope="row">取消訴訟など</th><td class="n">28問</td><td class="ok">厚く</td><td>処分性(7問)・原告適格・訴えの利益・執行停止。計画や指導は「処分に当たるか」の形でここに出る</td></tr>
+      <tr><th scope="row">審査請求</th><td class="n">24問</td><td class="ok">厚く</td><td><a href="不服申立ての七つの軸.html">別紙「不服申立ての七つの軸」</a>にMECEで整理済み</td></tr>
+      <tr><th scope="row">行政手続法</th><td class="n">23問</td><td class="ok">厚く</td><td>4つの守備範囲と、それぞれの手続。行政指導は総論でなくここで出る(11問)</td></tr>
+      <tr><th scope="row">国家賠償</th><td class="n">15問</td><td>中</td><td>1条(公務員の行為)と2条(営造物)の二本柱。判例中心</td></tr>
+      <tr><th scope="row">行政立法</th><td class="n">総論5問</td><td>中</td><td>法規命令と行政規則の区別、委任の範囲(判例)</td></tr>
+      <tr><th scope="row">行政強制</th><td class="n">総論3問</td><td>薄く</td><td>代執行の4要件と手続(戒告→通知→執行)、執行罰・即時強制との区別だけ</td></tr>
+      <tr><th scope="row">行政契約</th><td class="n">1問</td><td class="none">最薄</td><td>「手続法の定めが無い」ことだけ</td></tr>
+      <tr><th scope="row">行政罰</th><td class="n">1問</td><td class="none">最薄</td><td>行政刑罰と秩序罰(過料)の区別だけ</td></tr>
+      <tr><th scope="row">行政計画</th><td class="n">0問</td><td class="none">単独では出ない</td><td>処分性の判例2つを対で: 用途地域=なし(最判昭57.4.22)、土地区画整理の事業計画=あり(最大判平20.9.10)</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note">
+    <p><b>細いところは捨てるのではなく、1点だけ覚える。</b>契約は「手続法に定めが無い」、罰は「刑罰と過料の区別」、計画は「判例2つの対」。それ以上を掘るのは28問側の時間を削るだけです。</p>
+  </div>
+</section>
+
+<footer>
+  <p>分量の目安は収録の平成30〜令和7年度・択一385問から集計しています。条文と判例の全文は<a href="テキスト/資料/索引.html">資料の索引</a>から引けます。次: <a href="不服申立ての七つの軸.html">不服申立ての七つの軸（行政不服審査法）</a></p>
+</footer>
+</div>

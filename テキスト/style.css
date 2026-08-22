@@ -1,0 +1,123 @@
+
+:root{
+  --paper:#FAFAF7; --card:#FFFFFF; --ink:#1C1B18; --ink-sub:#55524A; --hai:#8A867C;
+  --line:#E3E1D9; --line2:#B5B1A6; --fill:#EAE7DE;
+  --seiji:#2F6E7A; --seiji-soft:#E7EFF0;
+  --shu:#C3422F; --shu-soft:#F9ECE9; --midori:#2E6E4E; --midori-soft:#E9F1EC;
+  --mincho:"Hiragino Mincho ProN","Yu Mincho","YuMincho","Noto Serif JP",serif;
+  --gothic:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#17161A; --card:#211F26; --ink:#E8E6E0; --ink-sub:#B0ADA4; --hai:#7C7970;
+    --line:#33323A; --line2:#4A4854; --fill:#35333D;
+    --seiji:#74BDC9; --seiji-soft:#22333A; --shu:#E06A57; --shu-soft:#3A2523;
+    --midori:#5FA983; --midori-soft:#20302A;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#17161A; --card:#211F26; --ink:#E8E6E0; --ink-sub:#B0ADA4; --hai:#7C7970;
+  --line:#33323A; --line2:#4A4854; --fill:#35333D;
+  --seiji:#74BDC9; --seiji-soft:#22333A; --shu:#E06A57; --shu-soft:#3A2523;
+  --midori:#5FA983; --midori-soft:#20302A;
+}
+*{box-sizing:border-box}
+body{background:var(--paper); color:var(--ink); font-family:var(--gothic); margin:0;
+  line-height:1.85; font-feature-settings:"palt" 1; -webkit-text-size-adjust:100%}
+.wrap{max-width:44rem; margin:0 auto; padding:clamp(1.5rem,5vw,3rem) clamp(1rem,4vw,2rem) 6rem}
+header{border-bottom:2px solid var(--line2); padding-bottom:1.4rem; margin-bottom:2rem}
+.eyebrow{font-size:.72rem; letter-spacing:.18em; color:var(--seiji); font-weight:700; margin:0 0 .6rem}
+h1{font-family:var(--mincho); font-size:clamp(1.7rem,6vw,2.3rem); line-height:1.4; margin:0 0 .7rem; font-weight:600}
+.lede{margin:0; color:var(--ink-sub); font-size:.96rem}
+section{margin:0 0 3rem}
+h2{font-family:var(--mincho); font-size:clamp(1.2rem,4.5vw,1.5rem); margin:0 0 .8rem; font-weight:600}
+h3{font-size:1rem; margin:1.4rem 0 .4rem; font-weight:700}
+p{margin:.6rem 0}
+.scroll{overflow-x:auto; margin:.8rem 0}
+table{border-collapse:collapse; width:100%; font-size:.88rem; min-width:28rem}
+th,td{border-bottom:1px solid var(--line); padding:.55rem .6rem; text-align:left; vertical-align:top}
+thead th{border-bottom:1px solid var(--line2); font-size:.74rem; color:var(--hai); font-weight:700; white-space:nowrap}
+tbody tr:last-child th,tbody tr:last-child td{border-bottom:none}
+th[scope="row"]{font-weight:700; white-space:nowrap}
+.box{background:var(--card); border:1px solid var(--line); border-radius:5px; padding:1rem 1.2rem; margin:.9rem 0}
+.trap{border-left:3px solid var(--shu); background:var(--shu-soft); padding:.8rem 1rem; margin:.9rem 0; font-size:.9rem; border-radius:0 3px 3px 0}
+.trap b{color:var(--shu)}
+.plain{background:var(--fill); border-radius:6px; padding:.9rem 1.1rem; margin:1.1rem 0 0}
+.plain h4{margin:0 0 .35rem; font-size:.75rem; letter-spacing:.16em; color:var(--hai); font-weight:700}
+.plain p{margin:0; font-size:.94rem}
+.quote{border:1px solid var(--line); border-radius:4px; background:var(--card); margin:1rem 0; overflow:hidden}
+.quote h4{margin:0; padding:.5rem .9rem; font-size:.74rem; letter-spacing:.14em; color:var(--hai); border-bottom:1px solid var(--line); font-weight:700}
+.q{display:flex; gap:.7rem; padding:.65rem .9rem; border-bottom:1px solid var(--line); font-size:.88rem}
+.q:last-child{border-bottom:none}
+.q .m{flex:none; font-weight:700; width:2.1rem; text-align:center; border-radius:3px; height:fit-content; padding:.05rem 0; font-size:.8rem}
+.q .m.x{color:var(--shu); background:var(--shu-soft)}
+.q .m.o{color:var(--midori); background:var(--midori-soft)}
+.q .src{color:var(--hai); font-size:.78rem; white-space:nowrap}
+.q p{margin:.2rem 0 0; line-height:1.65}
+.q .why-x{color:var(--ink-sub); font-size:.84rem; margin-top:.3rem}
+code{font-family:inherit; background:var(--fill); padding:.05rem .4rem; border-radius:3px; font-size:.92em}
+a{color:var(--seiji)}
+footer{border-top:1px solid var(--line); margin-top:3rem; padding-top:1.1rem; color:var(--hai); font-size:.84rem}
+.dialog{border:1px solid var(--line); border-radius:5px; margin:.9rem 0; overflow:hidden}
+.dialog .qq{background:var(--fill); padding:.6rem 1rem; font-weight:700; font-size:.92rem}
+.dialog .aa{padding:.7rem 1rem; font-size:.92rem}
+
+figure{margin:1rem 0}
+figure svg{max-width:100%; height:auto; display:block}
+figcaption{font-size:.84rem; color:var(--hai); margin-top:.45rem}
+.note{border-left:3px solid var(--seiji); background:var(--seiji-soft);
+  padding:.8rem 1rem; margin:1rem 0; font-size:.9rem; border-radius:0 3px 3px 0}
+.note p{margin:0}
+.note p+p{margin-top:.5rem}
+
+
+/* ── 読みやすさの土台 ───────────────────────── */
+body{line-height:1.95; letter-spacing:.01em}
+.wrap{max-width:42rem}
+p{margin:.9rem 0}
+
+/* 章タイトルまわり */
+h1{letter-spacing:.02em}
+h2{font-size:clamp(1.3rem,4.6vw,1.6rem) !important; margin:3.2rem 0 1rem !important;
+  padding:.7rem 0 .7rem 0; border-top:3px solid var(--ink); border-bottom:1px solid var(--line2);
+  position:relative}
+section:first-of-type h2{margin-top:1.5rem !important}
+h3{font-size:1.08rem; margin:2.2rem 0 .7rem; padding:.35rem 0 .35rem .8rem;
+  border-left:4px solid var(--seiji); background:linear-gradient(90deg,var(--seiji-soft),transparent 70%)}
+h4.sub{font-size:1rem; margin:1.8rem 0 .5rem; color:var(--ink);
+  padding-bottom:.3rem; border-bottom:1px dashed var(--line2); display:inline-block}
+
+/* 表 */
+table{font-size:.9rem; background:var(--card)}
+thead th{background:var(--fill); padding:.6rem .7rem !important}
+th,td{padding:.7rem .75rem !important; line-height:1.75}
+tbody tr:nth-child(even){background:color-mix(in srgb, var(--fill) 35%, transparent)}
+th[scope="row"]{background:color-mix(in srgb, var(--fill) 60%, transparent)}
+.scroll{border:1px solid var(--line2); border-radius:6px; overflow:hidden; margin:1.2rem 0}
+.scroll table{border:none}
+
+/* 覚えるカード・例外枠を目立たせる */
+.memo{box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.exc{box-shadow:0 1px 4px rgba(0,0,0,.06)}
+
+/* 参照リスト */
+.refs{box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.ref:hover{background:var(--fill)}
+
+/* 節の区切りを視覚化 */
+section{padding-bottom:.5rem}
+section+section{margin-top:0}
+
+/* 目次を読みやすく */
+.toc2 ol{gap:.5rem !important; line-height:1.7}
+.toc2 a{border-bottom:1px solid var(--line2)}
+.toc2 a:hover{color:var(--seiji); border-bottom-color:var(--seiji)}
+
+/* リード文 */
+.lede{font-size:1.02rem; line-height:1.9}
+
+@media(max-width:600px){
+  .wrap{padding-left:1rem; padding-right:1rem}
+  h2{font-size:1.2rem !important}
+  table{font-size:.85rem}
+}

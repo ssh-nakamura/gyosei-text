@@ -1,0 +1,183 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>行政法の全体像</title>
+<link rel="stylesheet" href="style.css">
+<style>.cite{color:var(--seiji); text-decoration:none; border-bottom:1px dotted var(--seiji); font-weight:600}
+.cite:hover{background:var(--seiji-soft); border-bottom-style:solid}
+/* ── サイドナビ ───────────────────────────── */
+body{display:flex; align-items:flex-start}
+#nav{
+  position:sticky; top:0; flex:none; width:15rem; height:100vh; overflow-y:auto;
+  background:var(--card); border-right:1px solid var(--line2); padding:1.2rem 0 3rem;
+  font-size:.86rem; line-height:1.6;
+}
+#nav .brand{display:block; padding:0 1.1rem 1rem; font-weight:700; font-size:.95rem;
+  color:var(--ink); text-decoration:none; border-bottom:1px solid var(--line); margin-bottom:.8rem}
+#nav .brand small{display:block; font-weight:400; font-size:.72rem; color:var(--hai); margin-top:.2rem}
+#nav h4{margin:1.1rem 1.1rem .35rem; font-size:.68rem; letter-spacing:.14em; color:var(--hai); font-weight:700}
+#nav a{display:block; padding:.4rem 1.1rem; color:var(--ink-sub); text-decoration:none; border-left:3px solid transparent}
+#nav a:hover{background:var(--fill); color:var(--ink)}
+#nav a.cur{border-left-color:var(--seiji); color:var(--seiji); font-weight:700; background:var(--seiji-soft)}
+#nav .sub{padding-left:1.9rem; font-size:.82rem}
+#nav .todo{color:var(--hai); opacity:.55; pointer-events:none}
+#navbtn{display:none}
+.wrap{flex:1; min-width:0}
+@media(max-width:900px){
+  body{display:block}
+  #nav{position:fixed; left:-15rem; top:0; z-index:50; transition:left .2s; box-shadow:2px 0 12px rgba(0,0,0,.15)}
+  #nav.open{left:0}
+  #navbtn{display:flex; position:fixed; left:.7rem; top:.7rem; z-index:60; width:2.5rem; height:2.5rem;
+    align-items:center; justify-content:center; background:var(--card); border:1px solid var(--line2);
+    border-radius:6px; cursor:pointer; font-size:1.1rem; color:var(--ink); box-shadow:0 1px 4px rgba(0,0,0,.1)}
+  .wrap{padding-top:3.4rem}
+}
+</style>
+
+<style>
+.stage{border:1px solid var(--line); border-radius:6px; margin:0 0 1.6rem; overflow:hidden; background:var(--card)}
+.stage>h2{font-family:var(--mincho); font-size:1.3rem; margin:0; padding:.85rem 1.1rem; background:var(--fill);
+  border-bottom:1px solid var(--line2); font-weight:600}
+.stage>h2 .n{color:var(--seiji); margin-right:.6rem}
+.stage>h2 .cnt{float:right; font-family:var(--gothic); font-size:.8rem; color:var(--hai); font-weight:700; padding-top:.35rem}
+.stage .lead{margin:0; padding:.9rem 1.1rem; font-size:.93rem; color:var(--ink-sub); border-bottom:1px solid var(--line)}
+.stage .lead b{color:var(--ink)}
+.topic{display:flex; gap:.9rem; padding:.7rem 1.1rem; border-bottom:1px solid var(--line); font-size:.9rem; align-items:baseline}
+.topic:last-child{border-bottom:none}
+.topic .num{flex:none; width:2.6rem; text-align:right; font-variant-numeric:tabular-nums; font-weight:700; color:var(--seiji)}
+.topic .nm{flex:1}
+.topic .nm .sub{display:block; color:var(--ink-sub); font-size:.85rem; margin-top:.15rem}
+.topic .law{flex:none; color:var(--hai); font-size:.78rem; white-space:nowrap}
+.hot{background:var(--seiji-soft)}
+.map{background:var(--fill); border-radius:6px; padding:1rem 1.2rem; margin:0 0 2rem; font-size:.92rem}
+.map p{margin:.45rem 0}
+</style>
+<div id="navbtn" onclick="document.getElementById('nav').classList.toggle('open')">☰</div>
+<nav id="nav">
+<a class="brand" href="index.html">行政法テキスト<small>条文と判例から</small></a>
+<h4>入口</h4>
+<a href="index.html">目次</a>
+<a href="全体像.html" class="cur">行政法の全体像</a>
+<a href="救済の三つの道.html">救済の三つの争訟方法</a>
+<a href="用語集.html">用語集</a>
+<a href="義務のレベル.html">義務のレベル</a>
+<h4>第2章 行政法総論</h4>
+<a href="02-行政法総論1-効力と瑕疵.html">行政行為の効力と瑕疵</a>
+<a class="todo">土台と行為形式</a>
+<h4>第3章 行政手続法</h4>
+<a href="03-行政手続法1-定義と適用範囲.html">定義と適用範囲</a>
+<a href="03-行政手続法2-申請と不利益処分.html">申請と不利益処分</a>
+<a class="todo">行政指導・意見公募</a>
+<h4>第4章 行政不服審査法</h4>
+<a href="../行政不服審査法.html">行政不服審査法</a>
+<h4>第5章 行政事件訴訟法</h4>
+<a href="05-行政事件訴訟法1-処分性.html">処分性</a>
+<a class="todo">原告適格・訴えの利益</a>
+<h4>第6章 国家賠償法</h4>
+<a href="06-国家賠償法1-国家賠償.html">国家賠償</a>
+<a class="todo">損失補償</a>
+<h4>第7章 地方自治法</h4>
+<a href="07-地方自治法1-条例と規則.html">条例と規則</a>
+<a class="todo">住民の権利・議会と長</a>
+<h4>資料</h4>
+<a href="資料/索引.html">条文・判例の全文</a>
+<a href="論点台帳.md">論点台帳</a>
+<a href="執筆計画.md">執筆計画</a>
+</nav>
+<div class="wrap">
+<header>
+  <p class="eyebrow">行政法の全体像 ── 一つの流れとして</p>
+  <h1>行政法の全体像</h1>
+  <p class="lede">行政法は6つの科目に分かれていますが、中身は<strong>「行政が動く → 人がそれを受ける → 不服なら争う → 決着する」という一本の物語</strong>です。この順に7つの段を置き、各段に何問出ているかを添えました。数字は当アプリ収録8年分(平成30〜令和7年度)の実測です。</p>
+</header>
+
+<div class="map">
+  <p><b>物語の骨格。</b>役所が動くには法律の根拠が要る(第1段)。動き方には型がある(第2段)。型の中心が行政行為＝処分で、いったん出ると独特の力を持つ(第3段)。処分を出す前には守るべき手続がある(第4段)。出た処分に傷があれば争える(第5段)。争う場所は行政の中(第5段)と裁判所(第6段)。効力を消せなくても金銭で償わせる道がある(第7段)。</p>
+  <p><b>地方自治法だけ位置づけが違います。</b>上の物語の主人公である「行政」が、国ではなく地方公共団体の場合の組織と権限の法です。26問と大きいので独立して扱います。</p>
+</div>
+
+<div class="note">
+  <p><b>この地図の「原則」には、いずれも例外がある。</b>各章で扱うが、地図の段階で対応関係だけ示しておく。</p>
+  <p>第4段の行政手続法は処分・行政指導・届出・命令等の4つを規律するのが原則だが、<b>3条・4条に広い適用除外</b>があり、地方公共団体の機関がする行為は条例・規則に根拠を置くものが外れる。</p>
+  <p>第5段と第6段は<b>自由選択が原則</b>だが（行政事件訴訟法8条1項）、個別の法律が審査請求前置を定めていればその順序に従う。ただし前置とされていても、審査請求から3か月を経て裁決がないときなどは裁決を待たずに出訴できる（同条2項）。</p>
+  <p>第6段の取消訴訟は出訴期間内に提起するのが原則だが（行政事件訴訟法14条）、<b>正当な理由があるときは期間経過後でも提起できる</b>。処分が無効であれば、そもそも出訴期間の制限を受けない。</p>
+  <p>第7段の国家賠償は、処分を取り消してもらわなくても請求できるのが原則である。この点に例外はない。</p>
+</div>
+<div class="stage">
+  <h2><span class="n">第1段</span>行政が動くための土台<span class="cnt">総論のうち約8問</span></h2>
+  <p class="lead">「行政は勝手に動けない」を出発点に置く段。<b>ここを理解しないと、以降の全ての制度が「なぜそんな面倒をするのか」分からなくなります。</b>もっとも、法律の根拠が必要とされる範囲には争いがあり、侵害留保説では国民の権利を制限し義務を課す作用に限られます。</p>
+  <div class="topic"><span class="num">1</span><span class="nm">法律による行政の原理<span class="sub">国民の権利を制限するなら法律の根拠が要る(法律の留保)。行政法という科目そのものの存在理由</span></span><span class="law">総論</span></div>
+  <div class="topic"><span class="num">2</span><span class="nm">法の一般原則<span class="sub">法律に書いていなくても行政を縛るもの。信義則・権利濫用の禁止・平等原則・比例原則</span></span><span class="law">総論 2問</span></div>
+  <div class="topic"><span class="num">3</span><span class="nm">行政組織<span class="sub">行政主体(国・県)と行政庁(大臣・知事)の区別。権限の委任・専決。誰が処分をし、誰が責任を負うか</span></span><span class="law">総論 2問</span></div>
+  <div class="topic"><span class="num">4</span><span class="nm">行政上の法律関係<span class="sub">行政の活動に民法の規定が適用されるか。公物(道路・河川)の法律関係</span></span><span class="law">総論 3問</span></div>
+</div>
+
+<div class="stage">
+  <h2><span class="n">第2段</span>行政の動き方 ── 行為形式<span class="cnt">総論のうち約9問</span></h2>
+  <p class="lead">行政が国民に働きかける手段の目録。<b>どの形式かで、事前の手続も事後の争い方も変わります。</b>だから最初に形式を見分ける。ただし形式の名前と法的性質は一致しないことがあり、条文が「取消し」と書いていても講学上は撤回である場合など、名前で判断してはいけません。</p>
+  <div class="topic"><span class="num">5</span><span class="nm">行政立法<span class="sub">法規命令(政省令・国民を拘束)と行政規則(通達・内部のルール)。委任の範囲を超えた命令は無効</span></span><span class="law">総論 4問</span></div>
+  <div class="topic hot"><span class="num">6</span><span class="nm">行政行為（＝処分）<span class="sub">個別・具体的に権利義務を決める。<b>行政法の中心概念。</b>許可・認可・特許の分類、附款(条件・期限・負担)</span></span><span class="law">総論 2問+</span></div>
+  <div class="topic"><span class="num">7</span><span class="nm">行政裁量<span class="sub">法律が行政に判断の幅を与えている場合。裁判所はどこまで踏み込めるか(逸脱・濫用のみ審査)</span></span><span class="law">総論 2問</span></div>
+  <div class="topic"><span class="num">8</span><span class="nm">行政指導・行政契約・行政計画<span class="sub">処分ではない働きかけ。処分でないので原則として取消訴訟で争えない</span></span><span class="law">総論 1問+手続法11問</span></div>
+  <div class="topic"><span class="num">9</span><span class="nm">行政強制・行政罰<span class="sub">従わない者への実力行使(代執行・即時強制)と制裁(行政刑罰・秩序罰)。行政調査もここ</span></span><span class="law">総論 4問</span></div>
+</div>
+
+<div class="stage">
+  <h2><span class="n">第3段</span>処分が持つ力と、その傷<span class="cnt">総論 5問(最大グループ)</span></h2>
+  <p class="lead">処分がいったん世に出た後の話。<b>行政法総論の中心にある領域です。</b>力の話と傷の話は表裏一体で、どちらも「処分を前提として形成された法律関係を守る」という一点から導かれます。</p>
+  <div class="topic hot"><span class="num">10</span><span class="nm">行政行為の効力<span class="sub">公定力(取り消されるまで有効)・不可争力(期間経過で争えない)・不可変更力(裁決は出した側も覆せない)</span></span><span class="law">総論</span></div>
+  <div class="topic hot"><span class="num">11</span><span class="nm">行政行為の瑕疵<span class="sub">無効(重大かつ明白)と取消し。職権取消しと撤回の区別。瑕疵の治癒・違法行為の転換・違法性の承継</span></span><span class="law">総論</span></div>
+</div>
+
+<div class="stage">
+  <h2><span class="n">第4段</span>処分を出す前の手続<span class="cnt">行政手続法 23問</span></h2>
+  <p class="lead">事後の救済だけでは遅い。<b>処分が出る前に、言い分を聞き、基準を示させる。</b>行政手続法は処分・行政指導・届出・命令等の4つを規律します(行政契約・行政計画・行政強制には及びません)。ただしこの4つであっても、3条の適用除外に当たる処分・行政指導には手続の規定が及ばず、地方公共団体の機関がする行為も条例・規則に根拠を置くものは除かれます(3条3項)。</p>
+  <div class="topic hot"><span class="num">12</span><span class="nm">申請に対する処分<span class="sub">審査基準の設定・公表(義務)、標準処理期間、審査・応答義務、拒否するときの理由の提示</span></span><span class="law">手続法 5問</span></div>
+  <div class="topic hot"><span class="num">13</span><span class="nm">不利益処分<span class="sub">処分基準(努力義務)、聴聞と弁明の機会の使い分け、理由の提示。申請の拒否はこちらに属さない</span></span><span class="law">手続法 6問</span></div>
+  <div class="topic hot"><span class="num">14</span><span class="nm">定義と適用範囲<span class="sub">2条の定義群と3条の適用除外。地方公共団体の条例に基づく処分には適用されない</span></span><span class="law">手続法 6問</span></div>
+  <div class="topic"><span class="num">15</span><span class="nm">行政指導・届出・意見公募手続<span class="sub">任意性の担保、不利益取扱いの禁止、中止等の求め。届出は到達で完了。命令等のパブリックコメント</span></span><span class="law">手続法 4問</span></div>
+</div>
+
+<div class="stage">
+  <h2><span class="n">第5段</span>行政の中で争う<span class="cnt">行政不服審査法 24問</span></h2>
+  <p class="lead">裁判所に行く前に、<b>行政自身にやり直させる</b>道。安く速く、違法だけでなく<b>不当</b>まで争えるのが持ち味です。もっとも国や地方公共団体が固有の資格で処分の名あて人となる場合には、この法律は適用されません(7条2項)。</p>
+  <div class="topic hot"><span class="num">16</span><span class="nm">審査請求の入口<span class="sub">対象(処分・不作為)、請求人適格、宛先(4条)、期間(3か月/1年)、書面主義、経由、取下げ</span></span><span class="law">不服審査 10問</span></div>
+  <div class="topic"><span class="num">17</span><span class="nm">審理の担い手と手続<span class="sub">審理員(処分に関与していない職員)→行政不服審査会等への諮問→審査庁の裁決という三段構え</span></span><span class="law">不服審査 1問</span></div>
+  <div class="topic"><span class="num">18</span><span class="nm">執行停止<span class="sub">原則は執行不停止。審査庁が上級庁・処分庁かで職権の可否が変わる。義務的執行停止の要件</span></span><span class="law">不服審査</span></div>
+  <div class="topic"><span class="num">19</span><span class="nm">裁決と教示<span class="sub">却下・棄却(＋事情裁決)・認容。形成力と拘束力。不利益変更の禁止。書面処分には書面で教示</span></span><span class="law">不服審査 4問</span></div>
+  <div class="topic hot"><span class="num">20</span><span class="nm">再調査の請求・再審査請求<span class="sub">個別法に定めがあるときだけ使える。前に挟むのが再調査、後ろに続けるのが再審査</span></span><span class="law">不服審査 4問</span></div>
+</div>
+
+<div class="stage">
+  <h2><span class="n">第6段</span>裁判所で争う<span class="cnt">行政事件訴訟法 28問</span></h2>
+  <p class="lead">行政から独立した裁判所が<b>違法かどうか</b>を裁く(不当は守備範囲外)。取消訴訟が中心で、<b>訴訟要件 → 本案 → 判決</b>の一本道を進みます。出訴期間内に提起するのが原則ですが(14条)、正当な理由があるときは期間経過後でも提起でき、処分が無効であればそもそも期間の制限を受けません。</p>
+  <div class="topic hot"><span class="num">21</span><span class="nm">訴訟要件 ── 処分性<span class="sub">争う相手がそもそも「処分」か。用途地域の指定は否定、土地区画整理の事業計画は肯定。<b>取消訴訟の入口</b></span></span><span class="law">行訴 6問</span></div>
+  <div class="topic"><span class="num">22</span><span class="nm">訴訟要件 ── 原告適格・訴えの利益<span class="sub">訴えてよい立場か。いま勝つ意味が残っているか。処分の効果が消えた後の「回復すべき法律上の利益」</span></span><span class="law">行訴 6問</span></div>
+  <div class="topic hot"><span class="num">23</span><span class="nm">訴訟要件 ── 出訴期間・被告適格・管轄<span class="sub">知った日から6か月/処分の日から1年。被告は処分庁が所属する行政主体。被告を誤っても変更の許可がある</span></span><span class="law">行訴 6問</span></div>
+  <div class="topic"><span class="num">24</span><span class="nm">本案の審理と執行停止<span class="sub">職権証拠調べ、違法性の承継、執行停止(内閣総理大臣の異議あり)</span></span><span class="law">行訴 1問</span></div>
+  <div class="topic"><span class="num">25</span><span class="nm">判決とその効力<span class="sub">却下・棄却(＋事情判決)・認容。形成力・第三者効・拘束力。拒否処分取消し後の行政庁の義務</span></span><span class="law">行訴 3問</span></div>
+  <div class="topic"><span class="num">26</span><span class="nm">取消訴訟以外の訴訟<span class="sub">無効等確認・不作為違法確認・義務付け・差止め(いずれも抗告訴訟)。当事者訴訟。民衆訴訟・機関訴訟</span></span><span class="law">行訴 4問</span></div>
+</div>
+
+<div class="stage">
+  <h2><span class="n">第7段</span>金銭で償わせる<span class="cnt">国家賠償法 15問</span></h2>
+  <p class="lead">処分を消せなくても、受けた損害の賠償は求められる。<b>取消訴訟と違い、処分を先に取り消してもらう必要はありません。</b>判例が7割を占める科目です。ただし処分が違法であることと国家賠償法1条1項の適用上違法であることは別であり、取り消されたからといって直ちに賠償責任が生じるわけではありません。</p>
+  <div class="topic hot"><span class="num">27</span><span class="nm"><a class="cite" href="資料/条文/%E5%9B%BD%E5%AE%B6%E8%B3%A0%E5%84%9F%E6%B3%951%E6%9D%A1.html">国家賠償法1条</a><span class="sub">公権力の行使に当たる公務員の故意過失による違法。違法性の判断枠組み、責任の性質、公務員個人の責任、求償</span></span><span class="law">国賠 11問</span></div>
+  <div class="topic"><span class="num">28</span><span class="nm"><a class="cite" href="資料/条文/%E5%9B%BD%E5%AE%B6%E8%B3%A0%E5%84%9F%E6%B3%952%E6%9D%A1.html">国家賠償法2条</a><span class="sub">営造物の設置管理の瑕疵。道路・河川で判断枠組みが違う。供用関連瑕疵(空港・道路の騒音)</span></span><span class="law">国賠 2問</span></div>
+  <div class="topic"><span class="num">29</span><span class="nm">3条・4条と損失補償<span class="sub">費用負担者の責任、失火責任法の適用。適法な行為による損失の補償(<a class="cite" href="資料/条文/%E6%86%B2%E6%B3%9529%E6%9D%A1.html">憲法29条</a>3項)</span></span><span class="law">国賠 2問</span></div>
+</div>
+
+<div class="stage">
+  <h2><span class="n">別枠</span>地方自治法<span class="cnt">26問</span></h2>
+  <p class="lead">物語の主人公である「行政」が地方公共団体である場合の組織法。上の7段とは軸が違うので独立させます。<b>条例と住民の権利が二本の柱</b>です。</p>
+  <div class="topic hot"><span class="num">30</span><span class="nm">条例と規則<span class="sub">条例で定めるべき事項、罰則の限度、法律との抵触(徳島市公安条例事件)、長の規則との違い</span></span><span class="law">自治 6問</span></div>
+  <div class="topic hot"><span class="num">31</span><span class="nm">住民の権利<span class="sub">住民監査請求と住民訴訟(監査請求前置)、直接請求(署名数・請求先)、外国籍住民の権利</span></span><span class="law">自治 7問</span></div>
+  <div class="topic"><span class="num">32</span><span class="nm">議会と長<span class="sub">議会の招集・議決、再議・不信任と解散、専決処分、委員会・監査委員</span></span><span class="law">自治 8問</span></div>
+  <div class="topic"><span class="num">33</span><span class="nm">事務区分と国の関与<span class="sub">自治事務と法定受託事務、是正の要求と是正の指示、関与法定主義</span></span><span class="law">自治 3問</span></div>
+  <div class="topic"><span class="num">34</span><span class="nm">団体の種類・公の施設・事務の共同処理<span class="sub">普通/特別地方公共団体、特別区、公の施設と指定管理者、連携協約・協議会</span></span><span class="law">自治 2問</span></div>
+</div>
+
+<footer>
+  <p>数字は当アプリ収録8年分・行政法147問の実測(<a href="論点台帳.md">論点台帳</a>に全問の割付あり)。青地は分量がとくに厚い領域です。<br>
+  執筆済み: <a href="02-行政法総論1-効力と瑕疵.html">10・11(効力と瑕疵)</a> ／ <a href="../行政不服審査法.html">16〜20(不服審査)</a> ／ <a href="救済の三つの道.html">第5段〜第7段の関係図</a> ／ <a href="用語集.html">用語集</a></p>
+</footer>
+</div>

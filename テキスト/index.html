@@ -1,0 +1,180 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>行政書士 行政法テキスト</title>
+<link rel="stylesheet" href="style.css">
+<style>.cite{color:var(--seiji); text-decoration:none; border-bottom:1px dotted var(--seiji); font-weight:600}
+.cite:hover{background:var(--seiji-soft); border-bottom-style:solid}
+/* ── サイドナビ ───────────────────────────── */
+body{display:flex; align-items:flex-start}
+#nav{
+  position:sticky; top:0; flex:none; width:15rem; height:100vh; overflow-y:auto;
+  background:var(--card); border-right:1px solid var(--line2); padding:1.2rem 0 3rem;
+  font-size:.86rem; line-height:1.6;
+}
+#nav .brand{display:block; padding:0 1.1rem 1rem; font-weight:700; font-size:.95rem;
+  color:var(--ink); text-decoration:none; border-bottom:1px solid var(--line); margin-bottom:.8rem}
+#nav .brand small{display:block; font-weight:400; font-size:.72rem; color:var(--hai); margin-top:.2rem}
+#nav h4{margin:1.1rem 1.1rem .35rem; font-size:.68rem; letter-spacing:.14em; color:var(--hai); font-weight:700}
+#nav a{display:block; padding:.4rem 1.1rem; color:var(--ink-sub); text-decoration:none; border-left:3px solid transparent}
+#nav a:hover{background:var(--fill); color:var(--ink)}
+#nav a.cur{border-left-color:var(--seiji); color:var(--seiji); font-weight:700; background:var(--seiji-soft)}
+#nav .sub{padding-left:1.9rem; font-size:.82rem}
+#nav .todo{color:var(--hai); opacity:.55; pointer-events:none}
+#navbtn{display:none}
+.wrap{flex:1; min-width:0}
+@media(max-width:900px){
+  body{display:block}
+  #nav{position:fixed; left:-15rem; top:0; z-index:50; transition:left .2s; box-shadow:2px 0 12px rgba(0,0,0,.15)}
+  #nav.open{left:0}
+  #navbtn{display:flex; position:fixed; left:.7rem; top:.7rem; z-index:60; width:2.5rem; height:2.5rem;
+    align-items:center; justify-content:center; background:var(--card); border:1px solid var(--line2);
+    border-radius:6px; cursor:pointer; font-size:1.1rem; color:var(--ink); box-shadow:0 1px 4px rgba(0,0,0,.1)}
+  .wrap{padding-top:3.4rem}
+}
+</style>
+
+<style>
+.part{margin:0 0 2.2rem}
+.part>h2{font-family:var(--mincho); font-size:1.25rem; margin:0 0 .2rem; font-weight:600;
+  border-bottom:2px solid var(--line2); padding-bottom:.4rem}
+.part>.pd{color:var(--hai); font-size:.86rem; margin:.35rem 0 .8rem}
+.row{display:flex; gap:.9rem; padding:.75rem .2rem; border-bottom:1px solid var(--line); align-items:baseline}
+.row:last-child{border-bottom:none}
+.row .ch{flex:none; width:3.2rem; color:var(--seiji); font-weight:700; font-variant-numeric:tabular-nums; font-size:.9rem}
+.row .tt{flex:1}
+.row .tt a{font-weight:700; font-size:1rem}
+.row .tt .d{display:block; color:var(--ink-sub); font-size:.86rem; margin-top:.2rem}
+.row .st{flex:none; font-size:.74rem; font-weight:700; padding:.1rem .5rem; border-radius:3px; white-space:nowrap}
+.done{color:var(--midori); background:var(--midori-soft)}
+.wip{color:var(--hai); background:var(--fill)}
+.row.pending .tt a{color:var(--hai); pointer-events:none; text-decoration:none}
+.howstart{background:var(--card); border:1px solid var(--line); border-radius:5px; padding:1rem 1.2rem; margin:0 0 2rem; font-size:.93rem}
+.howstart p{margin:.4rem 0}
+</style>
+<div id="navbtn" onclick="document.getElementById('nav').classList.toggle('open')">☰</div>
+<nav id="nav">
+<a class="brand" href="index.html">行政法テキスト<small>条文と判例から</small></a>
+<h4>入口</h4>
+<a href="index.html" class="cur">目次</a>
+<a href="全体像.html">行政法の全体像</a>
+<a href="救済の三つの道.html">救済の三つの争訟方法</a>
+<a href="用語集.html">用語集</a>
+<a href="義務のレベル.html">義務のレベル</a>
+<h4>第2章 行政法総論</h4>
+<a href="02-行政法総論1-効力と瑕疵.html">行政行為の効力と瑕疵</a>
+<a class="todo">土台と行為形式</a>
+<h4>第3章 行政手続法</h4>
+<a href="03-行政手続法1-定義と適用範囲.html">定義と適用範囲</a>
+<a href="03-行政手続法2-申請と不利益処分.html">申請と不利益処分</a>
+<a class="todo">行政指導・意見公募</a>
+<h4>第4章 行政不服審査法</h4>
+<a href="../行政不服審査法.html">行政不服審査法</a>
+<h4>第5章 行政事件訴訟法</h4>
+<a href="05-行政事件訴訟法1-処分性.html">処分性</a>
+<a class="todo">原告適格・訴えの利益</a>
+<h4>第6章 国家賠償法</h4>
+<a href="06-国家賠償法1-国家賠償.html">国家賠償</a>
+<a class="todo">損失補償</a>
+<h4>第7章 地方自治法</h4>
+<a href="07-地方自治法1-条例と規則.html">条例と規則</a>
+<a class="todo">住民の権利・議会と長</a>
+<h4>資料</h4>
+<a href="資料/索引.html">条文・判例の全文</a>
+<a href="論点台帳.md">論点台帳</a>
+<a href="執筆計画.md">執筆計画</a>
+</nav>
+<div class="wrap">
+<header>
+  <p class="eyebrow">行政書士試験 ── 条文と判例から</p>
+  <h1>行政法テキスト 目次</h1>
+  <p class="lede">条文と判例の原典だけを材料に組んだ行政法のテキストです。条文は e-Gov の現行法令から機械取得したものを、判例は収録データのうち確度の高いものだけを引いています。</p>
+</header>
+
+<div class="howstart">
+  <p><b>初めての人はこの順に。</b>①「行政法の全体像」で地図を持つ → ②「救済の三つの争訟方法」で争い方の骨格をつかむ → ③各章へ。分からない語が出たら「用語集」を引く。</p>
+  <p><b>直前期は</b>各章の【覚える】カードと、各節末の「例外・限界」だけを回してください。</p>
+</div>
+
+<div class="part">
+  <h2>入口 ── まずこの3つ</h2>
+  <p class="pd">どこに何があるかを先に持つための3枚</p>
+  <div class="row"><span class="ch">地図</span><span class="tt"><a href="全体像.html">行政法の全体像</a>
+    <span class="d">7段34項目。行政が動く→人が受ける→争う→決着する、という一本の流れとして並べています</span></span><span class="st done">完成</span></div>
+  <div class="row"><span class="ch">骨格</span><span class="tt"><a href="救済の三つの道.html">救済の三つの争訟方法</a>
+    <span class="d">審査請求・取消訴訟・国家賠償の関係を1枚に。自由選択の原則と審査請求前置の例外</span></span><span class="st done">完成</span></div>
+  <div class="row"><span class="ch">読み方</span><span class="tt"><a href="義務のレベル.html">義務のレベル</a>
+    <span class="d">「しなければならない／できる／努める」の3段階。3つの原理から導く方式で、表は確かめ用です</span></span><span class="st done">完成</span></div>
+  <div class="row"><span class="ch">辞書</span><span class="tt"><a href="用語集.html">用語集</a>
+    <span class="d">7ジャンル21項目。定義→押さえどころ→取り違えやすい点の3段。見出しをクリックで開きます</span></span><span class="st done">完成</span></div>
+</div>
+
+<div class="part">
+  <h2>第1部 行政法総論 <span style="font-weight:400;font-size:.8rem;color:var(--hai)">31問</span></h2>
+  <p class="pd">行政が動くための土台と、動き方の型。処分の効力と瑕疵が最大の山</p>
+  <div class="row pending"><span class="ch">2-0</span><span class="tt"><a>土台と行為形式</a>
+    <span class="d">法律による行政・法の一般原則・行政組織・行政立法・裁量・強制・罰</span></span><span class="st wip">未着手</span></div>
+  <div class="row"><span class="ch">2-1</span><span class="tt"><a href="02-行政法総論1-効力と瑕疵.html">行政行為の効力と瑕疵</a>
+    <span class="d">公定力と限界／無効の判断基準／職権取消しと撤回／治癒・転換・違法性の承継</span></span><span class="st done">完成</span></div>
+</div>
+
+<div class="part">
+  <h2>第2部 行政手続法 <span style="font-weight:400;font-size:.8rem;color:var(--hai)">23問</span></h2>
+  <p class="pd">処分が出る前の守り。規律するのは処分・行政指導・届出・命令等の4つだけ</p>
+  <div class="row"><span class="ch">3-1</span><span class="tt"><a href="03-行政手続法1-定義と適用範囲.html">定義と適用範囲</a>
+    <span class="d">この法律の守備範囲／法令・申請・不利益処分・届出・行政指導・命令等の定義／適用除外と固有の資格</span></span><span class="st done">完成</span></div>
+  <div class="row"><span class="ch">3-2</span><span class="tt"><a href="03-行政手続法2-申請と不利益処分.html">申請に対する処分と不利益処分</a>
+    <span class="d">審査基準と標準処理期間／審査・応答と補正／拒否するときの理由の提示／処分基準／聴聞と弁明の使い分け／聴聞の通知・主宰者・文書閲覧・調書と報告書／弁明の方式と準用</span></span><span class="st done">完成</span></div>
+  <div class="row pending"><span class="ch">3-3</span><span class="tt"><a>行政指導・意見公募手続</a>
+    <span class="d">行政指導の方式と限界／中止等の求めと処分等の求め／意見公募手続の実施義務と適用除外</span></span><span class="st wip">未着手</span></div>
+</div>
+
+<div class="part">
+  <h2>第3部 行政不服審査法 <span style="font-weight:400;font-size:.8rem;color:var(--hai)">24問</span></h2>
+  <p class="pd">行政の中で争う方法。判例による解釈がほとんど働かず、条文の枝分かれと数字でできています</p>
+  <div class="row"><span class="ch">4</span><span class="tt"><a href="../行政不服審査法.html">行政不服審査法の教科書</a>
+    <span class="d">全8章。何を誰が争えるか／再調査・再審査／宛先と期間／審理員／執行停止／裁決／教示と行訴法との異同</span></span><span class="st done">完成</span></div>
+</div>
+
+<div class="part">
+  <h2>第4部 行政事件訴訟法 <span style="font-weight:400;font-size:.8rem;color:var(--hai)">28問</span></h2>
+  <p class="pd">裁判所で争う方法。訴訟要件→本案→判決という一本道で、その入口が処分性です</p>
+  <div class="row pending"><span class="ch">5</span><span class="tt"><a>行政事件訴訟法</a>
+    <span class="d">処分性／原告適格／訴えの利益／出訴期間・被告適格／執行停止／判決の効力／取消訴訟以外</span></span><span class="st wip">未着手</span></div>
+</div>
+
+<div class="part">
+  <h2>第5部 国家賠償法・損失補償 <span style="font-weight:400;font-size:.8rem;color:var(--hai)">15問</span></h2>
+  <p class="pd">処分の効力は消さず、受けた損害を金銭で埋め合わせる道。条文が6か条しかなく、中身のほとんどを判例が作っています</p>
+  <div class="row"><span class="ch">6-1</span><span class="tt"><a href="06-国家賠償法1-国家賠償.html">国家賠償</a>
+    <span class="d">憲法17条と6か条の骨格／1条の六つの要件／公権力の行使の範囲／外形標準説／取消訴訟の違法との違い／規制権限の不行使／個人責任と求償／営造物責任と供用関連瑕疵／費用負担者／民法の適用</span></span><span class="st done">完成</span></div>
+  <div class="row pending"><span class="ch">6-2</span><span class="tt"><a>損失補償</a>
+    <span class="d">憲法29条3項／正当な補償の意味／補償が必要になる場合／損失補償と国家賠償の谷間</span></span><span class="st wip">未着手</span></div>
+</div>
+
+<div class="part">
+  <h2>第6部 地方自治法 <span style="font-weight:400;font-size:.8rem;color:var(--hai)">26問</span></h2>
+  <p class="pd">主人公が地方公共団体の場合の組織法。条例と住民の権利が二本の柱です</p>
+  <div class="row"><span class="ch">7-1</span><span class="tt"><a href="07-地方自治法1-条例と規則.html">条例と規則</a>
+    <span class="d">条例制定権の根拠／法律の範囲内の意味と徳島市公安条例事件／条例事項と公の施設／罰則の上限と過料／長の規則／条例と憲法</span></span><span class="st done">完成</span></div>
+  <div class="row pending"><span class="ch">7-2</span><span class="tt"><a>住民の権利・議会と長・事務区分</a>
+    <span class="d">住民監査請求と住民訴訟／直接請求／議会と長の関係／自治事務と法定受託事務／国の関与／団体の種類</span></span><span class="st wip">未着手</span></div>
+</div>
+
+<div class="part">
+  <h2>資料</h2>
+  <div class="row"><span class="ch">資料</span><span class="tt"><a href="資料/索引.html">条文・判例の全文</a>
+    <span class="d">条文824件・判例215件。各ページに本文と「この条文が問われた問題」の一覧。本文中の青い文字から直接飛べる</span></span><span class="st done">完成</span></div>
+  <div class="row"><span class="ch">台帳</span><span class="tt"><a href="論点台帳.md">論点台帳</a>
+    <span class="d">8年分147問を59グループに全数割付。どの論点が何回出たかの一次資料</span></span><span class="st done">完成</span></div>
+  <div class="row"><span class="ch">手順</span><span class="tt"><a href="作り方.md">テキストの作り方</a>
+    <span class="d">1論点グループを仕上げる手順。材料収集→骨格→部品→執筆→5段階の検査→記録</span></span><span class="st done">運用中</span></div>
+  <div class="row"><span class="ch">計画</span><span class="tt"><a href="執筆計画.md">執筆計画</a>
+    <span class="d">59論点グループの残作業と、その進み具合</span></span><span class="st done">運用中</span></div>
+  <div class="row"><span class="ch">工程</span><span class="tt"><a href="執筆チェックリスト.md">執筆チェックリスト</a>
+    <span class="d">15項目。指摘された誤りから作った再発防止。全ページ納品前に通す</span></span><span class="st done">運用中</span></div>
+</div>
+
+<footer>
+  <p>条文は e-Gov の現行法令から機械取得したものを引用しています。過去問については、その論点が扱われた問題の番号だけを載せ、問題文および選択肢の本文は載せていません。</p>
+</footer>
+</div>

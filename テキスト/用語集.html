@@ -1,0 +1,268 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>用語集</title>
+<link rel="stylesheet" href="style.css">
+<style>.cite{color:var(--seiji); text-decoration:none; border-bottom:1px dotted var(--seiji); font-weight:600}
+.cite:hover{background:var(--seiji-soft); border-bottom-style:solid}
+/* ── サイドナビ ───────────────────────────── */
+body{display:flex; align-items:flex-start}
+#nav{
+  position:sticky; top:0; flex:none; width:15rem; height:100vh; overflow-y:auto;
+  background:var(--card); border-right:1px solid var(--line2); padding:1.2rem 0 3rem;
+  font-size:.86rem; line-height:1.6;
+}
+#nav .brand{display:block; padding:0 1.1rem 1rem; font-weight:700; font-size:.95rem;
+  color:var(--ink); text-decoration:none; border-bottom:1px solid var(--line); margin-bottom:.8rem}
+#nav .brand small{display:block; font-weight:400; font-size:.72rem; color:var(--hai); margin-top:.2rem}
+#nav h4{margin:1.1rem 1.1rem .35rem; font-size:.68rem; letter-spacing:.14em; color:var(--hai); font-weight:700}
+#nav a{display:block; padding:.4rem 1.1rem; color:var(--ink-sub); text-decoration:none; border-left:3px solid transparent}
+#nav a:hover{background:var(--fill); color:var(--ink)}
+#nav a.cur{border-left-color:var(--seiji); color:var(--seiji); font-weight:700; background:var(--seiji-soft)}
+#nav .sub{padding-left:1.9rem; font-size:.82rem}
+#nav .todo{color:var(--hai); opacity:.55; pointer-events:none}
+#navbtn{display:none}
+.wrap{flex:1; min-width:0}
+@media(max-width:900px){
+  body{display:block}
+  #nav{position:fixed; left:-15rem; top:0; z-index:50; transition:left .2s; box-shadow:2px 0 12px rgba(0,0,0,.15)}
+  #nav.open{left:0}
+  #navbtn{display:flex; position:fixed; left:.7rem; top:.7rem; z-index:60; width:2.5rem; height:2.5rem;
+    align-items:center; justify-content:center; background:var(--card); border:1px solid var(--line2);
+    border-radius:6px; cursor:pointer; font-size:1.1rem; color:var(--ink); box-shadow:0 1px 4px rgba(0,0,0,.1)}
+  .wrap{padding-top:3.4rem}
+}
+</style>
+
+<style>
+.entry{border-bottom:1px solid var(--line); padding:0.9rem 0}
+.entry:last-child{border-bottom:none}
+dt{font-weight:700; font-size:1.05rem; margin:0 0 .3rem}
+.yomi{font-weight:400; font-size:.85rem; color:var(--hai)}
+dd{margin:0; font-size:.93rem}
+dd .def{margin:0 0 .5rem}
+dd .pt{background:var(--fill); border-radius:5px; padding:.6rem .8rem; margin:.5rem 0}
+dd .pt b{display:block; font-size:.75rem; letter-spacing:.12em; color:var(--hai); margin-bottom:.25rem}
+dd .pt p{margin:.25rem 0}
+dd .trap{border-left:3px solid var(--shu); background:var(--shu-soft); padding:.55rem .8rem; margin:.5rem 0; font-size:.88rem; border-radius:0 3px 3px 0}
+dd .trap b{color:var(--shu)}
+.goto{margin-top:.35rem; font-size:.84rem; color:var(--hai)}
+.howto{background:var(--card); border:1px solid var(--line); border-radius:5px; padding:1rem 1.2rem; margin:0 0 1.6rem; font-size:.92rem}
+.howto p{margin:.4rem 0}
+.gnav{background:var(--card); border:1px solid var(--line); border-radius:5px; padding:1rem 1.2rem; margin:0 0 2rem}
+.gnav h3{font-size:.72rem; letter-spacing:.16em; color:var(--hai); margin:0 0 .7rem; font-weight:700}
+.gnav ol{margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:.5rem}
+.gnav li{font-size:.93rem; line-height:1.6}
+.gnav a{color:inherit; text-decoration:none; border-bottom:1px solid var(--line2)}
+.gnav a:hover{color:var(--seiji); border-bottom-color:var(--seiji)}
+.gt{color:var(--hai); font-size:.84rem}
+.gsec{margin:0 0 2.6rem}
+.gsec h2{font-family:var(--mincho); font-size:1.35rem; margin:0 0 .2rem; font-weight:600;
+  padding-bottom:.4rem; border-bottom:2px solid var(--line2)}
+.gsub{color:var(--hai); font-size:.86rem; margin:.3rem 0 .8rem}
+.gsec dl{margin:0}
+.entry{border-bottom:1px solid var(--line)}
+.entry:last-child{border-bottom:none}
+.entry>summary{cursor:pointer; list-style:none; padding:.75rem .2rem; display:flex; gap:.8rem;
+  align-items:baseline; transition:background .12s}
+.entry>summary::-webkit-details-marker{display:none}
+.entry>summary::before{content:"＋"; color:var(--seiji); font-weight:700; flex:none; width:1rem}
+.entry[open]>summary::before{content:"−"}
+.entry>summary:hover{background:var(--fill)}
+.entry .term{font-weight:700; font-size:1rem; flex:none}
+.entry .brief{color:var(--ink-sub); font-size:.85rem}
+.entry .body{padding:0 .2rem 1rem 1.8rem; font-size:.93rem}
+.entry[open]>summary{background:var(--fill)}
+@media(max-width:520px){.entry>summary{flex-wrap:wrap} .entry .brief{width:100%; padding-left:1.8rem}}
+</style>
+<div id="navbtn" onclick="document.getElementById('nav').classList.toggle('open')">☰</div>
+<nav id="nav">
+<a class="brand" href="index.html">行政法テキスト<small>条文と判例から</small></a>
+<h4>入口</h4>
+<a href="index.html">目次</a>
+<a href="全体像.html">行政法の全体像</a>
+<a href="救済の三つの道.html">救済の三つの争訟方法</a>
+<a href="用語集.html" class="cur">用語集</a>
+<a href="義務のレベル.html">義務のレベル</a>
+<h4>第2章 行政法総論</h4>
+<a href="02-行政法総論1-効力と瑕疵.html">行政行為の効力と瑕疵</a>
+<a class="todo">土台と行為形式</a>
+<h4>第3章 行政手続法</h4>
+<a href="03-行政手続法1-定義と適用範囲.html">定義と適用範囲</a>
+<a href="03-行政手続法2-申請と不利益処分.html">申請と不利益処分</a>
+<a class="todo">行政指導・意見公募</a>
+<h4>第4章 行政不服審査法</h4>
+<a href="../行政不服審査法.html">行政不服審査法</a>
+<h4>第5章 行政事件訴訟法</h4>
+<a href="05-行政事件訴訟法1-処分性.html">処分性</a>
+<a class="todo">原告適格・訴えの利益</a>
+<h4>第6章 国家賠償法</h4>
+<a href="06-国家賠償法1-国家賠償.html">国家賠償</a>
+<a class="todo">損失補償</a>
+<h4>第7章 地方自治法</h4>
+<a href="07-地方自治法1-条例と規則.html">条例と規則</a>
+<a class="todo">住民の権利・議会と長</a>
+<h4>資料</h4>
+<a href="資料/索引.html">条文・判例の全文</a>
+<a href="論点台帳.md">論点台帳</a>
+<a href="執筆計画.md">執筆計画</a>
+</nav>
+<div class="wrap">
+<header>
+  <p class="eyebrow">いつでも引く辞書 ── 本格解説は本編に1か所だけ</p>
+  <h1>用語集</h1>
+  <p class="lede">見出しをクリックすると開きます。各用語の定義はここに、<strong>本格的な解説は本編のただ1か所に</strong>置いています。本編を直せばここは直さなくてよい、という分担です。読み方の約束2つだけ先に。</p>
+</header>
+<div class="howto" id="yoken">
+  <p><b>条文の読み方 ── 要件と効果。</b>条文は「〜のときは(要件)、〜する(効果)」の形で書かれる。主語・要件・効果に加えて、<b>義務のレベル</b>(しなければならない／できる／努める)に印を付けて読む。同じ制度でも、定めることと公にすることで強さが変わることがある。</p>
+</div>
+<div class="howto" id="gensoku">
+  <p><b>この本の約束 ── 原則と例外。</b>「原則」と書いたら、必ず同じ場所に例外の有無を書く。例外は丸暗記させず、なぜその例外が置かれているのかという理屈を必ず添える。</p>
+</div>
+<nav class="gnav"><h3>ジャンル索引 ── 科目の章立てに合わせてある</h3><ol>
+<li><a href="#g1"><b>行政の組織</b></a> <span class="gt">行政法総論 ── 行政主体 ・ 行政庁</span></li>
+<li><a href="#g2"><b>行政行為</b></a> <span class="gt">行政法総論 ── 処分 ・ 申請に対する処分/不利益処分 ・ 許可・認可・特許</span></li>
+<li><a href="#g3"><b>行政行為の効力</b></a> <span class="gt">行政法総論 ── 公定力 ・ 不可争力 ・ 不可変更力</span></li>
+<li><a href="#g4"><b>行政行為の瑕疵</b></a> <span class="gt">行政法総論 ── 無効 ・ 職権取消し ・ 撤回 ・ 瑕疵の治癒/違法行為の転換 ・ 違法性の承継</span></li>
+<li><a href="#g5"><b>行政上の不服申立て</b></a> <span class="gt">行政不服審査法 ── 審査請求 ・ 執行停止 ・ 教示 ・ 裁決 ・ 却下/棄却</span></li>
+<li><a href="#g6"><b>行政事件訴訟</b></a> <span class="gt">行政事件訴訟法 ── 取消訴訟 ・ 事情裁決/事情判決</span></li>
+<li><a href="#g7"><b>国家賠償・損失補償</b></a> <span class="gt">国家賠償法 ── 国家賠償</span></li>
+</ol></nav>
+<section class="gsec" id="g1">
+<h2>行政の組織</h2>
+<p class="gsub">行政法総論</p>
+<div class="list">
+<details class="entry" id="shutai">
+<summary><span class="term">行政主体 <span class="yomi">(ぎょうせいしゅたい)</span></span><span class="brief">法人格を持つ団体そのもの。国、A県、B市。権利義務はここに帰属し、賠償金を払うのも取消訴訟の被告になるの…</span></summary>
+<div class="body">法人格を持つ団体そのもの。国、A県、B市。権利義務はここに帰属し、賠償金を払うのも取消訴訟の被告になるのも行政主体である。<div class="goto">本編 → <a href="02-行政法総論1-効力と瑕疵.html">第2章(行政組織の節で詳述予定)</a></div></div>
+</details>
+<details class="entry" id="gyoseicho">
+<summary><span class="term">行政庁 <span class="yomi">(ぎょうせいちょう)</span></span><span class="brief">行政主体の手足として意思を決定し、外部に表示する機関。大臣・知事・市長・公安委員会。処分をするのは行政庁…</span></summary>
+<div class="body">行政主体の手足として意思を決定し、外部に表示する機関。大臣・知事・市長・公安委員会。処分をするのは行政庁だが、法人ではないので財産は持たない。<div class="goto">本編 → <a href="02-行政法総論1-効力と瑕疵.html">第2章(同上)</a></div></div>
+</details>
+</div>
+</section>
+<section class="gsec" id="g2">
+<h2>行政行為</h2>
+<p class="gsub">行政法総論</p>
+<div class="list">
+<details class="entry" id="shobun">
+<summary><span class="term">処分 <span class="yomi">(しょぶん)</span></span><span class="brief">役所が、一方的に、特定の相手を狙って、権利義務を動かす決定。営業許可・課税・免許取消しなど。学問上は「行…</span></summary>
+<div class="body">役所が、一方的に、特定の相手を名あて人として、権利義務を動かす決定。営業許可・課税・免許取消しなど。学問上は「行政行為」と呼ぶ。行政手続法2条2号は「行政庁の処分その他公権力の行使に当たる行為」と定義し、行政事件訴訟法3条2項の取消訴訟の対象もこれを指す。<div class="goto">本編 → <a href="救済の三つの道.html">救済の三つの争訟方法</a></div></div>
+</details>
+<details class="entry" id="tracks">
+<summary><span class="term">申請に対する処分/不利益処分 </span><span class="brief">どちらも処分そのもので、処分の種類分けである。分類の実益は処分をされる前の手続の割り当て(行政手続法)に…</span></summary>
+<div class="body">どちらも処分そのもので、処分の種類分けである。分類の実益は処分をされる前の手続の割り当て(行政手続法)にあり、された後の救済では区別なくどちらも「処分」として争える。申請への拒否は「申請に対する処分」に属する。<div class="goto">本編 → <a href="救済の三つの道.html">救済の三つの争訟方法(冒頭の注意)・本格解説は第3章(執筆中)</a></div></div>
+</details>
+<details class="entry" id="kyoka">
+<summary><span class="term">許可・認可・特許 <span class="yomi">(きょか・にんか・とっきょ)</span></span><span class="brief">講学上の分類で、条文上の名前とは一致しない。許可=一般的禁止の解除(運転免許)。特許=本来無い権利の設定…</span></summary>
+<div class="body">講学上の分類で、条文上の名前とは一致しない。許可=一般的禁止の解除(運転免許)。特許=本来無い権利の設定(埋立免許)。認可=私人の法律行為の効力を完成させる(農地の権利移動)。<div class="goto">本編 → <a href="02-行政法総論1-効力と瑕疵.html">第2章(行為の分類の節で詳述予定)</a></div></div>
+</details>
+</div>
+</section>
+<section class="gsec" id="g3">
+<h2>行政行為の効力</h2>
+<p class="gsub">行政法総論</p>
+<div class="list">
+<details class="entry" id="kotei">
+<summary><span class="term">公定力 <span class="yomi">(こうていりょく)</span></span><span class="brief">瑕疵のある処分でも、権限ある機関が取り消すまでは有効なものとして扱われる力。国家賠償請求と無効の主張には…</span></summary>
+<div class="body">瑕疵のある処分でも、権限ある機関が取り消すまでは有効なものとして扱われる力。条文に明記された語ではなく、行政事件訴訟法が取消訴訟という特別の手続を設けたこと(取消訴訟の排他的管轄)から導かれる。国家賠償請求とは審理の対象が異なるため衝突せず、無効な処分にはそもそも生じない。<div class="goto">本編 → <a href="02-行政法総論1-効力と瑕疵.html#k1">第2章 2-1</a></div></div>
+</details>
+<details class="entry" id="fukaso">
+<summary><span class="term">不可争力 <span class="yomi">(ふかそうりょく)</span></span><span class="brief">不服申立て・出訴の期間が過ぎると、相手方の側からは処分の効力を争えなくなる力。行政の側の職権取消しは妨げ…</span></summary>
+<div class="body">不服申立て・出訴の期間が過ぎると、相手方の側からは処分の効力を争えなくなる力。根拠は行政不服審査法18条(処分を知った日の翌日から3か月・処分の日の翌日から1年)と行政事件訴訟法14条(知った日から6か月・処分の日から1年)。行政の側の職権取消しには期間の制限がない。<div class="goto">本編 → <a href="02-行政法総論1-効力と瑕疵.html#k1">第2章 2-1</a></div></div>
+</details>
+<details class="entry" id="fukahen">
+<summary><span class="term">不可変更力 <span class="yomi">(ふかへんこうりょく)</span></span><span class="brief">裁決など、紛争に決着を付けるための処分は、出した行政庁自身も取り消せないという力。旧自作農創設特別措置法の農地買収計画への訴願を認容した裁決について、実質は法律上の争訟の裁判であるとして裁決庁自らの取消しを認めなかった判例がある(最判昭和29年1月21日ほか)。</span></summary>
+<div class="body">裁決など、紛争に決着を付けるための処分は、出した行政庁自身も取り消せないという力。<div class="goto">本編 → <a href="02-行政法総論1-効力と瑕疵.html#k3">第2章 2-3</a></div></div>
+</details>
+</div>
+</section>
+<section class="gsec" id="g4">
+<h2>行政行為の瑕疵</h2>
+<p class="gsub">行政法総論</p>
+<div class="list">
+<details class="entry" id="muko">
+<summary><span class="term">無効 <span class="yomi">(むこう)</span></span><span class="brief">瑕疵が重大かつ明白なとき、その処分は取消しを待たず、初めから効力を持たない。取り消されるまで有効…</span></summary>
+<div class="body">
+    <p class="def">瑕疵が<b>重大かつ明白</b>なとき、その処分は取消しを待たず、初めから効力を持たない。取り消されるまで有効に扱われる通常の処分(公定力が働く)との違いがここにある。</p>
+    <div class="pt"><b>押さえどころ</b>
+      <p>① <b>明白性の測り方</b>は、処分の<b>外形上、客観的に、誤認が一見看取し得るか</b>で決まる。調査を尽くせば分かったはずか、ではなく外観だけで判定する(外観上一見明白説)。行政庁が怠慢により資料を見落としたといった主観的な事情は、明白性の判断に直接かかわらない。</p>
+      <p>② <b>例外がある。</b><a class="cite" href="資料/判例/%E6%9C%80%E5%88%A4%E6%98%AD%E5%92%8C48%E5%B9%B44%E6%9C%8826%E6%97%A5.html">最判昭和48年4月26日</a>は、課税処分は課税庁と被課税者の間にのみ存在し、処分を信頼する<b>第三者の保護を考慮する必要がない</b>ことを理由に、課税要件の根幹についての過誤があり不利益を甘受させることが著しく不当な事情があるときは、<b>明白性がなくても当然無効</b>とした。明白性は第三者を守るための要件だから、守るべき第三者がいない場面では要求する理由が消える。</p>
+      <p>③ <b>争い方が広い。</b>無効な処分に公定力・不可争力は生じないので、審査請求期間や出訴期間が過ぎても主張できる。方法も無効等確認訴訟に限られず、民事訴訟や当事者訴訟の中で主張することもできる(争点訴訟)。出訴期間内なら取消訴訟を提起してもよい。</p>
+    </div>
+    <div class="trap"><b>取り違えやすい点。</b>明白性が認められなくても、課税処分のように処分を信頼する第三者がいない場面では無効となりうる。無効を争う訴訟は無効等確認の訴えに限られず、争点訴訟や当事者訴訟でも主張できる。処分が無効であっても、出訴期間内であれば取消訴訟を提起できる。</div>
+    <div class="goto">さらに深く → <a href="02-行政法総論1-効力と瑕疵.html#k2">第2章 2-2</a></div>
+  </div>
+</details>
+<details class="entry" id="shokken">
+<summary><span class="term">職権取消し <span class="yomi">(しょっけんとりけし)</span></span><span class="brief">成立時に瑕疵(違法または不当)のあった処分を、行政が自分で消すこと。原則さかのぼって消える。法律の根拠は…</span></summary>
+<div class="body">成立時に瑕疵(違法または不当)のあった処分を、行政が自分で消すこと。原則さかのぼって消える。法律の根拠は不要。<div class="goto">本編 → <a href="02-行政法総論1-効力と瑕疵.html#k3">第2章 2-3</a></div></div>
+</details>
+<details class="entry" id="tekkai">
+<summary><span class="term">撤回 <span class="yomi">(てっかい)</span></span><span class="brief">成立時は無傷だった処分を、後発の事情(義務違反・公益上の必要)を理由に、将来に向かって消すこと。処分庁だ…</span></summary>
+<div class="body">成立時は無傷だった処分を、後発の事情(義務違反・公益上の必要)を理由に、将来に向かって消すこと。処分庁だけができ、法律の根拠は不要(菊田医師事件)。<div class="goto">本編 → <a href="02-行政法総論1-効力と瑕疵.html#k3">第2章 2-3</a></div></div>
+</details>
+<details class="entry" id="chiyu">
+<summary><span class="term">瑕疵の治癒/違法行為の転換 <span class="yomi">(かしのちゆ/てんかん)</span></span><span class="brief">治癒=後から傷が塞がったものと扱うこと(理由提示の不備は治らない)。転換=別の処分としてなら適法なとき、…</span></summary>
+<div class="body">治癒=後から傷が塞がったものと扱うこと(理由提示の不備は治らない)。転換=別の処分としてなら適法なとき、そちらとして生かすこと。どちらも狭い例外。<div class="goto">本編 → <a href="02-行政法総論1-効力と瑕疵.html#k4">第2章 2-4</a></div></div>
+</details>
+<details class="entry" id="shokei">
+<summary><span class="term">違法性の承継 <span class="yomi">(いほうせいのしょうけい)</span></span><span class="brief">先行処分の違法を、後行処分の取消訴訟で取消事由として主張すること。原則できず、例外がたぬきの森事件。</span></summary>
+<div class="body">先行処分の違法を、後行処分の取消訴訟で取消事由として主張すること。原則できず、例外がたぬきの森事件。<div class="goto">本編 → <a href="02-行政法総論1-効力と瑕疵.html#k4">第2章 2-4</a></div></div>
+</details>
+</div>
+</section>
+<section class="gsec" id="g5">
+<h2>行政上の不服申立て</h2>
+<p class="gsub">行政不服審査法</p>
+<div class="list">
+<details class="entry" id="shinsa">
+<summary><span class="term">審査請求 <span class="yomi">(しんさせいきゅう)</span></span><span class="brief">行政庁(審査庁)に対する不服申立て。訴訟ではなく、裁判所は関与しない。行政不服審査法2条(処分)・3条(不作為)が対象を定め、4条が宛先となる審査庁を定める。違法だけでなく不当も審理できる点が取消訴訟と異なる。</span></summary>
+<div class="body">行政庁(審査庁)に対する不服申立て。訴訟ではなく、裁判所は関与しない。行政不服審査法が規律する。<div class="goto">本編 → <a href="../行政不服審査法.html">行政不服審査法の教科書</a></div></div>
+</details>
+<details class="entry" id="shikko">
+<summary><span class="term">執行停止 <span class="yomi">(しっこうていし)</span></span><span class="brief">争っている間、処分の効力や執行を止める仕組み。原則は止まらない(執行不停止)。審査庁・裁判所の立場によっ…</span></summary>
+<div class="body">争っている間、処分の効力や執行を止める仕組み。行政不服審査法25条1項と行政事件訴訟法25条1項がいずれも執行不停止を原則とする。審査請求では審査庁が上級行政庁または処分庁であれば職権でも停止できるが、それ以外の審査庁は申立てによる場合に限られる(行政不服審査法25条2項・3項)。<div class="goto">本編 → <a href="../行政不服審査法.html#c6">不服審査の教科書 六章</a></div></div>
+</details>
+<details class="entry" id="kyoji">
+<summary><span class="term">教示 <span class="yomi">(きょうじ)</span></span><span class="brief">処分の際に、不服申立てができること・宛先・期間を相手に知らせる行政の義務。書面で処分するなら書面で。誤っ…</span></summary>
+<div class="body">処分の際に、不服申立てができること・宛先・期間を相手に知らせる行政の義務。行政不服審査法82条が定め、書面で処分をするときは書面で教示しなければならない。教示をしなかった場合は処分庁に不服申立書を提出でき(83条)、誤って教示した場合はその行政庁が正しい審査庁に送付する(22条)。行政事件訴訟法46条にも同様の教示の規定がある。<div class="goto">本編 → <a href="../行政不服審査法.html#c8">不服審査の教科書 八章</a></div></div>
+</details>
+<details class="entry" id="saiketsu">
+<summary><span class="term">裁決 <span class="yomi">(さいけつ)</span></span><span class="brief">審査請求への答え。審査庁(行政)が出す。違法に加えて不当まで審理できる。再調査の請求への答えは「決定」、…</span></summary>
+<div class="body">審査請求への答え。審査庁(行政)が出す。違法に加えて不当まで審理できる。再調査の請求への答えは「決定」、訴訟への答えは「判決」。議会の「採決」は別の言葉。<div class="goto">本編 → <a href="../行政不服審査法.html#c7">不服審査の教科書 七章</a></div></div>
+</details>
+<details class="entry" id="kyakka">
+<summary><span class="term">却下/棄却 <span class="yomi">(きゃっか/ききゃく)</span></span><span class="brief">却下=入口の要件を欠くための門前払い(中身は見ない)。棄却=中身を審理した上で理由がないという負け。審査…</span></summary>
+<div class="body">却下=入口の要件を欠くための門前払い(中身は見ない)。棄却=中身を審理した上で理由がないという負け。審査請求でも訴訟でも同じ使い分け。<div class="goto">本編 → <a href="../行政不服審査法.html#c7">不服審査の教科書 七章</a></div></div>
+</details>
+</div>
+</section>
+<section class="gsec" id="g6">
+<h2>行政事件訴訟</h2>
+<p class="gsub">行政事件訴訟法</p>
+<div class="list">
+<details class="entry" id="torikeshi">
+<summary><span class="term">取消訴訟 <span class="yomi">(とりけしそしょう)</span></span><span class="brief">処分の取消しを求めて裁判所に起こす訴訟(<a class="cite" href="資料/条文/%E8%A1%8C%E6%94%BF%E4%BA%8B%E4%BB%B6%E8%A8%B4%E8%A8%9F%E6%B3%953%E6%9D%A1.html">行政事件訴訟法3条</a>2項)。訴訟要件→本案→判決の一本道で進む。</span></summary>
+<div class="body">処分の取消しを求めて裁判所に起こす訴訟(<a class="cite" href="資料/条文/%E8%A1%8C%E6%94%BF%E4%BA%8B%E4%BB%B6%E8%A8%B4%E8%A8%9F%E6%B3%953%E6%9D%A1.html">行政事件訴訟法3条</a>2項)。訴訟要件→本案→判決の一本道で進む。<div class="goto">本編 → <a href="救済の三つの道.html">救済の三つの争訟方法・本格解説は第5章(執筆中)</a></div></div>
+</details>
+<details class="entry" id="jijo">
+<summary><span class="term">事情裁決/事情判決 <span class="yomi">(じじょうさいけつ/じじょうはんけつ)</span></span><span class="brief">処分は違法(裁決は不当も)だが、取り消すと公の利益に著しい障害が生じるとき、主文で違法(・不当)を宣言し…</span></summary>
+<div class="body">処分は違法(裁決は不当も)だが、取り消すと公の利益に著しい障害が生じるとき、主文で違法(・不当)を宣言した上で棄却する制度。裁決版が行審法45条3項、判決版が行訴法31条。<div class="goto">本編 → <a href="../行政不服審査法.html#c7">不服審査の教科書 七章</a></div></div>
+</details>
+</div>
+</section>
+<section class="gsec" id="g7">
+<h2>国家賠償・損失補償</h2>
+<p class="gsub">国家賠償法</p>
+<div class="list">
+<details class="entry" id="kokubai">
+<summary><span class="term">国家賠償 <span class="yomi">(こっかばいしょう)</span></span><span class="brief">処分の効力は消さずに、受けた損害の金銭賠償を国・公共団体に求める道。処分の取消しを先に得る必要はない。</span></summary>
+<div class="body">処分の効力は消さずに、受けた損害の金銭賠償を国・公共団体に求める道。処分の取消しを先に得る必要はない。<div class="goto">本編 → <a href="救済の三つの道.html">救済の三つの争訟方法・本格解説は第6章(執筆中)</a></div></div>
+</details>
+</div>
+</section>
+<footer>
+  <p><a href="救済の三つの道.html">救済の三つの争訟方法</a> / <a href="02-行政法総論1-効力と瑕疵.html">第2章 効力と瑕疵</a> / <a href="../行政不服審査法.html">行政不服審査法の教科書</a></p>
+</footer>
+</div>
