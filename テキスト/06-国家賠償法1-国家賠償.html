@@ -80,6 +80,21 @@ body{display:flex; align-items:flex-start}
     border-radius:6px; cursor:pointer; font-size:1.1rem; color:var(--ink); box-shadow:0 1px 4px rgba(0,0,0,.1)}
   .wrap{padding-top:3.4rem}
 }
+
+/* ── 横に長いものは、その箱の中だけでスクロールさせる（本文は横スクロールしない） ── */
+.scroll{overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%}
+.scroll table{min-width:max-content}
+figure,.fig{overflow-x:auto; max-width:100%}
+svg{max-width:100%; height:auto}
+img{max-width:100%; height:auto}
+pre,code{overflow-x:auto; word-break:break-word}
+.wrap{overflow-x:hidden}
+@media(max-width:640px){
+  html{font-size:15px}
+  table{font-size:.84rem}
+  th,td{padding:.4rem .5rem}
+  .wrap{padding-left:.8rem; padding-right:.8rem}
+}
 </style>
 <div id="navbtn" onclick="document.getElementById('nav').classList.toggle('open')">☰</div>
 <nav id="nav">
@@ -101,7 +116,8 @@ body{display:flex; align-items:flex-start}
 <a href="../行政不服審査法.html">行政不服審査法</a>
 <h4>第5章 行政事件訴訟法</h4>
 <a href="05-行政事件訴訟法1-処分性.html">処分性</a>
-<a href="05-行政事件訴訟法2-訴訟要件と判決.html">訴訟要件と判決</a>
+<a href="05-行政事件訴訟法2-訴訟要件.html">訴訟要件</a>
+<a href="05-行政事件訴訟法3-判決と訴訟類型.html">判決と訴訟類型</a>
 <h4>第6章 国家賠償法</h4>
 <a href="06-国家賠償法1-国家賠償.html" class="cur">国家賠償</a>
 <a class="todo">損失補償</a>
@@ -185,6 +201,22 @@ body{display:flex; align-items:flex-start}
 
 <p>もう一つ、二つの条文には<span class="key">責任の性質そのものに違い</span>があります。1条は「故意又は過失によつて」と書いているので、<span class="key">過失がなければ責任が生じません</span>。これに対し2条にはその文言がなく、<span class="key">管理者に過失がなくても、営造物が通常有すべき安全性を欠いていれば責任が生じます</span>。この違いは6-9で詳しく見ます。</p>
 
+<h3>国家賠償と損失補償</h3>
+
+<p>国家賠償と並べて押さえる制度が、<span class="term-b">損失補償</span>（そんしつほしょう）です。損失補償とは、<span class="key">適法な公権力の行使によって、特定の人に生じた特別の犠牲を補う制度</span>をいいます。<span class="term-b">特別の犠牲</span>とは、社会一般が等しく受ける制約を超えて、特定の人だけに重い負担が集中している状態のことです。</p>
+
+<div class="scroll"><table>
+  <thead><tr><th>制度</th><th>対象になる場面</th><th>根拠と性質</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">国家賠償</th><td>違法な公権力の行使、または公の営造物の設置管理の瑕疵によって損害が生じた場面です。填補（てんぽ）とは、損害を金銭などで埋め合わせることをいいます。</td><td>憲法17条を受けた国家賠償法が根拠です。1条は人の行為についての責任、2条は物の状態についての責任です。</td></tr>
+    <tr><th scope="row">損失補償</th><td>適法な公権力の行使によって、特定の人に特別の犠牲が生じた場面です。土地収用のように、行政の行為自体は適法であることが出発点です。</td><td>憲法29条3項が根拠です。私有財産を公共のために用いるときは、正当な補償が必要になります。</td></tr>
+  </tbody>
+</table></div>
+
+<p>したがって、<span class="warn">国家賠償は違法な行為による損害の填補、損失補償は適法な行為による特別の犠牲の補償</span>という分かれ方になります。根拠条文も、国家賠償は憲法17条、損失補償は憲法29条3項です。</p>
+
+<p>損失補償では、法律に補償規定がないときに憲法29条3項を直接の根拠として請求できるかが問題になります。<span class="key">河川附近地制限令事件（最大判昭和43年11月27日）は、法律に補償規定がない場合でも、憲法29条3項を直接の根拠として補償を請求する余地があることを示した判例</span>です。この判例は本教材の判例データベースに独立の判例カードがないため、ここでは判例名と要点だけを押さえます。</p>
+
 <h3>三つの救済の道の中での位置</h3>
 
 <p>第4章の審査請求、第5章の取消訴訟と並べると、国家賠償の性格がはっきりします。</p>
@@ -208,13 +240,14 @@ body{display:flex; align-items:flex-start}
 <dt>根拠</dt><dd>憲法17条が「法律の定めるところにより」賠償を求めることができるとし、それを受けて国家賠償法が置かれている</dd>
 <dt>1条</dt><dd><b>人の行為</b>についての責任。故意または過失が要る</dd>
 <dt>2条</dt><dd><b>物の状態</b>についての責任。<b>過失は要らない</b></dd>
+<dt>損失補償との違い</dt><dd>国家賠償は<b>違法な行為または瑕疵</b>による損害の填補であり、損失補償は<b>適法な行為</b>によって特定の人に生じた特別の犠牲の補償である</dd>
 <dt>3条</dt><dd>選任監督をする者と費用を負担する者が異なるとき、<b>費用を負担する者も</b>責任を負う</dd>
 <dt>取消訴訟との関係</dt><dd>処分性は不要。取消判決を先に得ておく必要もない。公定力は妨げにならない</dd>
 <dt>混同しやすい点</dt><dd>1条は過失責任、2条は無過失責任である。また、国家賠償を請求するのにあらかじめ処分の取消判決または無効確認判決を得ておく必要はない</dd>
 </dl></div>
 </div>
 
-<div class="refs"><h4>過去問での出題</h4><span class="rid">H30-20-ア</span><span class="rid">R4-20-1</span><span class="rid">R3-21-ア</span></div>
+<div class="refs"><h4>関連問題番号</h4><span class="rid">H30-20-ア</span><span class="rid">R4-20-1</span><span class="rid">R3-21-ア</span></div>
 </section>
 
 <section id="t2">
@@ -237,14 +270,26 @@ body{display:flex; align-items:flex-start}
   </tbody>
 </table></div>
 
-<p>このうち<span class="key">④と⑤は別の要件</span>である点に注意してください。行為が違法であっても、その公務員に過失がなければ責任は成立しません。逆に、注意を怠っていても行為自体が適法であれば、やはり責任は成立しません。<span class="warn">違法だから当然に過失がある、という関係にはありません。</span>もっとも、6-6で見るように、判例は違法の判断の中に注意義務違反を織り込んでいるので、実際にはこの二つが重なる場面が多くなります。</p>
+<h3>故意・過失 ── 個人の心理だけで見ない</h3>
+
+<p><span class="term-b">故意</span>とは、損害を生じさせる行為であることを認識しながら行うことです。<span class="term-b">過失</span>とは、注意すれば損害の発生を避けられたのに、必要な注意を尽くさなかったことです。国家賠償法1条1項の過失は、公務員個人の内心だけでなく、<span class="key">職務上通常尽くすべき注意義務に違反したかどうか</span>で客観的に捉えます。このような捉え方を<span class="term-b">客観的過失</span>といいます。</p>
+
+<p>そのため、過失の判断では「その公務員が実際にどれほど慎重だったつもりか」だけを見るのではありません。その職務を担当する公務員として、資料を集め、法令を調べ、危険を予見し、必要な措置を採るべきであったのにそれをしなかったか、という形で見ます。</p>
+
+<p>また、<span class="key">違法と過失は別の要件</span>です。行為が違法であっても、職務上通常尽くすべき注意を尽くしていれば過失が否定されることがあります。逆に、注意を怠っていても、行為自体が適法であれば1条1項の責任は成立しません。もっとも、6-6で見る職務行為基準説では、違法の判断の中で注意義務違反を問うため、違法と過失の判断が接近します。接近するだけで、条文上は別の要件である点は変わりません。</p>
+
+<p>誰の故意・過失を見るのかも、場面によって問題になります。加害公務員を特定できるときは、その公務員の故意・過失を見ます。加害公務員を特定できないときでも、一連の職務上の行為のどこかに故意または過失による違法行為があり、どの行為であっても同じ国または公共団体が責任を負う関係にある場合には、責任が認められることがあります（6-5）。さらに、個々の公務員の心理状態ではなく、組織として職務上尽くすべき注意を欠いたと見る考え方を<span class="term-b">組織的過失</span>といいます。</p>
+
+<p>ここでの故意・過失は、被害者に対する国または公共団体の賠償責任が成立するための要件です。これに対し、国または公共団体が賠償した後に公務員へ求償する場面では、1条2項により<span class="key">公務員に故意または重大な過失があること</span>が必要です。軽い過失だけでは、国または公共団体はその公務員に求償できません。</p>
 
 <div class="exc"><h4>6-2の例外・限界</h4><div class="in">
-<table><tbody>
+<div class="scroll"><table><tbody>
 <tr><th scope="row">公務員の身分は必要でない</th><td>②の公務員は、公務員としての身分を持つ者に限られません。<b>公権力の行使を委ねられた者</b>であれば、民間人でも民間法人でも公務員に当たります。建築確認を行う指定確認検査機関、児童の一時保護を委託された社会福祉法人などがこれに当たります。</td></tr>
 <tr><th scope="row">加害公務員の特定は常に必要ではない</th><td>一連の職務上の行為の過程で被害が生じ、どの公務員のどの行為によるものか特定できない場合でも、責任を免れないことがあります（6-5）。ただし限定が付きます。</td></tr>
+<tr><th scope="row">組織的過失で見る場合がある</th><td>過失は、公務員個人の心理状態だけでなく、組織として職務上尽くすべき注意義務を尽くしたかどうかで捉えられることがあります。組織的過失とは、個々の担当者の内心を超えて、行政組織全体として必要な注意を欠いたという意味です。</td></tr>
+<tr><th scope="row">求償には重い要件がある</th><td>1条1項の賠償責任は故意または過失で成立しますが、1条2項の求償は故意または重大な過失があるときに限られます。重大な過失とは、通常求められる注意を著しく欠くことをいいます。</td></tr>
 <tr><th scope="row">損害には精神的損害も含まれる</th><td>⑥の損害は財産上の損害に限られず、慰謝料の対象となる精神的損害も含まれます。4条により民法710条が適用されるためです。</td></tr>
-</tbody></table>
+</tbody></table></div>
 </div></div>
 
 <h3>責任の性質 ── 代位責任説と自己責任説</h3>
@@ -278,7 +323,7 @@ body{display:flex; align-items:flex-start}
 </dl></div>
 </div>
 
-<div class="refs"><h4>過去問での出題</h4><span class="rid">H30-20-イ</span><span class="rid">R2-20-ア</span><span class="rid">R4-21-ア</span><span class="rid">R5-21-k1</span><span class="rid">R5-21-k5</span></div>
+<div class="refs"><h4>関連問題番号</h4><span class="rid">H30-20-イ</span><span class="rid">R2-20-ア</span><span class="rid">R4-21-ア</span><span class="rid">R5-21-k1</span><span class="rid">R5-21-k5</span></div>
 </section>
 
 <section id="t3">
@@ -341,7 +386,7 @@ body{display:flex; align-items:flex-start}
 
 <div class="case" data-case="最判昭和57年3月12日"><h4>裁判官がした裁判　<a class="cite" href="資料/判例/%E6%9C%80%E5%88%A4%E6%98%AD%E5%92%8C57%E5%B9%B43%E6%9C%8812%E6%97%A5.html">最判昭和57年3月12日</a></h4><div class="cin"><p class="cf" data-case="最判昭和57年3月12日"><b>事案</b>裁判官がした争訟の裁判について、当事者が、その裁判に不服があり違法であるとして、国に対し国家賠償を請求した。裁判内容の不当を理由に国家賠償責任を追及できるかが争われた。</p><p class="ch" data-case="最判昭和57年3月12日"><b>判旨</b>裁判官がした争訟の裁判について国家賠償法1条1項にいう違法があるというためには、当該裁判に上訴等の訴訟法上の救済方法によって是正されるべき瑕疵が存在するだけでは足りない。当該裁判官が違法または不当な目的をもって裁判をしたなど、裁判官がその付与された権限の趣旨に明らかに背いてこれを行使したものと認め得るような特別の事情があることを必要とする。裁判の内容に誤りがあることのみをもって直ちに国家賠償責任が生ずるものではない。</p><p class="cp"><b>意義</b>裁判もまた公権力の行使に含まれるが、違法とされるには<b>裁判官が権限の趣旨に明らかに背いて権限を行使したと認め得る特別の事情</b>が要る。裁判の内容に誤りがあることだけでは足りない。誤りは上訴という制度で正すべきものであり、内容の誤りをそのまま賠償責任に結びつけると、裁判官が判断をためらうようになるからである。<b>逆にいえば、そうした特別の事情があるときは違法となりうる</b>のであって、裁判である以上およそ違法にならない、というわけではない。</p><p class="cl">この判例の全文の要約は<a href="資料/索引.html">判例の索引</a>から引けます</p></div></div>
 
-<div class="refs"><h4>過去問での出題</h4><span class="rid">R7-20-ア</span><span class="rid">R7-20-イ</span><span class="rid">R7-20-ウ</span><span class="rid">R7-20-エ</span><span class="rid">H30-20-ウ</span><span class="rid">R2-21-4</span></div>
+<div class="refs"><h4>関連問題番号</h4><span class="rid">R7-20-ア</span><span class="rid">R7-20-イ</span><span class="rid">R7-20-ウ</span><span class="rid">R7-20-エ</span><span class="rid">H30-20-ウ</span><span class="rid">R2-21-4</span></div>
 </section>
 
 <section id="t4">
@@ -379,7 +424,7 @@ body{display:flex; align-items:flex-start}
 </dl></div>
 </div>
 
-<div class="refs"><h4>過去問での出題</h4><span class="rid">R7-20-ア</span><span class="rid">R4-21-イ</span><span class="rid">H30-20-エ</span></div>
+<div class="refs"><h4>関連問題番号</h4><span class="rid">R7-20-ア</span><span class="rid">R4-21-イ</span><span class="rid">H30-20-エ</span></div>
 </section>
 
 <section id="t5">
@@ -392,13 +437,13 @@ body{display:flex; align-items:flex-start}
 <p>したがって、<span class="warn">加害公務員および加害行為の特定が常に必要である、というわけではありません。</span>他方で、<span class="warn">特定できなければ常に責任が認められる、というわけでもありません。</span>判決が挙げた二つの限定を満たす必要があります。</p>
 
 <div class="exc"><h4>6-5の例外・限界</h4><div class="in">
-<table><tbody>
+<div class="scroll"><table><tbody>
 <tr><th scope="row">同一の主体であることが要る</th><td>一連の行為に関わった公務員が別々の行政主体に属していて、どの行為かによって責任を負う主体が変わる場合には、この理屈は使えません。誰を被告とすべきかが決まらないからです。</td></tr>
 <tr><th scope="row">いずれかに故意過失があることは要る</th><td>一連の行為のどれをとっても故意も過失もない、という場合には責任は生じません。特定を免除しただけであって、<b>故意過失という要件そのものを外したわけではありません</b>。</td></tr>
-</tbody></table>
+</tbody></table></div>
 </div></div>
 
-<div class="refs"><h4>過去問での出題</h4><span class="rid">R2-20-イ</span><span class="rid">R4-20-2</span></div>
+<div class="refs"><h4>関連問題番号</h4><span class="rid">R2-20-イ</span><span class="rid">R4-20-2</span></div>
 </section>
 
 <section id="t6">
@@ -458,7 +503,7 @@ body{display:flex; align-items:flex-start}
 
 <p>これも6-6全体を貫く考え方の現れです。<span class="key">国家賠償法上の違法が問うているのは、結果の当否ではなく、その時点での判断が職務上尽くすべき注意を払ったものだったか</span>という点だからです。逆にいえば、<span class="warn">見解の対立がなく解釈が定まっている事柄について誤ったのであれば、注意義務違反が認められます。</span></p>
 
-<div class="refs"><h4>過去問での出題</h4><span class="rid">H30-20-オ</span><span class="rid">R2-20-ウ</span><span class="rid">R3-21-イ</span><span class="rid">R4-20-3</span><span class="rid">R4-21-ウ</span><span class="rid">R4-20-1</span><span class="rid">R7-20-エ</span><span class="rid">R2-21-3</span></div>
+<div class="refs"><h4>関連問題番号</h4><span class="rid">H30-20-オ</span><span class="rid">R2-20-ウ</span><span class="rid">R3-21-イ</span><span class="rid">R4-20-3</span><span class="rid">R4-21-ウ</span><span class="rid">R4-20-1</span><span class="rid">R7-20-エ</span><span class="rid">R2-21-3</span></div>
 </section>
 
 <section id="t7">
@@ -517,7 +562,7 @@ body{display:flex; align-items:flex-start}
 </dl></div>
 </div>
 
-<div class="refs"><h4>過去問での出題</h4><span class="rid">R2-21-1</span><span class="rid">R2-21-2</span><span class="rid">R2-21-3</span><span class="rid">R2-21-4</span><span class="rid">R2-21-5</span></div>
+<div class="refs"><h4>関連問題番号</h4><span class="rid">R2-21-1</span><span class="rid">R2-21-2</span><span class="rid">R2-21-3</span><span class="rid">R2-21-4</span><span class="rid">R2-21-5</span></div>
 </section>
 
 <section id="t8">
@@ -549,11 +594,11 @@ body{display:flex; align-items:flex-start}
 <div class="case" data-case="最判令和2年7月14日"><h4>共同して故意による違法行為をした公務員の求償債務　<a class="cite" href="資料/判例/%E6%9C%80%E5%88%A4%E4%BB%A4%E5%92%8C2%E5%B9%B47%E6%9C%8814%E6%97%A5.html">最判令和2年7月14日</a></h4><div class="cin"><p class="cf" data-case="最判令和2年7月14日"><b>事案</b>複数の公務員が共同して故意による違法行為を行い、被害者に損害を与えたため、国または公共団体が被害者に損害を賠償した。その後、国または公共団体が当該公務員らに対して国家賠償法1条2項に基づく求償権を行使する場合、各公務員の求償債務の性質が争われた。</p><p class="ch" data-case="最判令和2年7月14日"><b>判旨</b>複数の公務員が共同して故意によって違法に他人に損害を加えた場合において、国または公共団体が被害者に対して損害を賠償したときは、当該公務員らは、国または公共団体に対し、連帯して国家賠償法1条2項による求償債務を負う。共同して故意に違法行為を行った以上、その求償債務を各自の負担部分に応じた分割債務とすべき理由はない。</p><p class="cp"><b>意義</b>求償債務が<b>分割債務ではなく連帯債務</b>になることを明らかにした判決である。分割債務とすると、国または公共団体は各人の負担部分を立証しなければならず、また誰か一人が無資力であればその分を回収できなくなる。共同して故意に違法行為をした者どうしの間で、その不利益を国に負わせる理由はない。<b>要件が「共同して」「故意によって」である点に注意が要る。</b>それぞれが別々に過失で関わったにすぎない場合まで、この判決が及ぶわけではない。</p><p class="cl">この判例の全文の要約は<a href="資料/索引.html">判例の索引</a>から引けます</p></div></div>
 
 <div class="exc"><h4>6-8の例外・限界</h4><div class="in">
-<table><tbody>
+<div class="scroll"><table><tbody>
 <tr><th scope="row">公務員個人の責任が生じる場面</th><td>外形からも職務執行と見えない私的な行為であれば、そもそも1条の適用がなく、公務員個人が民法709条の責任を負います。1条が適用される場面で個人責任が否定されるのであって、公務員がいかなる場合も責任を負わないわけではありません。</td></tr>
 <tr><th scope="row">求償できないことと責任がないことは別</th><td>軽い過失にとどまるため求償ができない場合でも、その公務員が懲戒処分を受けることはあり得ます。国家賠償法上の求償と、公務員法上の責任は別のことがらです。</td></tr>
 <tr><th scope="row">連帯になるのは共同・故意の場合</th><td>最判令和2年7月14日が連帯債務としたのは、<b>複数の公務員が共同して故意によって</b>違法行為をした場合です。それぞれが別々に、あるいは過失で関わったにすぎない場合にまで及ぶものではありません。</td></tr>
-</tbody></table>
+</tbody></table></div>
 </div></div>
 
 <div class="memo">
@@ -568,7 +613,7 @@ body{display:flex; align-items:flex-start}
 </dl></div>
 </div>
 
-<div class="refs"><h4>過去問での出題</h4><span class="rid">R3-26-ア</span><span class="rid">R5-21-1</span><span class="rid">R5-21-2</span><span class="rid">R6-21-1</span><span class="rid">R7-21-1</span><span class="rid">R7-21-2</span></div>
+<div class="refs"><h4>関連問題番号</h4><span class="rid">R3-26-ア</span><span class="rid">R5-21-1</span><span class="rid">R5-21-2</span><span class="rid">R6-21-1</span><span class="rid">R7-21-1</span><span class="rid">R7-21-2</span></div>
 </section>
 
 <section id="t9">
@@ -617,15 +662,18 @@ body{display:flex; align-items:flex-start}
 
 <p>たとえば、道路管理者が設置した工事標識板やバリケードが何者かに倒され、それが夜間の事故発生の直前に生じたものであって、道路管理者において時間的に遅滞なく原状に復することが困難であったという場合です。<span class="key">管理の瑕疵とは、管理者が採るべき措置を採らなかったことを指す</span>ので、採る余地がそもそもなかったのであれば瑕疵は認められません。</p>
 
+<p>この整理は、<span class="term-b">不可抗力</span>（ふかこうりょく＝通常の予見や対応を超えて避けられない外部事情）で免責される、という意味ではありません。2条は無過失責任なので、「過失がないから免責される」という枠組みでは整理しません。危険が生じてから対応する時間がなかった場合には、<span class="key">営造物が通常有すべき安全性を欠いていたとはいえず、瑕疵そのものが否定される</span>と考えます。</p>
+
 <p>ここは6-9の冒頭で見た予算の話と混同しないでください。<span class="key">予算が足りないことは免責の理由になりませんが、そもそも対応する時間がなかったことは別</span>です。前者は、費用を理由に安全の水準を下げてよいかという問題であり、後者は、管理者に採るべき措置を採る機会があったかという問題です。</p>
 
 <div class="exc"><h4>6-9の例外・限界</h4><div class="in">
-<table><tbody>
+<div class="scroll"><table><tbody>
 <tr><th scope="row">無過失責任でも瑕疵は要る</th><td>管理者の過失は要件ではありませんが、<b>瑕疵という要件そのものは残ります</b>。営造物に関わる事故であれば当然に責任が生じるわけではなく、通常有すべき安全性を欠いていたことが必要です。</td></tr>
 <tr><th scope="row">通常の用法が前提になる</th><td>安全性は通常の用法に即して利用する限りで測られます。本来の用法と異なる異常な使い方によって生じた事故については、設置管理者は責任を負いません（最判平成5年3月30日、最判昭和53年7月4日）。</td></tr>
+<tr><th scope="row">不可抗力は瑕疵の有無で整理する</th><td>不可抗力とは、通常の予見や対応を超えて避けられない外部事情のことです。2条では、不可抗力だから免責されるのではなく、対応する時間がなく通常有すべき安全性を欠くとはいえないため、瑕疵が否定されると整理します。</td></tr>
 <tr><th scope="row">予算不足は免責にならない</th><td>防護柵の設置に多額の費用を要し予算措置に困却するとしても、それだけで賠償責任を免れることはできません（最判昭和45年8月20日、最判昭和50年7月25日）。ただし、危険の程度、対策として一般に行われている措置の内容と費用、注意喚起がされていたかどうかといった事情は、通常有すべき安全性を判断する際の考慮事情になります。高速道路への動物の侵入が争われた事案では、当時の技術水準と設置費用に加えて、動物注意の標識による注意喚起がされていたことも考慮されました（最判平成22年3月2日）。</td></tr>
 <tr><th scope="row">2条2項の求償</th><td>他に損害の原因について責任を負うべき者があるときは、賠償をした国または公共団体はその者に求償できます。1条2項の求償と違い、<b>故意または重大な過失という限定が付いていません</b>。求償の相手が公務員ではなく、道路に障害物を放置した者などの第三者だからです。</td></tr>
-</tbody></table>
+</tbody></table></div>
 </div></div>
 
 <div class="memo">
@@ -637,11 +685,12 @@ body{display:flex; align-items:flex-start}
 <dt>予算</dt><dd>予算措置に困却することは<b>免責の理由にならない</b></dd>
 <dt>判断の方法</dt><dd>構造・用法・場所的環境・利用状況等を<b>総合考慮して具体的個別的に</b>判断する（最判昭和53年7月4日）</dd>
 <dt>通常の用法</dt><dd>安全性は<b>通常の用法に即して利用する限り</b>で測る。本来の用法と異なる異常な使い方による事故には責任を負わない（最判平成5年3月30日）</dd>
+<dt>不可抗力</dt><dd>不可抗力で免責されるのではなく、対応する時間がなく通常有すべき安全性を欠くとはいえないため、<b>瑕疵が否定される</b>と整理する</dd>
 <dt>混同しやすい点</dt><dd>1条は過失責任、2条は無過失責任である。ただし無過失責任であっても、瑕疵という要件は残るので、営造物に関わる事故に常に責任が生じるわけではない。また2条2項の求償には、1条2項と違って重過失の限定がない</dd>
 </dl></div>
 </div>
 
-<div class="refs"><h4>過去問での出題</h4><span class="rid">R1-21-1</span><span class="rid">R1-21-2</span><span class="rid">R1-21-3</span><span class="rid">R1-21-4</span><span class="rid">R1-21-5</span><span class="rid">R5-20-1</span><span class="rid">R5-20-2</span><span class="rid">R5-20-3</span></div>
+<div class="refs"><h4>関連問題番号</h4><span class="rid">R1-21-1</span><span class="rid">R1-21-2</span><span class="rid">R1-21-3</span><span class="rid">R1-21-4</span><span class="rid">R1-21-5</span><span class="rid">R5-20-1</span><span class="rid">R5-20-2</span><span class="rid">R5-20-3</span></div>
 </section>
 
 <section id="t10">
@@ -685,7 +734,7 @@ body{display:flex; align-items:flex-start}
 </dl></div>
 </div>
 
-<div class="refs"><h4>過去問での出題</h4><span class="rid">R1-21-k1</span><span class="rid">R1-21-k2</span><span class="rid">R5-20-4</span><span class="rid">R5-20-5</span><span class="rid">R5-20-k1</span></div>
+<div class="refs"><h4>関連問題番号</h4><span class="rid">R1-21-k1</span><span class="rid">R1-21-k2</span><span class="rid">R5-20-4</span><span class="rid">R5-20-5</span><span class="rid">R5-20-k1</span></div>
 </section>
 
 <section id="t11">
@@ -725,7 +774,7 @@ body{display:flex; align-items:flex-start}
 </dl></div>
 </div>
 
-<div class="refs"><h4>過去問での出題</h4><span class="rid">R3-26-イ</span><span class="rid">R6-21-2</span><span class="rid">R6-21-3</span><span class="rid">R7-21-3</span></div>
+<div class="refs"><h4>関連問題番号</h4><span class="rid">R3-26-イ</span><span class="rid">R6-21-2</span><span class="rid">R6-21-3</span><span class="rid">R7-21-3</span></div>
 </section>
 
 <section id="t12">
@@ -733,17 +782,17 @@ body{display:flex; align-items:flex-start}
 
 <p>国家賠償法は6か条しかありません。損害の範囲、過失相殺、時効といった細かい事柄はどこにも書かれていません。それを補うのが4条です。</p>
 
-<div class="art"><h4><a class="cite" href="資料/条文/%E5%9B%BD%E5%AE%B6%E8%B3%A0%E5%84%9F%E6%B3%954%E6%9D%A1.html">国家賠償法4条</a></h4><div class="ain"><p class="atext" data-law="国家賠償法4条">国又は公共団体の損害賠償の責任については、前三条の規定によるの外、民法の規定による。</p><p class="an">一行の条文だが、実務上の意味は大きい。損害の範囲（民法416条の類推）、過失相殺（722条2項）、慰謝料（710条）、消滅時効（724条）など、国家賠償法が書いていない事柄はすべて民法によることになる。<b>国家賠償法は民法の不法行為の特別法である</b>という位置づけが、この条文に表れている。</p><p class="al">この法律の全文は<a href="資料/索引.html">条文の索引</a>から引けます</p></div></div>
+<div class="art"><h4><a class="cite" href="資料/条文/%E5%9B%BD%E5%AE%B6%E8%B3%A0%E5%84%9F%E6%B3%954%E6%9D%A1.html">国家賠償法4条</a></h4><div class="ain"><p class="atext" data-law="国家賠償法4条">国又は公共団体の損害賠償の責任については、前三条の規定によるの外、民法の規定による。</p><p class="an">一行の条文だが、実務上の意味は大きい。損害の範囲（民法416条の類推）、過失相殺（722条2項）、慰謝料（710条）、消滅時効（724条）などは、1条から3条までの規定、および他の法律に別段の定めがない限り、民法の規定によることになる。<b>国家賠償法は民法の不法行為の特別法である</b>という位置づけが、この条文に表れている。</p><p class="al">この法律の全文は<a href="資料/索引.html">条文の索引</a>から引けます</p></div></div>
 
-<p>4条によって民法が適用される結果、次のようなことが決まります。</p>
+<p>4条によって、1条から3条までの規定、および5条によって優先される個別の法律に別段の定めがない限り、民法が適用されます。その結果、次のようなことが決まります。</p>
 
 <div class="scroll"><table>
-  <thead><tr><th>事柄</th><th>適用される民法の規定</th><th>内容</th></tr></thead>
+  <thead><tr><th>事柄</th><th>適用される規定</th><th>内容</th></tr></thead>
   <tbody>
-    <tr><th scope="row">消滅時効</th><td>民法724条・724条の2</td><td>損害および加害者を知った時から3年（人の生命または身体を害する不法行為の場合は5年）、不法行為の時から20年で、損害賠償請求権は消滅します。</td></tr>
-    <tr><th scope="row">過失相殺</th><td>民法722条2項</td><td>被害者にも落ち度があったときは、裁判所はこれを考慮して賠償の額を定めることができます。</td></tr>
-    <tr><th scope="row">精神的損害</th><td>民法710条</td><td>財産以外の損害についても賠償の対象になります。慰謝料が認められるのはこの規定によります。</td></tr>
-    <tr><th scope="row">失火責任法の適用</th><td>失火ノ責任ニ関スル法律</td><td>4条にいう「民法」には、民法の不法行為の規定を修正する失火責任法も含まれると解されています。したがって、消防職員の失火のように<b>失火による損害については、重大な過失がなければ賠償責任が生じません</b>。</td></tr>
+    <tr><th scope="row">消滅時効</th><td>民法724条および724条の2が適用されます。</td><td>損害および加害者を知った時から3年（人の生命または身体を害する不法行為の場合は5年）、不法行為の時から20年で、損害賠償請求権は消滅します。</td></tr>
+    <tr><th scope="row">過失相殺</th><td>民法722条2項が適用されます。</td><td>被害者にも落ち度があったときは、裁判所はこれを考慮して賠償の額を定めることができます。</td></tr>
+    <tr><th scope="row">精神的損害</th><td>民法710条が適用されます。</td><td>財産以外の損害についても賠償の対象になります。慰謝料が認められるのはこの規定によります。</td></tr>
+    <tr><th scope="row">失火責任法の適用</th><td>失火ノ責任ニ関スル法律が適用されます。</td><td>4条にいう「民法」には、民法の不法行為の規定を修正する失火責任法も含まれると解されています。したがって、消防職員の失火のように<b>失火による損害については、重大な過失がなければ賠償責任が生じません</b>。</td></tr>
   </tbody>
 </table></div>
 
@@ -751,7 +800,7 @@ body{display:flex; align-items:flex-start}
 
 <h3>5条 ── 他の法律に別段の定めがあるとき</h3>
 
-<p>5条は、国または公共団体の損害賠償の責任について<span class="key">民法以外の他の法律に別段の定めがあるときは、その定めによる</span>ことを規定しています。郵便物の亡失や毀損についての責任を制限する規定などが、この例に当たります。<span class="key">国家賠償法よりも個別の法律が優先する</span>という関係です。</p>
+<p>5条は、国または公共団体の損害賠償の責任について<span class="key">民法以外の他の法律に別段の定めがあるときは、その定めによる</span>ことを規定しています。たとえば、郵便物の亡失や毀損について責任を制限する郵便法の規定などが、この例に当たります。<span class="key">国家賠償法よりも個別の法律が優先する</span>という関係です。</p>
 
 <h3>6条 ── 外国人が被害者であるとき</h3>
 
@@ -760,30 +809,31 @@ body{display:flex; align-items:flex-start}
 <p>憲法17条は「何人も」と書いており、国民に限っていません。それにもかかわらず6条のような制限が置けるのは、<span class="key">憲法17条が「法律の定めるところにより」と、具体的な要件を法律に委ねているから</span>です。</p>
 
 <div class="exc"><h4>6-12の例外・限界</h4><div class="in">
-<table><tbody>
+<div class="scroll"><table><tbody>
 <tr><th scope="row">失火責任法が及ぶ範囲</th><td>失火責任法により重過失が必要になるのは、<b>失火による損害</b>についてです。消防職員が消火の活動そのものを誤ったことによる損害など、失火とはいえない場面には及びません。</td></tr>
+<tr><th scope="row">他の法律の別段の定め</th><td>5条により、民法以外の法律に特別の定めがあれば、その定めが優先します。郵便法の責任制限規定などが例です。失火ノ責任ニ関スル法律は、民法709条の責任を修正する法律として4条を通じて問題になります。</td></tr>
 <tr><th scope="row">6条は憲法に反しないか</th><td>憲法17条は「法律の定めるところにより」として要件を法律に委ねているので、相互の保証を要求することが直ちに違憲になるものではないと解されています。</td></tr>
 <tr><th scope="row">条文が置かれている順序</th><td>4条が民法、5条が民法以外の他の法律です。<b>5条のほうが優先します</b>。個別の法律に別段の定めがあれば、まずそちらによることになります。</td></tr>
-</tbody></table>
+</tbody></table></div>
 </div></div>
 
 <div class="memo">
 <h4>覚える ── 4条・5条・6条</h4>
 <div class="in"><dl>
-<dt>4条</dt><dd>1条から3条までのほか、<b>民法の規定による</b>。消滅時効、過失相殺、慰謝料などはすべて民法による</dd>
+<dt>4条</dt><dd>1条から3条まで、および他の法律に別段の定めがない限り、<b>民法の規定による</b>。消滅時効、過失相殺、慰謝料などは、民法によって決まる</dd>
 <dt>消滅時効</dt><dd>民法724条により、知った時から<b>3年</b>、不法行為の時から<b>20年</b>。人の生命または身体を害する不法行為については、724条の2により<b>3年が5年に延長</b>される</dd>
-<dt>失火責任法</dt><dd>4条の「民法」には<b>失火責任法も含まれる</b>。したがって公務員の失火については<b>重大な過失</b>が必要になる</dd>
-<dt>5条</dt><dd>民法以外の他の法律に別段の定めがあるときは、<b>その定めによる</b></dd>
+<dt>失火責任法</dt><dd>4条の「民法」には<b>失火ノ責任ニ関スル法律</b>も含まれる。したがって公務員の失火については<b>重大な過失</b>が必要になる</dd>
+<dt>5条</dt><dd>民法以外の他の法律に別段の定めがあるときは、<b>その定めによる</b>。郵便法の責任制限規定などが例である</dd>
 <dt>6条</dt><dd>外国人が被害者である場合には、<b>相互の保証があるときに限り</b>適用する</dd>
 <dt>混同しやすい点</dt><dd>失火の場合に必要なのは重大な過失であり、通常の過失では足りない。また、憲法17条が「何人も」と書いていることは、6条の相互保証主義を違憲にするものではない</dd>
 </dl></div>
 </div>
 
-<div class="refs"><h4>過去問での出題</h4><span class="rid">R3-20-1</span><span class="rid">R3-20-2</span><span class="rid">R3-20-3</span><span class="rid">R3-20-4</span><span class="rid">R3-20-5</span><span class="rid">R4-20-4</span><span class="rid">R4-20-5</span></div>
+<div class="refs"><h4>関連問題番号</h4><span class="rid">R3-20-1</span><span class="rid">R3-20-2</span><span class="rid">R3-20-3</span><span class="rid">R3-20-4</span><span class="rid">R3-20-5</span><span class="rid">R4-20-4</span><span class="rid">R4-20-5</span></div>
 </section>
 
 <footer>
   <p><a href="index.html">目次</a> ／ <a href="用語集.html">用語集</a> ／ <a href="救済の三つの道.html">救済の三つの争訟方法</a><br>
-  条文は e-Gov の現行法令から機械取得したものを引用しています。判例は収録データのうち確度の高いものだけを引きました。過去問については、その論点が扱われた問題の番号だけを載せ、問題文および選択肢の本文は載せていません。</p>
+  条文は e-Gov の現行法令から機械取得したものを引用しています。判例は収録データのうち確度の高いものだけを引きました。関連問題番号は、その論点が扱われた問題の番号だけを載せ、問題文や選択文の本文は載せていません。</p>
 </footer>
 </div>

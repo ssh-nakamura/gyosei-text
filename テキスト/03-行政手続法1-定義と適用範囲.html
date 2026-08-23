@@ -67,6 +67,21 @@ body{display:flex; align-items:flex-start}
     border-radius:6px; cursor:pointer; font-size:1.1rem; color:var(--ink); box-shadow:0 1px 4px rgba(0,0,0,.1)}
   .wrap{padding-top:3.4rem}
 }
+
+/* ── 横に長いものは、その箱の中だけでスクロールさせる（本文は横スクロールしない） ── */
+.scroll{overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%}
+.scroll table{min-width:max-content}
+figure,.fig{overflow-x:auto; max-width:100%}
+svg{max-width:100%; height:auto}
+img{max-width:100%; height:auto}
+pre,code{overflow-x:auto; word-break:break-word}
+.wrap{overflow-x:hidden}
+@media(max-width:640px){
+  html{font-size:15px}
+  table{font-size:.84rem}
+  th,td{padding:.4rem .5rem}
+  .wrap{padding-left:.8rem; padding-right:.8rem}
+}
 </style>
 <div id="navbtn" onclick="document.getElementById('nav').classList.toggle('open')">☰</div>
 <nav id="nav">
@@ -88,7 +103,8 @@ body{display:flex; align-items:flex-start}
 <a href="../行政不服審査法.html">行政不服審査法</a>
 <h4>第5章 行政事件訴訟法</h4>
 <a href="05-行政事件訴訟法1-処分性.html">処分性</a>
-<a href="05-行政事件訴訟法2-訴訟要件と判決.html">訴訟要件と判決</a>
+<a href="05-行政事件訴訟法2-訴訟要件.html">訴訟要件</a>
+<a href="05-行政事件訴訟法3-判決と訴訟類型.html">判決と訴訟類型</a>
 <h4>第6章 国家賠償法</h4>
 <a href="06-国家賠償法1-国家賠償.html">国家賠償</a>
 <a class="todo">損失補償</a>
@@ -222,11 +238,11 @@ body{display:flex; align-items:flex-start}
 <p>ハも同じ考え方です。同意があるなら、意見を聴く手続の前提が失われる。</p>
 
 <div class="exc"><h4>この節の例外・限界</h4><div class="in">
-<table><tbody>
+<div class="scroll"><table><tbody>
 <tr><th scope="row">除外されても手続がゼロではない</th><td>申請拒否処分は不利益処分から除かれるが、申請に対する処分としての手続（審査基準・標準処理期間・理由の提示）は<b>かかる</b></td></tr>
 <tr><th scope="row">「直接に」の意味</th><td>義務を課し権利を制限する効果が<b>その処分自体から直接生じる</b>ことを要する。間接的に不利益が及ぶだけでは不利益処分にならない</td></tr>
 <tr><th scope="row">名あて人が特定されない場合</th><td>「特定の者を名あて人として」が要件なので、一般的な規制は不利益処分ではない（命令等の世界になる）</td></tr>
-</tbody></table>
+</tbody></table></div>
 </div></div>
 
 <div class="refs"><h4>関連問題</h4><span class="rid">R2-11-1</span><span class="rid">R4-12-1</span><span class="rid">R5-11-2</span><span class="rid">R2-11-3</span></div><div class="memo">
@@ -434,12 +450,12 @@ body{display:flex; align-items:flex-start}
 <p>9号は「その職務又は身分に関してされる処分」と書いているので、<span class="warn">公務員に対する処分がすべて外れるわけではありません。</span>たとえば公務員が私人として受ける営業許可の取消しは、職務にも身分にも関係しないので、この号には当たりません。<span class="key">誰に対する処分かではなく、何に関してされる処分かで判断する</span>という読み方です。</p>
 
 <div class="exc"><h4>3-9の例外・限界</h4><div class="in">
-<table><tbody>
+<div class="scroll"><table><tbody>
 <tr><th scope="row">外れるのは手続だけである</th><td>3条によって適用が外れるのは、行政手続法が定める手続です。<b>処分そのものが違法でよくなるわけではありません。</b>また、これらの処分について審査請求や取消訴訟ができなくなるわけでもありません。行政手続法の適用除外と、争えるかどうかは別のことがらです。</td></tr>
 <tr><th scope="row">1項と2項で外れる範囲が違う</th><td>1項に当たる処分・行政指導について外れるのは第2章から第4章の2までで、第6章の意見公募手続は外れません。2項に当たる命令等について外れるのは第6章だけです。<b>3条に当たれば全部外れる、という理解はできません。</b></td></tr>
 <tr><th scope="row">個別法が手続を置いていることがある</th><td>行政手続法の適用が外れても、その分野の個別法が独自に手続を定めていることがあります。たとえば公務員の懲戒処分については、国家公務員法や地方公務員法が不服申立ての仕組みを置いています。手続がまったく無くなるわけではありません。</td></tr>
 <tr><th scope="row">1条2項の一般的な優先関係</th><td>3条とは別に、1条2項が「この法律に規定する事項について、他の法律に特別の定めがある場合は、その定めるところによる」としています。個別法に特別の定めがあれば、そちらが優先します。3条の列挙に当たらなくても、個別法の定めによって行政手続法の規定が働かない場面があるということです。</td></tr>
-</tbody></table>
+</tbody></table></div>
 </div></div>
 
 <div class="memo">
@@ -514,12 +530,12 @@ body{display:flex; align-items:flex-start}
 <p>46条の義務のレベルは<span class="key">努力義務</span>です。<span class="warn">地方公共団体が行政手続条例を定めなければならない、という義務ではありません。</span>国の法律で地方公共団体の手続まで縛ると、憲法92条にいう地方自治の本旨に触れるおそれがあるからです。もっとも、実際にはほとんどの地方公共団体が行政手続条例を制定しており、その中身も行政手続法とほぼ同じ組み立てになっています。</p>
 
 <div class="exc"><h4>3-10の例外・限界</h4><div class="in">
-<table><tbody>
+<div class="scroll"><table><tbody>
 <tr><th scope="row">4条は処分・行政指導・届出で限定が違う</th><td>国や地方公共団体が処分の名あて人であれば常に外れるのではありません。処分は、<b>固有の資格において名あて人となる場合に限って</b>外れます。届出も、固有の資格においてすべきこととされているものに限って外れます。行政指導は、固有の資格かどうかを問わず外れます。</td></tr>
 <tr><th scope="row">法人に対する処分の特則</th><td>4条2項は、法律により直接に設立された法人などに対する処分であって、その法人の監督に関する法律の特別の規定に基づくものについて、第2章および第3章を適用しないとしています。ただし<b>解散を命ずる処分、設立の認可を取り消す処分、役員等の解任を命ずる処分は除かれ</b>、これらには手続がかかります。重い処分については保障を残した、という作りです。</td></tr>
 <tr><th scope="row">指定法人に対する監督上の処分</th><td>4条3項も同じ構造で、指定を受けた者に対する監督上の処分について第2章・第3章を外していますが、<b>指定を取り消す処分と役員等の解任を命ずる処分は除かれます</b>。</td></tr>
 <tr><th scope="row">3条3項で外れるのは国の法律の適用だけ</th><td>適用が外れても、その地方公共団体の行政手続条例が手続を定めていれば、そちらがかかります。手続がまったく無くなるわけではありません。</td></tr>
-</tbody></table>
+</tbody></table></div>
 </div></div>
 
 <div class="memo">

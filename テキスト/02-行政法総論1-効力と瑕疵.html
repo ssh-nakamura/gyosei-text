@@ -31,6 +31,21 @@ body{display:flex; align-items:flex-start}
     border-radius:6px; cursor:pointer; font-size:1.1rem; color:var(--ink); box-shadow:0 1px 4px rgba(0,0,0,.1)}
   .wrap{padding-top:3.4rem}
 }
+
+/* ── 横に長いものは、その箱の中だけでスクロールさせる（本文は横スクロールしない） ── */
+.scroll{overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%}
+.scroll table{min-width:max-content}
+figure,.fig{overflow-x:auto; max-width:100%}
+svg{max-width:100%; height:auto}
+img{max-width:100%; height:auto}
+pre,code{overflow-x:auto; word-break:break-word}
+.wrap{overflow-x:hidden}
+@media(max-width:640px){
+  html{font-size:15px}
+  table{font-size:.84rem}
+  th,td{padding:.4rem .5rem}
+  .wrap{padding-left:.8rem; padding-right:.8rem}
+}
 </style>
 
 <style>
@@ -122,7 +137,8 @@ h4.sub{position:relative}
 <a href="../行政不服審査法.html">行政不服審査法</a>
 <h4>第5章 行政事件訴訟法</h4>
 <a href="05-行政事件訴訟法1-処分性.html">処分性</a>
-<a href="05-行政事件訴訟法2-訴訟要件と判決.html">訴訟要件と判決</a>
+<a href="05-行政事件訴訟法2-訴訟要件.html">訴訟要件</a>
+<a href="05-行政事件訴訟法3-判決と訴訟類型.html">判決と訴訟類型</a>
 <h4>第6章 国家賠償法</h4>
 <a href="06-国家賠償法1-国家賠償.html">国家賠償</a>
 <a class="todo">損失補償</a>
@@ -235,10 +251,10 @@ h4.sub{position:relative}
 <p>処分はいつから効力を持つのか。<b>特別の規定がない限り、意思表示が相手方に到達した時</b>です。発信した時ではありません。相手が知りようのない時点から効力が生じるとすれば、争う機会が事実上奪われるからです。民法の意思表示の到達主義(97条1項)と同じ発想です。</p>
 
 <div class="refs"><h4>過去問での出題</h4><span class="rid">R2-9-2</span></div><div class="exc"><h4>この節の例外・限界</h4><div class="in">
-<table><tbody>
+<div class="scroll"><table><tbody>
 <tr><th scope="row">効力の発生時期</th><td>原則は<b>到達時</b>。ただし<b>特別の規定があればそれに従う</b>(行政不服審査法の裁決のように、送達の方法が別に定められている場合など)</td></tr>
 <tr><th scope="row">公定力の根拠</th><td>取消訴訟の排他的管轄から導かれる。したがって<b>取消訴訟で争わせる仕組みが及ばない場面(国家賠償・無効)では働かない</b></td></tr>
-</tbody></table>
+</tbody></table></div>
 </div></div>
 </section>
 
@@ -332,11 +348,11 @@ h4.sub{position:relative}
 </div>
 
 <div class="exc"><h4>この節の例外・限界</h4><div class="in">
-<table><tbody>
+<div class="scroll"><table><tbody>
 <tr><th scope="row">不可争力の限界</th><td>縛るのは<b>相手方だけ</b>。行政の職権取消しには期間の制限がない。また<b>無効な処分には不可争力が生じない</b></td></tr>
 <tr><th scope="row">出訴期間の例外</th><td>行訴法14条・行審法18条とも<b>「正当な理由があるとき」のただし書</b>がある。天災や誤った教示など本人の責めに帰せない事情なら期間経過後も争える</td></tr>
 <tr><th scope="row">不可変更力の範囲</th><td>働くのは<b>争訟裁断的な処分だけ</b>です。審査請求に対する裁決のように、一定の争訟手続に従って当事者を関与させ、紛争を終局的に解決することを目的とする処分がこれに当たります。一般の処分には不可変更力が働かないので、行政庁は職権で取り消せます。逆にいえば、<b>裁決については、特別の規定がない限り取り消せる、という一般化はできません</b></td></tr>
-</tbody></table>
+</tbody></table></div>
 </div></div>
 </section>
 
@@ -407,11 +423,11 @@ h4.sub{position:relative}
 </div>
 
 <div class="exc"><h4>この節の例外・限界</h4><div class="in">
-<table><tbody>
+<div class="scroll"><table><tbody>
 <tr><th scope="row">明白性の要件の例外</th><td>課税処分のように<b>信頼を保護すべき第三者がいない場面</b>では、判旨のいう例外的事情がある場合に、明白性を欠いても当然無効となりうる(最判昭48.4.26)。</td></tr>
 <tr><th scope="row">重大性の要件</th><td>重大性の要件に例外はありません。<b>重大でなければ、どれだけ明白でも無効にはなりません</b>(取り消しうべき処分にとどまります)。</td></tr>
 <tr><th scope="row">無効でも制限が残る場面</th><td>無効の主張に期間制限がないのは<b>訴訟の場面</b>です。行政不服審査法には無効の場合の期間の特則が<b>置かれていません</b>。</td></tr>
-</tbody></table>
+</tbody></table></div>
 </div></div>
 </section>
 
@@ -495,12 +511,12 @@ h4.sub{position:relative}
 </div>
 
 <div class="exc"><h4>この節の例外・限界</h4><div class="in">
-<table><tbody>
+<div class="scroll"><table><tbody>
 <tr><th scope="row">職権取消しの限界</th><td>授益的処分は自由に取り消せません。<b>取消しの公益上の必要と相手方の不利益を比較衡量</b>します。生活の基盤になっている処分ほど制限されます。</td></tr>
 <tr><th scope="row">撤回の限界</th><td>撤回も比較衡量による制限を受けます。加えて、<b>公益上の必要で撤回する場合には損失補償が必要になることがあります</b>(相手に落ち度がないのに一方的に奪う場合)。</td></tr>
 <tr><th scope="row">撤回権者</th><td>撤回は、原則として撤回権限を持つ処分権者が行います。ただし、<b>法律が上級庁などに撤回権限を与えていればその法律に従います</b>。</td></tr>
 <tr><th scope="row">遡及効の例外</th><td>職権取消しは原則として遡りますが、<b>授益的処分の取消しでは、相手方の信頼保護から将来効にとどめる扱いがされることがあります</b>。</td></tr>
-</tbody></table>
+</tbody></table></div>
 </div></div>
 </section>
 
@@ -561,11 +577,11 @@ h4.sub{position:relative}
 </dl></div>
 
 <div class="exc"><h4>この節の例外・限界</h4><div class="in">
-<table><tbody>
+<div class="scroll"><table><tbody>
 <tr><th scope="row">承継の例外の範囲</th><td>たぬきの森事件は<b>総合考慮による判断</b>です。挙げられた事情がそろえば必ず承継されるという要件の形ではなく、事案ごとに判断されます。番号を振って要件のように覚えると、判決より強い言い方になります。</td></tr>
 <tr><th scope="row">無効の場合</th><td>先行処分が<b>無効</b>なら、承継の理論を持ち出すまでもなく後行処分の訴訟で主張できます。承継が問題になるのは<b>取消事由にとどまる違法</b>の場合だけです。</td></tr>
 <tr><th scope="row">否定される典型</th><td>義務を課す処分と、その履行を確保する手続(除却命令→代執行の戒告)では、承継は否定されます。両者は<b>相結合して一つの効果を完成させる関係にない</b>からです。</td></tr>
-</tbody></table>
+</tbody></table></div>
 </div></div>
 </div>
 </section>

@@ -31,6 +31,21 @@ body{display:flex; align-items:flex-start}
     border-radius:6px; cursor:pointer; font-size:1.1rem; color:var(--ink); box-shadow:0 1px 4px rgba(0,0,0,.1)}
   .wrap{padding-top:3.4rem}
 }
+
+/* ── 横に長いものは、その箱の中だけでスクロールさせる（本文は横スクロールしない） ── */
+.scroll{overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%}
+.scroll table{min-width:max-content}
+figure,.fig{overflow-x:auto; max-width:100%}
+svg{max-width:100%; height:auto}
+img{max-width:100%; height:auto}
+pre,code{overflow-x:auto; word-break:break-word}
+.wrap{overflow-x:hidden}
+@media(max-width:640px){
+  html{font-size:15px}
+  table{font-size:.84rem}
+  th,td{padding:.4rem .5rem}
+  .wrap{padding-left:.8rem; padding-right:.8rem}
+}
 </style>
 
 <style>
@@ -94,7 +109,8 @@ dd .trap b{color:var(--shu)}
 <a href="../行政不服審査法.html">行政不服審査法</a>
 <h4>第5章 行政事件訴訟法</h4>
 <a href="05-行政事件訴訟法1-処分性.html">処分性</a>
-<a href="05-行政事件訴訟法2-訴訟要件と判決.html">訴訟要件と判決</a>
+<a href="05-行政事件訴訟法2-訴訟要件.html">訴訟要件</a>
+<a href="05-行政事件訴訟法3-判決と訴訟類型.html">判決と訴訟類型</a>
 <h4>第6章 国家賠償法</h4>
 <a href="06-国家賠償法1-国家賠償.html">国家賠償</a>
 <a class="todo">損失補償</a>

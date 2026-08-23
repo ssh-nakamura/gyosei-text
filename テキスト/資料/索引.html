@@ -24,6 +24,21 @@
 .hmk.x{color:var(--shu); background:var(--shu-soft)}
 .hnote{flex:1; color:var(--ink-sub)}
 .back{font-size:.85rem; margin-bottom:1.2rem}
+
+/* ── 横に長いものは、その箱の中だけでスクロールさせる（本文は横スクロールしない） ── */
+.scroll{overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%}
+.scroll table{min-width:max-content}
+figure,.fig{overflow-x:auto; max-width:100%}
+svg{max-width:100%; height:auto}
+img{max-width:100%; height:auto}
+pre,code{overflow-x:auto; word-break:break-word}
+.wrap{overflow-x:hidden}
+@media(max-width:640px){
+  html{font-size:15px}
+  table{font-size:.84rem}
+  th,td{padding:.4rem .5rem}
+  .wrap{padding-left:.8rem; padding-right:.8rem}
+}
 </style>
 <div class="wrap">
 <p class="back"><a href="../../index.html">テキスト目次へ</a></p>

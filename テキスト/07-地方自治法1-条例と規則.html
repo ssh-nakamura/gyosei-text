@@ -80,6 +80,21 @@ body{display:flex; align-items:flex-start}
     border-radius:6px; cursor:pointer; font-size:1.1rem; color:var(--ink); box-shadow:0 1px 4px rgba(0,0,0,.1)}
   .wrap{padding-top:3.4rem}
 }
+
+/* ── 横に長いものは、その箱の中だけでスクロールさせる（本文は横スクロールしない） ── */
+.scroll{overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%}
+.scroll table{min-width:max-content}
+figure,.fig{overflow-x:auto; max-width:100%}
+svg{max-width:100%; height:auto}
+img{max-width:100%; height:auto}
+pre,code{overflow-x:auto; word-break:break-word}
+.wrap{overflow-x:hidden}
+@media(max-width:640px){
+  html{font-size:15px}
+  table{font-size:.84rem}
+  th,td{padding:.4rem .5rem}
+  .wrap{padding-left:.8rem; padding-right:.8rem}
+}
 </style>
 <div id="navbtn" onclick="document.getElementById('nav').classList.toggle('open')">☰</div>
 <nav id="nav">
@@ -101,7 +116,8 @@ body{display:flex; align-items:flex-start}
 <a href="../行政不服審査法.html">行政不服審査法</a>
 <h4>第5章 行政事件訴訟法</h4>
 <a href="05-行政事件訴訟法1-処分性.html">処分性</a>
-<a href="05-行政事件訴訟法2-訴訟要件と判決.html">訴訟要件と判決</a>
+<a href="05-行政事件訴訟法2-訴訟要件.html">訴訟要件</a>
+<a href="05-行政事件訴訟法3-判決と訴訟類型.html">判決と訴訟類型</a>
 <h4>第6章 国家賠償法</h4>
 <a href="06-国家賠償法1-国家賠償.html">国家賠償</a>
 <a class="todo">損失補償</a>
@@ -240,12 +256,12 @@ body{display:flex; align-items:flex-start}
 </div>
 
 <div class="exc"><h4>7-1の例外・限界</h4><div class="in">
-<table><tbody>
+<div class="scroll"><table><tbody>
 <tr><th scope="row">法定受託事務についての限界</th><td>条例を制定できること自体は原則どおりですが、国の法令が細部まで定めていることが多く、実際に条例が入る余地は狭くなります。国の関与も自治事務より強く、各大臣による是正の指示が用意されています（地方自治法245条の7第1項）。自治事務について都道府県の執行機関が市町村に対してできるのは是正の勧告にとどまります（同法245条の6）。</td></tr>
 <tr><th scope="row">属地性の裏側</th><td>区域内であれば住民以外にも及ぶ一方で、区域の外でされた行為には原則として及びません。もっとも、区域外に関係が及ぶ場面としては、協議により区域外に公の施設を設けるとする地方自治法244条の3のように、法律が個別に仕組みを置いたものがあります。</td></tr>
 <tr><th scope="row">直接請求から外れる条例</th><td>地方税の賦課徴収に関するものと、分担金・使用料・手数料の徴収に関するものは、住民による制定改廃請求の対象から除かれています（地方自治法74条1項かっこ書、12条1項かっこ書）。負担を軽くする方向の請求が乱発されて財政の基礎が崩れることを避ける趣旨です。</td></tr>
 <tr><th scope="row">住民が条例を作るわけではない</th><td>直接請求は議会に審議させるところまでの権利であって、可決するかどうかは議会が決めます。住民投票で条例が成立する仕組みは、地方自治法の直接請求には置かれていません。</td></tr>
-</tbody></table>
+</tbody></table></div>
 </div></div>
 
 <div class="refs"><h4>過去問での出題</h4><span class="rid">H30-24-1</span><span class="rid">R4-22-2</span><span class="rid">R3-23-4</span><span class="rid">R3-23-5</span><span class="rid">H30-23-ウ</span></div></section>
@@ -309,11 +325,11 @@ body{display:flex; align-items:flex-start}
 </div>
 
 <div class="exc"><h4>7-2の例外・限界</h4><div class="in">
-<table><tbody>
+<div class="scroll"><table><tbody>
 <tr><th scope="row">規律のない領域でも無条件ではない</th><td>国の法令がその事項を規律していない場合、条例は通常は違反しません。ただし、法令があえて規律しないでおく趣旨であると読めるときは、条例による規制がその趣旨と衝突しないかを確かめる必要があります。「法令に規定がなければ何を定めてもよい」とまでは言えません。</td></tr>
 <tr><th scope="row">明確性の限界</th><td>明確性が認められたのは「通常の判断能力を有する一般人の理解において」判断できる基準が読み取れたからです。読み取れないほど漠然とした文言であれば、条例の罰則は憲法31条に違反します。徳島市公安条例事件はこの基準を示したうえで結論として合憲としたのであって、条例の文言なら何でも許されると述べたのではありません。</td></tr>
 <tr><th scope="row">法律そのものの要件は動かせない</th><td>法律が定めた処分の要件を条例で緩めたり厳しくしたりすることは、法令に違反する条例となり許されません。事務が自治事務であっても結論は変わりません。</td></tr>
-</tbody></table>
+</tbody></table></div>
 </div></div>
 
 <div class="refs"><h4>過去問での出題</h4><span class="rid">R7-22-5</span><span class="rid">R2-23-2</span></div></section>
@@ -382,11 +398,11 @@ body{display:flex; align-items:flex-start}
 </div>
 
 <div class="exc"><h4>7-3の例外・限界</h4><div class="in">
-<table><tbody>
+<div class="scroll"><table><tbody>
 <tr><th scope="row">14条2項が働かない場面</th><td>この項が条例を要求しているのは義務を課し権利を制限する場面です。住民に利益を与えるだけの給付や、団体の内部組織に関する事柄は、この項の対象ではありません。もっとも、他の条文が別に条例を要求していることはあります。</td></tr>
 <tr><th scope="row">法令の特別の定めによる例外</th><td>14条2項も244条の2第1項も、法令（法律またはこれに基づく政令）に特別の定めがあるものを除いています。個別の法律が別の形式を指定していれば、そちらが優先します。</td></tr>
 <tr><th scope="row">手数料の額の標準</th><td>手数料は条例事項ですが、全国的に統一して定めることが特に必要と認められる標準事務については、政令で定める金額を徴収することを標準として条例を定めなければならないとされています（228条1項後段）。条例事項であることと、額を自由に決められることは別です。</td></tr>
-</tbody></table>
+</tbody></table></div>
 </div></div>
 
 <div class="refs"><h4>過去問での出題</h4><span class="rid">R6-24-3</span><span class="rid">H30-23-エ</span></div></section>
@@ -482,12 +498,12 @@ body{display:flex; align-items:flex-start}
 </div>
 
 <div class="exc"><h4>7-4の例外・限界</h4><div class="in">
-<table><tbody>
+<div class="scroll"><table><tbody>
 <tr><th scope="row">利用を拒める場合</th><td>244条2項は「正当な理由がない限り」と書いており、利用の拒否が一切できないわけではありません。施設の管理上の支障がある場合など、正当な理由があれば拒むことができます。</td></tr>
 <tr><th scope="row">住民でない者への効果</th><td>244条3項の文言は「住民」ですが、判例はその区域内に事務所や別荘を有するなど住民に準ずる地位にある者の利用関係にも及ぶとしています（最判平成18年7月14日）。文言どおりに住民だけと読むと誤ります。</td></tr>
 <tr><th scope="row">条例の制定行為の処分性</th><td>条例の制定行為は原則として抗告訴訟の対象になりません（最判平成18年7月14日）。特定の者の法的地位を条例の施行だけで奪う場合に例外的に処分性が認められます（最判平成21年11月26日）。</td></tr>
 <tr><th scope="row">条例事項から外れるもの</th><td>244条の2第1項は「法律又はこれに基づく政令に特別の定めがあるものを除くほか」としています。個別の法律が別の定めを置いていれば、そちらによります。</td></tr>
-</tbody></table>
+</tbody></table></div>
 </div></div>
 
 <div class="refs"><h4>過去問での出題</h4><span class="rid">R1-23-1</span><span class="rid">R1-23-2</span><span class="rid">R1-23-3</span><span class="rid">R1-23-4</span><span class="rid">R1-23-5</span><span class="rid">R3-22-ア</span><span class="rid">R3-22-イ</span><span class="rid">R3-22-ウ</span><span class="rid">R3-22-エ</span></div></section>
@@ -559,11 +575,11 @@ body{display:flex; align-items:flex-start}
 </div>
 
 <div class="exc"><h4>7-5の例外・限界</h4><div class="in">
-<table><tbody>
+<div class="scroll"><table><tbody>
 <tr><th scope="row">法令に特別の定めがある場合</th><td>14条3項は「法令に特別の定めがあるものを除くほか」としています。個別の法律が別の限度を定めていれば、14条3項の数字ではなくそちらによります。14条3項自身が「法令に特別の定めがあるものを除くほか」と書いているので、<span class="key">この数字は絶対の上限ではなく、他に定めがないときの限度</span>だということになります。</td></tr>
 <tr><th scope="row">分担金等についての過料の特則</th><td>分担金・使用料・加入金・手数料の徴収に関しては、条例で5万円以下の過料を科する規定を設けることができ（228条2項）、詐欺その他不正の行為によりこれらの徴収を免れた者については、免れた金額の5倍に相当する金額（5万円を超えないときは5万円）以下の過料を科する規定を設けることができます（同条3項）。<b>地方自治法の中で、5万円を超える過料を条例で定められる場面</b>です。なお14条3項自体が「法令に特別の定めがあるものを除くほか」としているため、個別の法律がこれより高い上限を定めることもあります（たとえば国民健康保険法127条）。</td></tr>
 <tr><th scope="row">罰則の内容の限界</th><td>上限の範囲内であっても、罰則の文言が漠然としていて何が禁じられているのか読み取れなければ、憲法31条に違反します（7-2の徳島市公安条例事件）。上限を守れば内容は自由、ではありません。</td></tr>
-</tbody></table>
+</tbody></table></div>
 </div></div>
 
 <div class="refs"><h4>過去問での出題</h4><span class="rid">R4-22-3</span><span class="rid">R4-22-5</span><span class="rid">R7-22-2</span><span class="rid">H30-23-ア</span><span class="rid">R3-23-2</span><span class="rid">R6-24-2</span><span class="rid">R6-24-5</span></div></section>
@@ -645,13 +661,13 @@ body{display:flex; align-items:flex-start}
 </div>
 
 <div class="exc"><h4>7-6の例外・限界</h4><div class="in">
-<table><tbody>
+<div class="scroll"><table><tbody>
 <tr><th scope="row">同じ「過料」でも主体が違う</th><td>裁判所が科すのは法律に違反した場合の過料です。条例・規則に違反した場合の過料を裁判所が科すことはありません。逆に、法律に違反した場合の過料は、原則として長が科すものではありません。ただし個別の法律が、条例で過料を科す規定を設けられるとしたうえで地方自治法255条の3の手続を準用することがあり（国民健康保険法127条）、その場合は長が科します。原則と例外を区別してください。</td></tr>
 <tr><th scope="row">行政手続法が適用される場合もある</th><td>行政手続法3条3項が適用除外としているのは、根拠となる規定が条例または規則に置かれている処分です。地方公共団体の機関がする処分でも、根拠が法律にある処分はこの項では除外されません。「地方公共団体の処分には行政手続法が適用されない」と一般化すると誤ります。もっとも、3条1項各号の適用除外に当たる余地は別にあるので、この項で除外されないことがそのまま適用されることを意味するわけではありません。</td></tr>
 <tr><th scope="row">秩序罰と刑罰は併科できる</th><td>秩序罰である過料と刑罰は、趣旨・目的・性質を異にするものとされています。したがって、同じ行為について過料を科したうえでさらに刑罰を科しても、憲法39条が禁ずる二重処罰には当たりません（行政上の措置と刑罰の関係について最大判昭和33年4月30日）。「過料を科したらもう罰金は科せない」と考えると誤ります。二重処罰の論点そのものは行政罰の章で扱います。</td></tr>
 <tr><th scope="row">執行罰は条例で作れない</th><td>秩序罰としての過料は条例・規則で定められますが、執行罰は行政上の強制執行の一種であり、個別の法律の根拠がなければ用いることができません。行政代執行法が一般法として定めているのは代執行だけです（行政代執行法1条・2条）。同じ「過料」でも、条例で置けるものと置けないものがあります。</td></tr>
 <tr><th scope="row">過料を納めないとき</th><td>過料の納付を命じられた者が納期限までに納めないときは、長は期限を指定してこれを督促しなければなりません。督促を受けた者がなお指定の期限までに納めないときは、長は地方税の滞納処分の例により処分することができます（地方自治法231条の3第1項・3項）。<span class="key">裁判所の手を借りずに、団体が自力で取り立てられる</span>という点が、行政上の強制徴収の仕組みです。</td></tr>
-</tbody></table>
+</tbody></table></div>
 </div></div>
 
 <div class="refs"><h4>過去問での出題</h4><span class="rid">R4-22-1</span></div></section>
@@ -711,11 +727,11 @@ body{display:flex; align-items:flex-start}
 </div>
 
 <div class="exc"><h4>7-7の例外・限界</h4><div class="in">
-<table><tbody>
+<div class="scroll"><table><tbody>
 <tr><th scope="row">法令に特別の定めがある場合</th><td>15条2項も「法令に特別の定めがあるものを除くほか」としています。個別の法律が別の定めを置いていればそちらによります。</td></tr>
 <tr><th scope="row">条例と規則の優劣</th><td>所管事項が違うので、正面からぶつかることは通常ありません。ただし義務を課し権利を制限する定めは条例によらなければならないので（14条2項）、その領域では規則は働けません。委員会の規程については、条例および長の規則に違反しない限りという明文の限定があります（138条の4第2項）。</td></tr>
 <tr><th scope="row">委員会に過料の定めはない</th><td>長の規則には5万円以下の過料を置ける規定がありますが（15条2項）、委員会の規程には対応する規定がありません。したがって委員会の規程で過料を科すことはできません。</td></tr>
-</tbody></table>
+</tbody></table></div>
 </div></div>
 
 <div class="refs"><h4>過去問での出題</h4><span class="rid">R4-22-4</span><span class="rid">H30-23-イ</span><span class="rid">R3-23-3</span><span class="rid">R6-24-1</span><span class="rid">R6-24-4</span></div></section>
@@ -764,12 +780,12 @@ body{display:flex; align-items:flex-start}
 </div>
 
 <div class="exc"><h4>7-8の例外・限界</h4><div class="in">
-<table><tbody>
+<div class="scroll"><table><tbody>
 <tr><th scope="row">ため池判決の射程</th><td>この判決は、堤とうの使用が財産権の保障の範囲外であることを理由に結論を出しています。財産権の保障が及ぶ行為を条例で制限する場合まで、この判決がそのまま当てはまるわけではありません。判決の理由づけを超えて一般化しないでください。</td></tr>
 <tr><th scope="row">損失補償が不要な理由</th><td>補償が不要とされたのは、そもそも保障されていない使い方だからです。財産権の制限一般について条例なら補償が要らない、という趣旨ではありません。</td></tr>
 <tr><th scope="row">84条の趣旨が及ぶ範囲</th><td>租税以外の公課であっても、賦課徴収の強制の度合い等に応じて憲法84条の趣旨が及びます。「租税でないから84条とは無関係」と言い切ると誤ります。</td></tr>
 <tr><th scope="row">合憲限定解釈の限界</th><td>限定して読み取る手がかりが条例の経緯や関連規定に見いだせない場合には、限定解釈はできません。広島市暴走族追放条例事件は、施行規則等を総合して限定できたから合憲としたのであって、広い文言なら常に救えるという判断ではありません。</td></tr>
-</tbody></table>
+</tbody></table></div>
 </div></div>
 
 <div class="refs"><h4>過去問での出題</h4><span class="rid">R7-22-1</span><span class="rid">R7-22-2</span><span class="rid">R7-22-3</span><span class="rid">R7-22-4</span><span class="rid">R7-22-5</span></div></section>
@@ -836,13 +852,13 @@ body{display:flex; align-items:flex-start}
 </div>
 
 <div class="exc"><h4>この章全体の例外・限界</h4><div class="in">
-<table><tbody>
+<div class="scroll"><table><tbody>
 <tr><th scope="row">「できる」と「実際に広い」は別</th><td>法定受託事務についても条例を制定できますが、国の法令が細部まで定めていることが多く、実際に条例が入る余地は狭くなります。条文上の可否と実務上の広さを区別してください。</td></tr>
 <tr><th scope="row">14条3項・15条2項の数字は絶対ではない</th><td>いずれも「法令に特別の定めがあるものを除くほか」としています。個別の法律が別の限度を定めていればそちらによります。また分担金等については5万円を超える過料の特則があります（228条3項）。</td></tr>
 <tr><th scope="row">条例が法令に違反するかは個別判断</th><td>上乗せ条例も横出し条例も、常に適法でも常に違法でもありません。その法令が全国一律を求める趣旨かどうかを、趣旨・目的・内容・効果の比較によって個別に判断します。</td></tr>
 <tr><th scope="row">判例の射程を広げない</th><td>奈良県ため池条例事件は、堤とうの使用が財産権の保障の範囲外であることを理由としています。保障が及ぶ行為への制限一般や、損失補償が不要になる場面一般に広げて読むと誤ります。</td></tr>
 <tr><th scope="row">条例の制定行為は原則として処分ではない</th><td>条例の制定行為は一般的・抽象的な定めを置くだけなので、原則として抗告訴訟の対象になりません（最判平成18年7月14日）。特定の者の法的地位を条例の施行だけで奪う場合が例外です（最判平成21年11月26日）。</td></tr>
-</tbody></table>
+</tbody></table></div>
 </div></div>
 
 <div class="refs"><h4>過去問での出題</h4><span class="rid">H30-24</span><span class="rid">R1-23</span><span class="rid">R2-23</span><span class="rid">R3-22</span><span class="rid">R4-22</span><span class="rid">R7-22</span></div>

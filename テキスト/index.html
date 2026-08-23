@@ -31,6 +31,21 @@ body{display:flex; align-items:flex-start}
     border-radius:6px; cursor:pointer; font-size:1.1rem; color:var(--ink); box-shadow:0 1px 4px rgba(0,0,0,.1)}
   .wrap{padding-top:3.4rem}
 }
+
+/* ── 横に長いものは、その箱の中だけでスクロールさせる（本文は横スクロールしない） ── */
+.scroll{overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%}
+.scroll table{min-width:max-content}
+figure,.fig{overflow-x:auto; max-width:100%}
+svg{max-width:100%; height:auto}
+img{max-width:100%; height:auto}
+pre,code{overflow-x:auto; word-break:break-word}
+.wrap{overflow-x:hidden}
+@media(max-width:640px){
+  html{font-size:15px}
+  table{font-size:.84rem}
+  th,td{padding:.4rem .5rem}
+  .wrap{padding-left:.8rem; padding-right:.8rem}
+}
 </style>
 
 <style>
@@ -71,7 +86,8 @@ body{display:flex; align-items:flex-start}
 <a href="../行政不服審査法.html">行政不服審査法</a>
 <h4>第5章 行政事件訴訟法</h4>
 <a href="05-行政事件訴訟法1-処分性.html">処分性</a>
-<a href="05-行政事件訴訟法2-訴訟要件と判決.html">訴訟要件と判決</a>
+<a href="05-行政事件訴訟法2-訴訟要件.html">訴訟要件</a>
+<a href="05-行政事件訴訟法3-判決と訴訟類型.html">判決と訴訟類型</a>
 <h4>第6章 国家賠償法</h4>
 <a href="06-国家賠償法1-国家賠償.html">国家賠償</a>
 <a class="todo">損失補償</a>
@@ -101,7 +117,7 @@ body{display:flex; align-items:flex-start}
       <li><b>Codex の検算で、法律上の誤りが49件見つかり、修正しました。</b>誤りの型は、義務のレベルの取り違え（行政手続法11条を努力義務と書いたが実際は禁止規定）、条文番号の誤り、限定を落とした断定（消滅時効を落とすなど）、判例の射程の拡大です。</li>
       <li><b>本文を直しても、覚えるカードや表に古い断定が残る事故が繰り返し起きています。</b></li>
     </ul>
-    <div class="audit-table-wrap"><table class="audit-table">
+    <div class="audit-table-wrap"><div class="scroll"><table class="audit-table">
       <thead><tr><th>章</th><th>書いた者</th><th>Codexの採点</th><th>直した後に採点し直したか</th><th>条文カード</th><th>判例カード</th><th>残っている穴</th></tr></thead>
       <tbody>
         <tr><td><a href="02-行政法総論1-効力と瑕疵.html"><code>docs/テキスト/02-行政法総論1-効力と瑕疵.html</code></a></td><td>Claude</td><td>72点</td><td><b>していない</b></td><td>4枚</td><td>6枚</td><td>─</td></tr>
@@ -109,13 +125,14 @@ body{display:flex; align-items:flex-start}
         <tr><td><a href="03-行政手続法1-定義と適用範囲.html"><code>docs/テキスト/03-行政手続法1-定義と適用範囲.html</code></a></td><td>Claude</td><td>62点</td><td><b>していない</b></td><td>16枚</td><td>0枚</td><td>─</td></tr>
         <tr><td><a href="03-行政手続法2-申請と不利益処分.html"><code>docs/テキスト/03-行政手続法2-申請と不利益処分.html</code></a></td><td>Claude</td><td>84点</td><td><b>していない</b></td><td>29枚</td><td>3枚</td><td>─</td></tr>
         <tr><td><a href="05-行政事件訴訟法1-処分性.html"><code>docs/テキスト/05-行政事件訴訟法1-処分性.html</code></a></td><td>Claude</td><td>78→<b>76点</b>（2回）</td><td>済み</td><td>21枚</td><td>10枚</td><td>─</td></tr>
-        <tr><td><a href="05-行政事件訴訟法2-訴訟要件と判決.html"><code>docs/テキスト/05-行政事件訴訟法2-訴訟要件と判決.html</code></a></td><td><b>Claudeのサブエージェント</b></td><td><b>未採点</b></td><td>─</td><td>51枚</td><td>34枚</td><td><b>一度も検算を受けていない。条文データに無い規定（13条・15条・16条・17条・19条・20条・23条の2・34条・41条、土地収用法133条）を、原文を持たずに書いた箇所がある。とくに41条について「執行停止は準用されていない」と書いた点は条文で裏を取れていない。判例データに無い判例を結論だけ書いた箇所が5つある（成田新幹線、成田新法、富山大学事件系、公立中学校教員の転任、市立小学校廃止条例）</b></td></tr>
+        <tr><td><a href="05-行政事件訴訟法2-訴訟要件.html"><code>docs/テキスト/05-行政事件訴訟法2-訴訟要件.html</code></a></td><td><b>Claudeのサブエージェント</b></td><td><b>74点</b></td><td>していない</td><td>20枚</td><td>17枚</td><td><b>一度も検算を受けていない。条文データに無い規定（13条・15条・16条・17条・19条・20条・23条の2・34条・41条、土地収用法133条）を、原文を持たずに書いた箇所がある。とくに41条について「執行停止は準用されていない」と書いた点は条文で裏を取れていない。判例データに無い判例を結論だけ書いた箇所が5つある（成田新幹線、成田新法、富山大学事件系、公立中学校教員の転任、市立小学校廃止条例）</b></td></tr>
+        <tr><td><a href="05-行政事件訴訟法3-判決と訴訟類型.html"><code>docs/テキスト/05-行政事件訴訟法3-判決と訴訟類型.html</code></a></td><td><b>Claudeのサブエージェント</b></td><td><b>74点</b></td><td>していない</td><td>31枚</td><td>17枚</td><td><b>一度も検算を受けていない。条文データに無い規定（13条・15条・16条・17条・19条・20条・23条の2・34条・41条、土地収用法133条）を、原文を持たずに書いた箇所がある。とくに41条について「執行停止は準用されていない」と書いた点は条文で裏を取れていない。判例データに無い判例を結論だけ書いた箇所が5つある（成田新幹線、成田新法、富山大学事件系、公立中学校教員の転任、市立小学校廃止条例）</b></td></tr>
         <tr><td><a href="06-国家賠償法1-国家賠償.html"><code>docs/テキスト/06-国家賠償法1-国家賠償.html</code></a></td><td>Claude</td><td>82点</td><td><b>していない</b></td><td>6枚</td><td>24枚</td><td><b>Geminiの検証で「教材に記載がない」と判定された問題が11件ある。この章だけ、教材を渡しても正答率が上がらない</b></td></tr>
         <tr><td><a href="07-地方自治法1-条例と規則.html"><code>docs/テキスト/07-地方自治法1-条例と規則.html</code></a></td><td>Claude</td><td>84点</td><td><b>していない</b></td><td>24枚</td><td>7枚</td><td>─</td></tr>
         <tr><td><a href="../行政不服審査法.html"><code>docs/行政不服審査法.html</code></a></td><td>Claude</td><td>78→<b>72点</b>（2回）</td><td>済み</td><td>22枚</td><td>0枚</td><td>─</td></tr>
         <tr><td><a href="全体像.html"><code>docs/テキスト/全体像.html</code></a></td><td>Claude</td><td>73→82点（2回）</td><td>済み</td><td>0枚</td><td>0枚</td><td>─</td></tr>
       </tbody>
-    </table></div>
+    </table></div></div>
   </div>
 </div>
 
@@ -169,8 +186,10 @@ body{display:flex; align-items:flex-start}
   <p class="pd">裁判所で争う方法。訴訟要件→本案→判決という一本道で、その入口が処分性です</p>
   <div class="row"><span class="ch">5-1</span><span class="tt"><a href="05-行政事件訴訟法1-処分性.html">処分性</a>
     <span class="d">処分性が決めること／定義と4つの要素／用途地域と条例／通達と内部行為／通知の処分性／二項道路の一括指定／計画段階での争わせ方／代執行の戒告／処分性がない行為の争い方</span></span><span class="st done">完成</span></div>
-  <div class="row"><span class="ch">5-2</span><span class="tt"><a href="05-行政事件訴訟法2-訴訟要件と判決.html">訴訟要件と判決</a>
-    <span class="d">訴訟要件の全体像／被告適格／管轄と訴訟参加／出訴期間／原告適格／訴えの利益／審査請求との関係と原処分主義／審理／事情判決／判決の効力／執行停止と内閣総理大臣の異議／無効等確認・不作為・義務付け・差止め／準用の一覧／当事者訴訟と客観訴訟／司法審査の限界／訴訟の型の選び方</span></span><span class="st done">完成</span></div>
+  <div class="row"><span class="ch">5-2</span><span class="tt"><a href="05-行政事件訴訟法2-訴訟要件.html">訴訟要件</a>
+    <span class="d">取消訴訟の全体像／被告適格／管轄と訴訟参加／出訴期間／原告適格／訴えの利益／審査請求との関係と原処分主義／審理</span></span><span class="st done">完成</span></div>
+  <div class="row"><span class="ch">5-3</span><span class="tt"><a href="05-行政事件訴訟法3-判決と訴訟類型.html">判決と訴訟類型</a>
+    <span class="d">事情判決／判決の効力／執行停止と内閣総理大臣の異議／無効等確認・不作為・義務付け・差止め／準用の一覧／当事者訴訟と客観訴訟／司法審査の限界／訴訟の型の選び方／分野横断の判例整理</span></span><span class="st done">完成</span></div>
 </div>
 
 <div class="part">

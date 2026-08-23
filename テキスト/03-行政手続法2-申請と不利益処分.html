@@ -111,6 +111,21 @@ section[data-trk] h2{ margin-top:.15rem }
   border-top:1px solid var(--line); font-size:.78rem; color:var(--ink-sub) }
 .tlg span{ display:inline-flex; align-items:center; gap:.35rem }
 .tlg i{ width:.7rem; height:.7rem; border-radius:2px; display:inline-block; font-style:normal }
+
+/* ── 横に長いものは、その箱の中だけでスクロールさせる（本文は横スクロールしない） ── */
+.scroll{overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%}
+.scroll table{min-width:max-content}
+figure,.fig{overflow-x:auto; max-width:100%}
+svg{max-width:100%; height:auto}
+img{max-width:100%; height:auto}
+pre,code{overflow-x:auto; word-break:break-word}
+.wrap{overflow-x:hidden}
+@media(max-width:640px){
+  html{font-size:15px}
+  table{font-size:.84rem}
+  th,td{padding:.4rem .5rem}
+  .wrap{padding-left:.8rem; padding-right:.8rem}
+}
 </style>
 <div id="navbtn" onclick="document.getElementById('nav').classList.toggle('open')">☰</div>
 <nav id="nav">
@@ -132,7 +147,8 @@ section[data-trk] h2{ margin-top:.15rem }
 <a href="../行政不服審査法.html">行政不服審査法</a>
 <h4>第5章 行政事件訴訟法</h4>
 <a href="05-行政事件訴訟法1-処分性.html">処分性</a>
-<a href="05-行政事件訴訟法2-訴訟要件と判決.html">訴訟要件と判決</a>
+<a href="05-行政事件訴訟法2-訴訟要件.html">訴訟要件</a>
+<a href="05-行政事件訴訟法3-判決と訴訟類型.html">判決と訴訟類型</a>
 <h4>第6章 国家賠償法</h4>
 <a href="06-国家賠償法1-国家賠償.html">国家賠償</a>
 <a class="todo">損失補償</a>
@@ -334,12 +350,12 @@ section[data-trk] h2{ margin-top:.15rem }
 <p><span class="warn">「申請に対する処分について処分基準を定めなければならない」</span>と書いており、名前と義務の強さの両方をずらしています。申請に対する処分について定めるのは審査基準であり、処分基準は不利益処分のものです。しかも処分基準の設定は努力義務なので、「定めなければならない」という部分も条文と合いません。</p>
 
 <div class="exc"><h4>この節の例外・限界</h4><div class="in">
-<table><tbody>
+<div class="scroll"><table><tbody>
 <tr><th scope="row">公表義務の例外</th><td>行政上特別の支障があるときは、審査基準を公にしなくてよい（5条3項）。</td></tr>
 <tr><th scope="row">設定義務に例外はない</th><td>審査基準を定めること自体（5条1項）には例外の定めが置かれていない。</td></tr>
 <tr><th scope="row">公表の方法は限定されない</th><td>事務所への備付けは例示であり、申請者が知りうる状態に置く方法であれば他の方法でもよい（5条3項）。</td></tr>
 <tr><th scope="row">不利益処分には及ばない</th><td>審査基準は申請に対する処分の制度なので、不利益処分をするときに審査基準を定める義務は生じない。</td></tr>
-</tbody></table>
+</tbody></table></div>
 </div></div>
 
 <div class="refs"><h4>過去問での出題</h4><span class="rid">H30-11-1</span><span class="rid">R7-13-3</span><span class="rid">R6-11-4</span></div><div class="memo">
@@ -392,12 +408,12 @@ section[data-trk] h2{ margin-top:.15rem }
 <p>もう一つ、<span class="warn">聴聞の主宰者から報告書の提出を受けてから不利益処分をするかどうかを決定するまでの標準的な期間を定めて通知する</span>、という規律を考えることもできそうに見えます。しかし<span class="key">行政手続法にそのような規定はありません</span>。26条は、行政庁が調書の内容と報告書に記載された主宰者の意見を十分に参酌して決定しなければならないと定めるだけで、決定までの期間については何も定めていません。標準処理期間は<span class="key">申請に対する処分の側にしか置かれていない制度</span>であり、聴聞の後の決定にこれに相当する仕組みはない、と押さえてください。</p>
 
 <div class="exc"><h4>この節の例外・限界</h4><div class="in">
-<table><tbody>
+<div class="scroll"><table><tbody>
 <tr><th scope="row">設定義務の例外にあたるもの</th><td>そもそも設定が努力義務なので、定めないこと自体が違法になることはない（6条前段）。</td></tr>
 <tr><th scope="row">公表義務に例外はない</th><td>審査基準（5条3項）と違い、6条の公表義務には「行政上特別の支障があるときを除き」という留保が付いていない。定めたら必ず公にする。</td></tr>
 <tr><th scope="row">経由機関があるとき</th><td>行政庁と異なる機関が申請の提出先とされている場合は、提出先の機関に到達してから行政庁に到達するまでの期間も併せて定めるよう努める（6条かっこ書）。</td></tr>
 <tr><th scope="row">期間を過ぎても効果はない</th><td>拒否処分とみなす規定はなく、行政庁の応答義務も消えない。争うには行政事件訴訟法または行政不服審査法による。</td></tr>
-</tbody></table>
+</tbody></table></div>
 </div></div>
 
 <div class="refs"><h4>過去問での出題</h4><span class="rid">H30-11-4</span><span class="rid">R4-11-1</span><span class="rid">R2-13-オ</span><span class="rid">R1-13-イ</span><span class="rid">R1-12-イ</span></div><div class="memo">
@@ -442,7 +458,7 @@ section[data-trk] h2{ margin-top:.15rem }
   </tbody>
 </table></div>
 
-<p>もう一つ、<span class="warn">応答せずに書類を返す</span>という書き方があります。返し戻すこと）しなければならない」としました。<span class="key">申請をすることができる期間内にされたものであることは、7条が形式上の要件として明文で挙げているものの一つです。</span>期間を過ぎていても、行政庁は補正を求めるか拒否するかのどちらかで応答しなければなりません。拒否処分という形で応答すれば、申請者は8条1項の理由の提示を受け、その処分を争うことができます。<span class="key">返戻という扱いは、争う相手を消してしまう</span>ので許されないのです。</p>
+<p>もう一つ、<span class="warn">応答せずに書類を返す</span>という扱いはできません。<span class="term-b">返戻</span>（へんれい）とは、申請として処理せず、提出された書類を申請者に返すことです。<span class="key">申請をすることができる期間内にされたものであることは、7条が形式上の要件として明文で挙げているものの一つです。</span>期間を過ぎていても、行政庁は補正を求めるか拒否するかのどちらかで応答しなければなりません。書類を返しただけでは7条の応答義務を果たしたことになりません。拒否処分という形で応答すれば、申請者は8条1項の理由の提示を受け、その処分を争うことができます。<span class="key">返戻という扱いは、争う相手を消してしまう</span>ので許されないのです。</p>
 
 <h3>形式上の要件として条文が挙げているもの</h3>
 
@@ -461,12 +477,12 @@ section[data-trk] h2{ margin-top:.15rem }
 <p>逆の向きにも注意が必要です。<span class="warn">申請の取下げや内容の変更を求める行政指導が、一律に違法になるわけではありません。</span>また、<span class="warn">申請者が従う意思がない旨を表明していないのに、行政指導を続けただけで違法になるわけでもありません。</span>33条が違法とするのは、<span class="key">従う意思がない旨の表明があり、それにもかかわらず継続するなどして申請権の行使を妨げた</span>場合です。二つの段のどちらを落としても、条文の定めから外れます。</p>
 
 <div class="exc"><h4>この節の例外・限界</h4><div class="in">
-<table><tbody>
+<div class="scroll"><table><tbody>
 <tr><th scope="row">審査開始義務に例外はない</th><td>到達すれば必ず遅滞なく審査を開始する。受理という行為を挟んで審査を先送りすることは認められない（7条）。</td></tr>
 <tr><th scope="row">補正か拒否かは選べる</th><td>どちらをするかは行政庁の選択に委ねられている。補正を必ず先にしなければならないという限定はない（7条）。</td></tr>
 <tr><th scope="row">応答しないことは許されない</th><td>申請期間を過ぎた申請であっても、返戻して応答を省くことはできない（7条）。</td></tr>
 <tr><th scope="row">行政指導が違法になる場面</th><td>従う意思がない旨の表明があり、なお継続して申請権の行使を妨げたときに限って違法となる（33条）。</td></tr>
-</tbody></table>
+</tbody></table></div>
 </div></div>
 
 <div class="refs"><h4>過去問での出題</h4><span class="rid">R2-13-イ</span><span class="rid">R2-13-ア</span><span class="rid">R4-11-2</span><span class="rid">R7-13-5</span><span class="rid">R2-13-エ</span></div><div class="memo">
@@ -550,13 +566,13 @@ section[data-trk] h2{ margin-top:.15rem }
 <p>8条2項は、<span class="key">拒否処分を書面でするときは、理由も書面により示さなければならない</span>と定めています。口頭で処分をするなら理由も口頭でよいのですが、書面で処分をしておいて理由だけ口頭ということは許されません。<span class="key">この構造は14条3項も同じです。</span></p>
 
 <div class="exc"><h4>この節の例外・限界</h4><div class="in">
-<table><tbody>
+<div class="scroll"><table><tbody>
 <tr><th scope="row">求めを待ってよい場合</th><td>要件または公にされた審査基準が数量的指標その他の客観的指標により明確に定められ、かつ申請の内容から不適合が明らかなときに限る（8条1項ただし書）。</td></tr>
 <tr><th scope="row">緊急の例外はない</th><td>14条1項ただし書のような「差し迫った必要」の例外は8条に置かれていない。</td></tr>
 <tr><th scope="row">一部拒否も対象</th><td>条文は全部拒否と一部拒否を区別していないので、一部を拒否するときも理由を示す。</td></tr>
 <tr><th scope="row">許認可するときは不要</th><td>申請どおりの処分をする場合には理由の提示は要らない。</td></tr>
 <tr><th scope="row">後から補うことはできない</th><td>不服申立ての段階で理由が明らかにされても、処分時の理由付記の瑕疵は治癒されない（最判昭和47年12月5日）。</td></tr>
-</tbody></table>
+</tbody></table></div>
 </div></div>
 
 <div class="refs"><h4>過去問での出題</h4><span class="rid">H30-11-2</span><span class="rid">R7-13-1</span><span class="rid">R1-13-エ</span><span class="rid">R4-11-3</span></div><div class="memo">
@@ -618,12 +634,12 @@ section[data-trk] h2{ margin-top:.15rem }
 <p>9条1項と混同しやすい理解として、<span class="warn">標準処理期間を経過してもなお諾否の応答ができないときは、申請者に対し審査の進行状況と処分の時期の見込みを書面で通知しなければならない</span>、というものがあります。しかしこれは9条1項とは三か所で違っています。第一に<span class="key">求めを前提としない行政庁の側からの通知</span>にしていること。第二に<span class="key">努力義務を義務</span>にしていること。第三に<span class="key">書面という方式を付け加えている</span>ことです。9条1項は方式を定めていません。</p>
 
 <div class="exc"><h4>この節の例外・限界</h4><div class="in">
-<table><tbody>
+<div class="scroll"><table><tbody>
 <tr><th scope="row">求めがなければ動かない</th><td>行政庁の側から進んで審査の進行状況を知らせる義務は9条にない。</td></tr>
 <tr><th scope="row">方式の定めがない</th><td>書面によることを求める規定はなく、口頭で示してもよい。</td></tr>
 <tr><th scope="row">努力義務にとどまる</th><td>示せなかったこと自体が直ちに違法となるものではない。</td></tr>
 <tr><th scope="row">相手方の範囲が項で違う</th><td>1項は申請者だけ、2項は申請をしようとする者も含む。</td></tr>
-</tbody></table>
+</tbody></table></div>
 </div></div>
 
 <div class="refs"><h4>過去問での出題</h4><span class="rid">R7-13-2</span><span class="rid">R4-11-4</span></div><div class="memo">
@@ -676,12 +692,12 @@ section[data-trk] h2{ margin-top:.15rem }
 <p>ただし、<span class="warn">不利益処分の場面で第三者の言い分がまったく拾われないわけではありません。</span>聴聞では、主宰者が利害関係を有すると認められる者に手続への参加を求め、または参加を許可することができます（17条1項）。参加人となれば文書等の閲覧を求めることもできます（18条1項）。<span class="key">公聴会という形ではないが、参加人という形で第三者が手続に入る道がある</span>と理解してください。この点は3-24で改めて扱います。</p>
 
 <div class="exc"><h4>この節の例外・限界</h4><div class="in">
-<table><tbody>
+<div class="scroll"><table><tbody>
 <tr><th scope="row">働く場面が限られる</th><td>申請者以外の者の利害を考慮すべきことが法令上の許認可等の要件とされている場合に限る（10条）。</td></tr>
 <tr><th scope="row">方法は固定されない</th><td>公聴会の開催は例示であり、その他の適当な方法でもよい（10条）。</td></tr>
 <tr><th scope="row">申請者本人は対象外</th><td>意見を聴く相手は申請者以外の者である（10条）。</td></tr>
 <tr><th scope="row">不利益処分に対応規定はない</th><td>10条は適用の場面を申請に対する処分に限っている。したがって不利益処分については、公聴会を求める規定も、第三者の意見を聴く機会を設けるよう努めるという規定も置かれていない。第三者が手続に入るのは聴聞の参加人としてである（17条1項）。</td></tr>
-</tbody></table>
+</tbody></table></div>
 </div></div>
 
 <div class="refs"><h4>過去問での出題</h4><span class="rid">H30-11-5</span><span class="rid">R4-11-5</span><span class="rid">R1-12-エ</span></div><div class="memo">
@@ -718,11 +734,11 @@ section[data-trk] h2{ margin-top:.15rem }
 </table></div>
 
 <div class="exc"><h4>この節の例外・限界</h4><div class="in">
-<table><tbody>
+<div class="scroll"><table><tbody>
 <tr><th scope="row">遅延がすべて違法ではない</th><td>1項が禁じるのは「殊更に」遅延させることである。審査に必要な時間をかけることまで禁じてはいない。</td></tr>
 <tr><th scope="row">協力の方法は定まっていない</th><td>相互の連絡や共同の聴取は例示であり、2項は方法を限定していない。</td></tr>
 <tr><th scope="row">同一の申請者であることが前提</th><td>1項が想定するのは「同一の申請者からされた関連する申請」である。別人の申請が審査中であることは対象外である。</td></tr>
-</tbody></table>
+</tbody></table></div>
 </div></div>
 
 <div class="memo">
@@ -839,12 +855,12 @@ section[data-trk] h2{ margin-top:.15rem }
 <p>12条2項は<span class="key">「定めるに当たっては、不利益処分の性質に照らしてできる限り具体的なものとしなければならない」</span>と書いています。ここは「しなければならない」です。<span class="key">定めるかどうかは努力義務だが、定めるのであれば具体的にすることは義務</span>という構造で、5条2項とまったく同じ形です。</p>
 
 <div class="exc"><h4>この節の例外・限界</h4><div class="in">
-<table><tbody>
+<div class="scroll"><table><tbody>
 <tr><th scope="row">努力義務だが拘束力はある</th><td>定めて公にした処分基準から特段の事情なく外れれば、裁量権の逸脱・濫用に当たる（最判平成27年3月3日）。</td></tr>
 <tr><th scope="row">基準違反の効果</th><td>当然無効ではなく、取消しの事由にとどまる。</td></tr>
 <tr><th scope="row">具体性は義務</th><td>定めるのであれば、不利益処分の性質に照らしてできる限り具体的にしなければならない（12条2項）。</td></tr>
 <tr><th scope="row">公表に留保は付かない</th><td>12条1項には「行政上特別の支障があるときを除き」という留保がない。そもそも公表自体が努力義務だからである。</td></tr>
-</tbody></table>
+</tbody></table></div>
 </div></div>
 
 <div class="refs"><h4>過去問での出題</h4><span class="rid">H30-11-1</span><span class="rid">R1-13-ウ</span></div><div class="memo">
@@ -897,12 +913,12 @@ section[data-trk] h2{ margin-top:.15rem }
 <p>同じ理由で、<span class="warn">拒否処分をしようとする場合には意見陳述のための手続を執らなければならないが、その手続は原則として弁明の機会の付与で足りる</span>、という理解も成り立ちません。<span class="key">拒否処分は、そもそも意見陳述のための手続の対象外</span>だからです。手続を軽いもので済ませてよいという話ではなく、13条1項の適用がないという話です。</p>
 
 <div class="exc"><h4>この節の例外・限界</h4><div class="in">
-<table><tbody>
+<div class="scroll"><table><tbody>
 <tr><th scope="row">弁明を聴聞に格上げできる</th><td>イからハに当たらなくても、行政庁が相当と認めるときは聴聞による（13条1項1号ニ）。</td></tr>
 <tr><th scope="row">聴聞を弁明に格下げすることはできない</th><td>イからハに当たる処分について、簡易な弁明の機会の付与で済ませてよいとする規定はない。</td></tr>
 <tr><th scope="row">拒否処分は対象外</th><td>申請拒否処分は2条4号ロで不利益処分から除かれ、13条1項の振り分けの対象にならない。</td></tr>
 <tr><th scope="row">名あて人と不利益を受ける者がずれる場合</th><td>13条1項1号ハの処分では、解任・除名される本人が通知を受けた者とみなされる（28条1項）。</td></tr>
-</tbody></table>
+</tbody></table></div>
 </div></div>
 
 <div class="refs"><h4>過去問での出題</h4><span class="rid">R2-12-2</span><span class="rid">R7-13-4</span><span class="rid">H30-11-3</span></div><div class="memo">
@@ -958,12 +974,12 @@ section[data-trk] h2{ margin-top:.15rem }
 <p>ここが混同されやすい点です。<span class="warn">13条2項に当たって意見陳述のための手続が要らなくなっても、14条の理由の提示は別の条文なので、そのまま義務として残ります。</span>「聴聞が要らないのだから理由も要らない」ということにはなりません。二つは目的が違います。<span class="key">意見陳述は処分の前に言い分を聴く制度、理由の提示は処分の時に判断の根拠を示す制度</span>です。</p>
 
 <div class="exc"><h4>この節の例外・限界</h4><div class="in">
-<table><tbody>
+<div class="scroll"><table><tbody>
 <tr><th scope="row">緊急でも理由は要る</th><td>13条2項1号で意見陳述が省かれても、14条1項本文の理由の提示は残る。14条1項ただし書に当たれば処分後に示す（同条2項）。</td></tr>
 <tr><th scope="row">2号は結論が決まっている場合に限る</th><td>行政庁が処分をするかどうかを判断できる場合は「必ずすることとされている」に当たらないので、2号は使えない。</td></tr>
 <tr><th scope="row">3号は基準の不充足だけを理由とする場合に限る</th><td>「専ら当該基準が充足されていないことを理由として」とあるので、他の事情も考慮して判断する処分は対象外である。</td></tr>
 <tr><th scope="row">5号は政令の定めが要る</th><td>軽微だから当然に省けるのではなく、政令で定められた処分に限られる。</td></tr>
-</tbody></table>
+</tbody></table></div>
 </div></div>
 
 <div class="refs"><h4>過去問での出題</h4><span class="rid">R6-11-5</span></div><div class="memo">
@@ -1031,12 +1047,12 @@ section[data-trk] h2{ margin-top:.15rem }
 <p>また、理由の後出しが許されないことも8条と同じです。3-15で見た最判昭和47年12月5日は、青色申告に係る更正処分という金銭の納付にかかわる処分について、<span class="key">処分庁自身が処分の時に理由を明示すべきであり、後の審査裁決で理由が明らかにされても当初の理由付記の瑕疵は治癒されない</span>としました。14条1項ただし書の場面を除けば、理由は処分の時に示されなければならないという原則がここでも働きます。</p>
 
 <div class="exc"><h4>この節の例外・限界</h4><div class="in">
-<table><tbody>
+<div class="scroll"><table><tbody>
 <tr><th scope="row">同時に示さなくてよい場合</th><td>理由を示さないで処分をすべき差し迫った必要があるときに限る（14条1項ただし書）。</td></tr>
 <tr><th scope="row">例外でも免除にはならない</th><td>処分後相当の期間内に示す義務が残る（14条2項）。</td></tr>
 <tr><th scope="row">後から示さなくてよい場合</th><td>名あて人の所在が判明しなくなったときその他、処分後において理由を示すことが困難な事情があるときに限る（14条2項）。</td></tr>
 <tr><th scope="row">13条2項との関係</th><td>意見陳述のための手続が省かれても、14条の理由の提示は別に働く。</td></tr>
-</tbody></table>
+</tbody></table></div>
 </div></div>
 
 <div class="refs"><h4>過去問での出題</h4><span class="rid">R7-12-エ</span><span class="rid">H30-11-2</span></div><div class="memo">
@@ -1098,13 +1114,13 @@ section[data-trk] h2{ margin-top:.15rem }
 <p>これに対し、<span class="warn">弁明の機会の付与には参加人の制度がありません。</span>31条が準用しているのは15条3項・4項と16条だけで、17条は準用の対象に入っていないからです。したがって、<span class="key">どちらの手続についても参加が認められないというのも、どちらについても認められるというのも、いずれも正しくありません。</span>聴聞にはあり、弁明にはない、という非対称が答えになります。</p>
 
 <div class="exc"><h4>この節の例外・限界</h4><div class="in">
-<table><tbody>
+<div class="scroll"><table><tbody>
 <tr><th scope="row">通知は書面に限る</th><td>15条1項は「書面により通知しなければならない」としており、口頭による通知は認めていない。</td></tr>
 <tr><th scope="row">所在が判明しないとき</th><td>公示の方法によることができ、措置を開始した日から2週間を経過したときに到達したものとみなされる（15条3項・4項）。</td></tr>
 <tr><th scope="row">参加は権利ではない</th><td>参加を求め、または許可するかどうかは主宰者が必要と認めるかによる（17条1項）。</td></tr>
 <tr><th scope="row">弁明に参加人はいない</th><td>31条は17条を準用していない。</td></tr>
 <tr><th scope="row">代理人は弁明にもいる</th><td>31条が16条を準用しているので、弁明の機会の付与でも代理人を選任できる。</td></tr>
-</tbody></table>
+</tbody></table></div>
 </div></div>
 
 <div class="refs"><h4>過去問での出題</h4><span class="rid">R2-12-1</span><span class="rid">R7-11-1</span><span class="rid">R2-12-4</span></div><div class="memo">
@@ -1173,13 +1189,13 @@ section[data-trk] h2{ margin-top:.15rem }
 <p><span class="key">1は「聴聞の終結後であっても調書の閲覧を求めることができる」（24条4項なので正しい）、2は「聴聞が終結するまでは原因となる事実を証する資料の閲覧を求めることができる」（18条1項なので正しい）</span>です。<span class="warn">18条の期間の限定を24条4項に持ち込むと、1が誤りに見えてしまいます。</span>条文が二つあることを知っていれば迷いません。</p>
 
 <div class="exc"><h4>この節の例外・限界</h4><div class="in">
-<table><tbody>
+<div class="scroll"><table><tbody>
 <tr><th scope="row">閲覧を拒める場合</th><td>第三者の利益を害するおそれがあるときその他正当な理由があるときに限る（18条1項後段）。</td></tr>
 <tr><th scope="row">日時・場所は指定できる</th><td>閲覧そのものを拒むことと、日時・場所を指定することは別である（18条3項）。</td></tr>
 <tr><th scope="row">弁明には準用されない</th><td>31条が準用するのは15条3項・4項と16条だけであり、18条は入っていない。</td></tr>
 <tr><th scope="row">第三者は求められない</th><td>閲覧を求められるのは当事者等に限られ、単なる利害関係人や一般の第三者は含まれない。</td></tr>
 <tr><th scope="row">閉じるわけではない</th><td>行政機関が保有する文書については、情報公開法3条の開示請求という別の枠組みがある。</td></tr>
-</tbody></table>
+</tbody></table></div>
 </div></div>
 
 <div class="refs"><h4>過去問での出題</h4><span class="rid">R1-12-オ</span><span class="rid">R5-12-2</span><span class="rid">R2-12-5</span><span class="rid">R7-11-2</span><span class="rid">R7-11-3</span></div><div class="memo">
@@ -1233,12 +1249,12 @@ section[data-trk] h2{ margin-top:.15rem }
 <p>19条で政令が出てくるのは<span class="key">1項だけ</span>です。主宰者になれる者として「行政庁が指名する職員その他政令で定める者」と書かれています。<span class="warn">2項の主宰できない者は法律自身が列挙しており、政令に委ねていません。</span>誰が聴聞を主宰しうるかは行政の内部組織の問題なので政令に委ねる余地がありますが、誰を排除するかは手続の公正さそのものにかかわるため、法律が自分で決め切っている、という違いです。</p>
 
 <div class="exc"><h4>この節の例外・限界</h4><div class="in">
-<table><tbody>
+<div class="scroll"><table><tbody>
 <tr><th scope="row">処分担当部局の職員でもよい</th><td>1項が「行政庁が指名する職員」としているので、処分をしようとする部局の職員が主宰しても違法ではない。</td></tr>
 <tr><th scope="row">列挙は限定である</th><td>2項の六つの号に当たらない者は主宰できる。事案の処理に直接関与した職員は列挙に入っていない。</td></tr>
 <tr><th scope="row">親族の範囲</th><td>配偶者、四親等内の親族、同居の親族に限られる（2号）。</td></tr>
 <tr><th scope="row">政令が出るのは1項だけ</th><td>主宰できない者の範囲は法律自身が定めており、政令に委ねられていない。</td></tr>
-</tbody></table>
+</tbody></table></div>
 </div></div>
 
 <div class="refs"><h4>過去問での出題</h4><span class="rid">R1-12-ア</span></div><div class="memo">
@@ -1302,13 +1318,13 @@ section[data-trk] h2{ margin-top:.15rem }
 <p>一回の期日で審理が尽くせないときは、主宰者が新たな期日を定めます。<span class="key">続行を決めるのは主宰者であって行政庁ではありません。</span>次回の期日と場所は、あらかじめ書面で通知するのが原則ですが、<span class="key">その期日に出頭していた当事者・参加人には、その場で告知すれば足ります</span>。既に知っている人に改めて書面を送る必要はないからです。</p>
 
 <div class="exc"><h4>この節の例外・限界</h4><div class="in">
-<table><tbody>
+<div class="scroll"><table><tbody>
 <tr><th scope="row">質問には許可が要る</th><td>行政庁の職員への質問は主宰者の許可を得て行う（20条2項）。意見の陳述と証拠書類等の提出に許可は要らない。</td></tr>
 <tr><th scope="row">補佐人にも許可が要る</th><td>補佐人とともに出頭するには主宰者の許可が必要である（20条3項）。</td></tr>
 <tr><th scope="row">一部が欠席しても進む</th><td>当事者または参加人の一部が出頭しないときでも審理を行うことができる（20条5項）。</td></tr>
 <tr><th scope="row">公開される場合</th><td>行政庁が公開することを相当と認めるときに限り公開される（20条6項）。原則は非公開である。</td></tr>
 <tr><th scope="row">続行期日の通知の例外</th><td>期日に出頭した当事者・参加人に対しては、その期日において告知すれば足りる（22条2項ただし書）。</td></tr>
-</tbody></table>
+</tbody></table></div>
 </div></div>
 
 <div class="refs"><h4>過去問での出題</h4><span class="rid">R5-12-3</span><span class="rid">R5-12-4</span></div><div class="memo">
@@ -1358,12 +1374,12 @@ section[data-trk] h2{ margin-top:.15rem }
 <p>この二段構えがあるため、<span class="warn">当事者が出頭しなければいつでも直ちに聴聞を終結できる、というわけではありません。</span><span class="key">1項が働くのは、正当な理由なく出頭せず、かつ陳述書も証拠書類等も提出しない場合</span>です。<span class="key">2項が働くのは、正当な理由の有無を問わず、出頭が相当期間引き続き見込めない場合</span>で、このときは期限を定めて陳述書等の提出を求め、その期限が到来したときに終結することになります。<span class="key">2項では、いきなり終結するのではなく、書面を出す機会をもう一度与える手順が挟まっている</span>点が要です。</p>
 
 <div class="exc"><h4>この節の例外・限界</h4><div class="in">
-<table><tbody>
+<div class="scroll"><table><tbody>
 <tr><th scope="row">終結は義務ではない</th><td>1項は「終結することができる」であり、終結せずに続行することもできる。</td></tr>
 <tr><th scope="row">当事者には二つの条件が要る</th><td>正当な理由のない不出頭と、陳述書等の不提出の両方がそろうことが必要である（23条1項）。</td></tr>
 <tr><th scope="row">参加人は不出頭だけでよい</th><td>参加人については正当な理由の有無を問わない（23条1項）。</td></tr>
 <tr><th scope="row">1項で終結できないとき</th><td>出頭が相当期間引き続き見込めないときは、期限を定めて書面の提出を求め、期限の到来で終結する（23条2項）。</td></tr>
-</tbody></table>
+</tbody></table></div>
 </div></div>
 
 <div class="refs"><h4>過去問での出題</h4><span class="rid">R1-12-ウ</span><span class="rid">R5-12-5</span></div><div class="memo">
@@ -1424,13 +1440,13 @@ section[data-trk] h2{ margin-top:.15rem }
 <p>3-13でも触れましたが、のイは<span class="warn">「報告書の提出を受けてから不利益処分を行うか否か決定するまでに通常要すべき標準的な期間を定め、これを当事者に通知するよう努めなければならない」</span>としました。24条3項で報告書が提出され、26条で決定に至るという流れは条文どおりなのですが、<span class="key">その間の期間について定めを置く規定は行政手続法にありません。</span>期間の定めがあるのは6条の標準処理期間だけで、それは申請に対する処分の規律です。</p>
 
 <div class="exc"><h4>この節の例外・限界</h4><div class="in">
-<table><tbody>
+<div class="scroll"><table><tbody>
 <tr><th scope="row">調書を作る時期の例外</th><td>期日における審理が行われなかった場合は、各期日ごとではなく終結後速やかに作る（24条2項）。</td></tr>
 <tr><th scope="row">調書・報告書の閲覧に期間制限はない</th><td>18条と違い、終結後でも閲覧を求めることができる（24条4項）。</td></tr>
 <tr><th scope="row">再開できる場合</th><td>聴聞の終結後に生じた事情にかんがみ必要があると認めるときに限る（25条）。命じるのは行政庁である。</td></tr>
 <tr><th scope="row">主宰者の意見に拘束されない</th><td>行政庁は十分に参酌すれば足り、意見に従う義務はない（26条）。ただし参酌しないことは許されない。</td></tr>
 <tr><th scope="row">決定までの期間の定めはない</th><td>報告書の提出から決定までの標準的な期間を定める規定は置かれていない。</td></tr>
-</tbody></table>
+</tbody></table></div>
 </div></div>
 
 <div class="refs"><h4>過去問での出題</h4><span class="rid">R5-12-1</span><span class="rid">R1-12-イ</span><span class="rid">R7-11-4</span></div><div class="memo">
@@ -1478,11 +1494,11 @@ section[data-trk] h2{ margin-top:.15rem }
 <p>では、これから自分にされようとしている命令について、要件に当てはまらないと主張する機会はどこにあるのか。<span class="key">それが13条1項の聴聞または弁明の機会の付与です。</span>そして命令がされた後は、審査請求や取消訴訟で争えます。<span class="key">処分の前は意見陳述、処分の後は不服申立てと訴訟</span>という順序を押さえてください。</p>
 
 <div class="exc"><h4>この節の例外・限界</h4><div class="in">
-<table><tbody>
+<div class="scroll"><table><tbody>
 <tr><th scope="row">制限がかかる範囲</th><td>聴聞の節（第3章第2節）の規定に基づく処分またはその不作為に限られる（27条）。</td></tr>
 <tr><th scope="row">不利益処分そのものは争える</th><td>審査請求も取消訴訟も可能である。手続の違法はその中で主張する。</td></tr>
 <tr><th scope="row">処分の前に主張する場</th><td>13条1項の聴聞または弁明の機会の付与である。36条の3の処分等の求めは、これから自分にされる処分を止める制度ではない。</td></tr>
-</tbody></table>
+</tbody></table></div>
 </div></div>
 
 <div class="refs"><h4>過去問での出題</h4><span class="rid">R7-12-ウ</span></div><div class="memo">
@@ -1561,13 +1577,13 @@ section[data-trk] h2{ margin-top:.15rem }
 <p>もっとも、<span class="warn">行政庁が何もできないわけではありません。</span>30条は弁明書の提出期限までに相当な期間をおいて通知すれば足りると定めているだけですから、期限を改めて設定して提出の機会を確保することは妨げられません。<span class="key">義務がないことと、してはならないこととは違います。</span>この区別を混ぜないでください。</p>
 
 <div class="exc"><h4>この節の例外・限界</h4><div class="in">
-<table><tbody>
+<div class="scroll"><table><tbody>
 <tr><th scope="row">口頭でできる場合</th><td>行政庁が口頭ですることを認めたときに限る（29条1項）。当事者の求めによるものではない。</td></tr>
 <tr><th scope="row">証拠書類等は出せる</th><td>書面が原則の手続だが、証拠書類等を提出することはできる（29条2項）。</td></tr>
 <tr><th scope="row">準用されるのは二つだけ</th><td>15条3項・4項と16条に限られる（31条）。</td></tr>
 <tr><th scope="row">再提出を求める規定はない</th><td>義務の定めはないが、期限を改めて設定して機会を確保することは妨げられない。</td></tr>
 <tr><th scope="row">閲覧の道が完全に閉じるわけではない</th><td>行政機関が保有する文書については、情報公開法3条の開示請求という別の枠組みがある。</td></tr>
-</tbody></table>
+</tbody></table></div>
 </div></div>
 
 <div class="refs"><h4>過去問での出題</h4><span class="rid">R7-11-1</span><span class="rid">R7-11-2</span><span class="rid">R7-11-3</span><span class="rid">R7-11-4</span><span class="rid">R7-11-5</span><span class="rid">R2-12-3</span></div><div class="memo">
@@ -1654,11 +1670,11 @@ section[data-trk] h2{ margin-top:.15rem }
   <tbody>
     <tr><th scope="row">行政指導指針を定めること</th><td>36条です。</td><td>義務です。同一の行政目的で複数の者に行政指導をしようとするときは、あらかじめ事案に応じ行政指導指針を定めなければなりません。</td></tr>
     <tr><th scope="row">行政指導指針を公表すること</th><td>36条です。</td><td>義務です。ただし行政上特別の支障がない限り、という留保が付きます。処分基準（12条1項）が定めることも公にすることも努力義務であるのと対照的です。</td></tr>
-    <tr><th scope="row">意見公募手続を実施すること</th><td>39条です。</td><td>義務です。命令等を定めようとする場合には、案と関連資料をあらかじめ公示し、三十日以上の期間を定めて広く一般の意見を求めなければなりません。公益上緊急に定める必要がある場合などの例外は39条4項が定めています。</td></tr>
+    <tr><th scope="row">意見公募手続を実施すること</th><td>39条です。</td><td>原則として義務です。命令等を定めようとする場合には、案と関連資料をあらかじめ公示し、三十日以上の期間を定めて広く一般の意見を求めなければなりません。ただし、審査基準、処分基準、行政指導指針のうち公にされるもの以外のものは、3条2項6号により第6章の適用除外になります。また、公益上緊急に定める必要がある場合などの例外は39条4項が定めています。</td></tr>
   </tbody>
 </table></div>
 
-<p>命令等には、2条8号により<span class="key">法律に基づく命令または規則、審査基準、処分基準、行政指導指針の四つ</span>が含まれます。<span class="warn">審査基準と処分基準は、それ自体を定めるときの義務の強さが5条と12条で違いますが、意見公募手続の対象になるかどうかという点では区別されません。</span>どちらも命令等なので、定めようとするときは意見公募手続が要ります。</p>
+<p>命令等には、2条8号により<span class="key">法律に基づく命令または規則、審査基準、処分基準、行政指導指針の四つ</span>が含まれます。これらを定めようとするときは、原則として意見公募手続の対象になります。もっとも、<span class="warn">命令等に当たれば常に意見公募手続が要る、というわけではありません。</span>行政手続法3条2項6号は、審査基準、処分基準、行政指導指針のうち、法令の規定、慣行、または命令等を定める機関の判断により<span class="term-b">公にされるもの</span>（外部に公開されるもの）以外のものについて、第6章を適用しないと定めています。さらに39条4項は、公益上緊急に命令等を定める必要がある場合など、意見公募手続を実施しなくてよい例外を定めています。</p>
 
 <div class="refs"><h4>過去問での出題</h4><span class="rid">R1-13-ア</span><span class="rid">R1-13-オ</span></div><div class="memo">
 <h4>覚える ── この節の骨格</h4>
@@ -1669,6 +1685,7 @@ section[data-trk] h2{ margin-top:.15rem }
 <dt>理由</dt><dd>拒否するとき（8条）と不利益処分をするとき（14条）に義務。14条にだけ緊急の例外がある</dd>
 <dt>言い分</dt><dd>重い処分は<b>聴聞</b>、それ以外は<b>弁明の機会の付与</b>。拒否処分はそもそも対象外</dd>
 <dt>弁明の薄さ</dt><dd>準用されるのは<b>15条3項・4項と16条だけ</b>。参加人も文書閲覧も主宰者もない</dd>
+<dt>意見公募</dt><dd>命令等を定める場合は原則として39条の意見公募手続が必要である。ただし、審査基準、処分基準、行政指導指針のうち公にされるもの以外のものは3条2項6号により第6章の適用除外となり、39条4項にも手続を省ける例外がある</dd>
 </dl></div>
 </div>
 </section>
