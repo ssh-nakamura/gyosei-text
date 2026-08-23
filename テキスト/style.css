@@ -70,6 +70,28 @@ figcaption{font-size:.84rem; color:var(--hai); margin-top:.45rem}
 .note p{margin:0}
 .note p+p{margin-top:.5rem}
 
+.audit-block{border:2px solid var(--shu); border-radius:6px; margin:1.1rem 0 2rem; overflow:hidden;
+  background:var(--card); box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.audit-title{margin:0; padding:.55rem .9rem; background:var(--shu); color:var(--paper);
+  font-size:.78rem; letter-spacing:.14em; font-weight:700}
+.audit-body{padding:.85rem 1rem}
+.audit-body p{margin:.55rem 0; font-size:.91rem; line-height:1.8}
+.audit-body ul{margin:.55rem 0 .75rem; padding-left:1.2rem; font-size:.9rem; line-height:1.75}
+.audit-body li+li{margin-top:.35rem}
+.audit-warn{color:var(--shu); font-weight:700}
+.audit-meta{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.55rem; margin:.85rem 0 0}
+.audit-meta>div{border:1px solid var(--line); border-radius:4px; padding:.55rem .7rem; background:var(--paper)}
+.audit-meta dt{margin:0 0 .15rem; color:var(--hai); font-size:.72rem; letter-spacing:.08em; font-weight:700}
+.audit-meta dd{margin:0; font-size:.92rem; line-height:1.65}
+.audit-table-wrap{overflow-x:auto; border:1px solid var(--line2); border-radius:6px; margin:.9rem 0 0}
+.audit-table{min-width:56rem; margin:0; font-size:.84rem}
+.audit-table th,.audit-table td{line-height:1.65}
+.audit-table td:last-child{min-width:18rem}
+@media(max-width:720px){
+  .audit-meta{grid-template-columns:1fr}
+  .audit-body{padding:.8rem .85rem}
+}
+
 
 /* ── 読みやすさの土台 ───────────────────────── */
 body{line-height:1.95; letter-spacing:.01em}
