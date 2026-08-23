@@ -31,6 +31,26 @@ body{display:flex; align-items:flex-start}
     border-radius:6px; cursor:pointer; font-size:1.1rem; color:var(--ink); box-shadow:0 1px 4px rgba(0,0,0,.1)}
   .wrap{padding-top:3.4rem}
 }
+
+.case-box{border:2px solid var(--seiji); border-radius:6px; background:var(--seiji-soft);
+  padding:1rem 1.2rem; margin:1.2rem 0}
+.case-box p{margin:.5rem 0}
+.q{border-left:4px solid var(--midori); background:var(--midori-soft); padding:.7rem 1rem;
+  margin:1.4rem 0 0; font-size:.92rem; border-radius:0 4px 4px 0}
+.term-b{border-bottom:2px solid var(--seiji); font-weight:700; padding-bottom:1px}
+.key{background:linear-gradient(transparent 62%, var(--seiji-soft) 62%); font-weight:700}
+.warn{color:var(--shu); font-weight:700}
+.scroll{overflow-x:auto; -webkit-overflow-scrolling:touch; margin:1rem 0}
+.scroll table{border-collapse:collapse; width:100%; font-size:.89rem; min-width:32rem}
+.scroll th,.scroll td{border-bottom:1px solid var(--line); padding:.6rem .65rem;
+  text-align:left; vertical-align:top}
+.scroll thead th{border-bottom:1px solid var(--line2); font-size:.75rem; letter-spacing:.05em;
+  color:var(--hai); font-weight:700}
+.scroll th[scope=row]{font-weight:700; white-space:nowrap}
+.lead{color:var(--ink-sub); margin:0 0 1rem}
+figure{margin:1.6rem 0}
+figure svg{width:100%; height:auto}
+figcaption{font-size:.85rem; color:var(--ink-sub); margin-top:.6rem}
 </style>
 
 <style>
@@ -59,19 +79,19 @@ body{display:flex; align-items:flex-start}
 <a href="全体像.html" class="cur">行政法の全体像</a>
 <a href="救済の三つの道.html">救済の三つの争訟方法</a>
 <a href="用語集.html">用語集</a>
-<a href="義務のレベル.html">義務のレベル</a>
 <h4>第2章 行政法総論</h4>
 <a href="02-行政法総論1-効力と瑕疵.html">行政行為の効力と瑕疵</a>
 <a class="todo">土台と行為形式</a>
 <h4>第3章 行政手続法</h4>
 <a href="03-行政手続法1-定義と適用範囲.html">定義と適用範囲</a>
 <a href="03-行政手続法2-申請と不利益処分.html">申請と不利益処分</a>
+<a href="義務のレベル.html" class="sub">└ 義務のレベルの読み方</a>
 <a class="todo">行政指導・意見公募</a>
 <h4>第4章 行政不服審査法</h4>
 <a href="../行政不服審査法.html">行政不服審査法</a>
 <h4>第5章 行政事件訴訟法</h4>
 <a href="05-行政事件訴訟法1-処分性.html">処分性</a>
-<a class="todo">原告適格・訴えの利益</a>
+<a href="05-行政事件訴訟法2-訴訟要件と判決.html">訴訟要件と判決</a>
 <h4>第6章 国家賠償法</h4>
 <a href="06-国家賠償法1-国家賠償.html">国家賠償</a>
 <a class="todo">損失補償</a>
@@ -85,99 +105,301 @@ body{display:flex; align-items:flex-start}
 </nav>
 <div class="wrap">
 <header>
-  <p class="eyebrow">行政法の全体像 ── 一つの流れとして</p>
+  <p class="eyebrow">最初に読む1枚</p>
   <h1>行政法の全体像</h1>
-  <p class="lede">行政法は6つの科目に分かれていますが、中身は<strong>「行政が動く → 人がそれを受ける → 不服なら争う → 決着する」という一本の物語</strong>です。この順に7つの段を置き、各段に何問出ているかを添えました。数字は当アプリ収録8年分(平成30〜令和7年度)の実測です。</p>
+  <p class="lede">行政書士試験の行政法は、行政法総論・行政手続法・行政不服審査法・行政事件訴訟法・国家賠償法・地方自治法という大きなまとまりで学びます。名前だけ見ると別々の科目に見えます。しかし中身は<strong>一つの出来事を、時間の順に追っているだけ</strong>です。ここでは<strong>一軒の飲食店が営業許可を取り消される</strong>という場面をひとつ決めて、それを最初から最後まで追いかけます。同じ事案が段ごとにどの法律の守備範囲に入るのかを見れば、6つの法律の関係が一度で頭に入ります。</p>
 </header>
 
-<div class="map">
-  <p><b>物語の骨格。</b>役所が動くには法律の根拠が要る(第1段)。動き方には型がある(第2段)。型の中心が行政行為＝処分で、いったん出ると独特の力を持つ(第3段)。処分を出す前には守るべき手続がある(第4段)。出た処分に傷があれば争える(第5段)。争う場所は行政の中(第5段)と裁判所(第6段)。効力を消せなくても金銭で償わせる道がある(第7段)。</p>
-  <p><b>地方自治法だけ位置づけが違います。</b>上の物語の主人公である「行政」が、国ではなく地方公共団体の場合の組織と権限の法です。26問と大きいので独立して扱います。</p>
+<section>
+<h2>追いかける事案</h2>
+
+<div class="case-box">
+<p>Aさんは駅前で飲食店を営んでいます。飲食店の営業には、食品衛生法55条に基づく<b>都道府県知事等の許可</b>が要ります。保健所を置く市であれば、市長がその権限を行使します。</p>
+<p>ある日、Aさんの店で食事をした客に食中毒の症状が出ました。市の調査の結果、<b>Aさんの店の料理が原因であると判断され</b>、市長はAさんの<b>営業許可を取り消す</b>ことにしました。</p>
+<p>ところがAさんは納得できません。<b>同じ日に別の店でも食事をした客がいたのに、そちらは調べられていない</b>と考えているからです。市の事実認定が誤っていると主張したい。</p>
+<p><b>Aさんはこの先どうすればよいのでしょうか。</b></p>
 </div>
 
-<div class="note">
-  <p><b>この地図の「原則」には、いずれも例外がある。</b>各章で扱うが、地図の段階で対応関係だけ示しておく。</p>
-  <p>第4段の行政手続法は処分・行政指導・届出・命令等の4つを規律するのが原則だが、<b>3条・4条に広い適用除外</b>があり、地方公共団体の機関がする行為は条例・規則に根拠を置くものが外れる。</p>
-  <p>第5段と第6段は<b>自由選択が原則</b>だが（行政事件訴訟法8条1項）、個別の法律が審査請求前置を定めていればその順序に従う。ただし前置とされていても、審査請求から3か月を経て裁決がないときなどは裁決を待たずに出訴できる（同条2項）。</p>
-  <p>第6段の取消訴訟は出訴期間内に提起するのが原則だが（行政事件訴訟法14条）、<b>正当な理由があるときは期間経過後でも提起できる</b>。処分が無効であれば、そもそも出訴期間の制限を受けない。</p>
-  <p>第7段の国家賠償は、処分を取り消してもらわなくても請求できるのが原則である。この点に例外はない。</p>
-</div>
-<div class="stage">
-  <h2><span class="n">第1段</span>行政が動くための土台<span class="cnt">総論のうち約8問</span></h2>
-  <p class="lead">「行政は勝手に動けない」を出発点に置く段。<b>ここを理解しないと、以降の全ての制度が「なぜそんな面倒をするのか」分からなくなります。</b>もっとも、法律の根拠が必要とされる範囲には争いがあり、侵害留保説では国民の権利を制限し義務を課す作用に限られます。</p>
-  <div class="topic"><span class="num">1</span><span class="nm">法律による行政の原理<span class="sub">国民の権利を制限するなら法律の根拠が要る(法律の留保)。行政法という科目そのものの存在理由</span></span><span class="law">総論</span></div>
-  <div class="topic"><span class="num">2</span><span class="nm">法の一般原則<span class="sub">法律に書いていなくても行政を縛るもの。信義則・権利濫用の禁止・平等原則・比例原則</span></span><span class="law">総論 2問</span></div>
-  <div class="topic"><span class="num">3</span><span class="nm">行政組織<span class="sub">行政主体(国・県)と行政庁(大臣・知事)の区別。権限の委任・専決。誰が処分をし、誰が責任を負うか</span></span><span class="law">総論 2問</span></div>
-  <div class="topic"><span class="num">4</span><span class="nm">行政上の法律関係<span class="sub">行政の活動に民法の規定が適用されるか。公物(道路・河川)の法律関係</span></span><span class="law">総論 3問</span></div>
-</div>
+<p>この一つの問いに答えるために、行政法の全部が要ります。以下、時間の順に見ていきます。</p>
+</section>
 
-<div class="stage">
-  <h2><span class="n">第2段</span>行政の動き方 ── 行為形式<span class="cnt">総論のうち約9問</span></h2>
-  <p class="lead">行政が国民に働きかける手段の目録。<b>どの形式かで、事前の手続も事後の争い方も変わります。</b>だから最初に形式を見分ける。ただし形式の名前と法的性質は一致しないことがあり、条文が「取消し」と書いていても講学上は撤回である場合など、名前で判断してはいけません。</p>
-  <div class="topic"><span class="num">5</span><span class="nm">行政立法<span class="sub">法規命令(政省令・国民を拘束)と行政規則(通達・内部のルール)。委任の範囲を超えた命令は無効</span></span><span class="law">総論 4問</span></div>
-  <div class="topic hot"><span class="num">6</span><span class="nm">行政行為（＝処分）<span class="sub">個別・具体的に権利義務を決める。<b>行政法の中心概念。</b>許可・認可・特許の分類、附款(条件・期限・負担)</span></span><span class="law">総論 2問+</span></div>
-  <div class="topic"><span class="num">7</span><span class="nm">行政裁量<span class="sub">法律が行政に判断の幅を与えている場合。裁判所はどこまで踏み込めるか(逸脱・濫用のみ審査)</span></span><span class="law">総論 2問</span></div>
-  <div class="topic"><span class="num">8</span><span class="nm">行政指導・行政契約・行政計画<span class="sub">処分ではない働きかけ。処分でないので原則として取消訴訟で争えない</span></span><span class="law">総論 1問+手続法11問</span></div>
-  <div class="topic"><span class="num">9</span><span class="nm">行政強制・行政罰<span class="sub">従わない者への実力行使(代執行・即時強制)と制裁(行政刑罰・秩序罰)。行政調査もここ</span></span><span class="law">総論 4問</span></div>
-</div>
+<section>
+<h2>第1段　なぜ市長はAさんの許可を取り消せるのか ── 法律の根拠</h2>
+<p class="lead">出発点は「行政は勝手に動けない」という一点です。</p>
 
-<div class="stage">
-  <h2><span class="n">第3段</span>処分が持つ力と、その傷<span class="cnt">総論 5問(最大グループ)</span></h2>
-  <p class="lead">処分がいったん世に出た後の話。<b>行政法総論の中心にある領域です。</b>力の話と傷の話は表裏一体で、どちらも「処分を前提として形成された法律関係を守る」という一点から導かれます。</p>
-  <div class="topic hot"><span class="num">10</span><span class="nm">行政行為の効力<span class="sub">公定力(取り消されるまで有効)・不可争力(期間経過で争えない)・不可変更力(裁決は出した側も覆せない)</span></span><span class="law">総論</span></div>
-  <div class="topic hot"><span class="num">11</span><span class="nm">行政行為の瑕疵<span class="sub">無効(重大かつ明白)と取消し。職権取消しと撤回の区別。瑕疵の治癒・違法行為の転換・違法性の承継</span></span><span class="law">総論</span></div>
-</div>
+<p>市長は、気に入らないという理由だけで店の営業をやめさせることはできません。<span class="key">国民の権利を制限したり義務を課したりするには、法律の根拠が要る</span>からです。これを<span class="term-b">法律による行政の原理</span>といい、その中でも「どこまで法律の根拠が要るか」という問題を<span class="term-b">法律の留保</span>といいます。通説である侵害留保説では、<span class="key">国民の権利を制限し、義務を課す作用について法律の根拠が必要</span>だとされます。</p>
 
-<div class="stage">
-  <h2><span class="n">第4段</span>処分を出す前の手続<span class="cnt">行政手続法 23問</span></h2>
-  <p class="lead">事後の救済だけでは遅い。<b>処分が出る前に、言い分を聞き、基準を示させる。</b>行政手続法は処分・行政指導・届出・命令等の4つを規律します(行政契約・行政計画・行政強制には及びません)。ただしこの4つであっても、3条の適用除外に当たる処分・行政指導には手続の規定が及ばず、地方公共団体の機関がする行為も条例・規則に根拠を置くものは除かれます(3条3項)。</p>
-  <div class="topic hot"><span class="num">12</span><span class="nm">申請に対する処分<span class="sub">審査基準の設定・公表(義務)、標準処理期間、審査・応答義務、拒否するときの理由の提示</span></span><span class="law">手続法 5問</span></div>
-  <div class="topic hot"><span class="num">13</span><span class="nm">不利益処分<span class="sub">処分基準(努力義務)、聴聞と弁明の機会の使い分け、理由の提示。申請の拒否はこちらに属さない</span></span><span class="law">手続法 6問</span></div>
-  <div class="topic hot"><span class="num">14</span><span class="nm">定義と適用範囲<span class="sub">2条の定義群と3条の適用除外。地方公共団体の条例に基づく処分には適用されない</span></span><span class="law">手続法 6問</span></div>
-  <div class="topic"><span class="num">15</span><span class="nm">行政指導・届出・意見公募手続<span class="sub">任意性の担保、不利益取扱いの禁止、中止等の求め。届出は到達で完了。命令等のパブリックコメント</span></span><span class="law">手続法 4問</span></div>
-</div>
+<p>Aさんの事案では、食品衛生法60条が「都道府県知事は……営業の許可を取り消し、又は営業の全部若しくは一部を禁止し、若しくは期間を定めて停止することができる」と定めています。<span class="key">Aさんの店の状態が食品衛生法60条の定める要件に当たる場合に限り、市長はこの条文を根拠に許可を取り消せます。</span>条文があること自体が取消しを正当化するのではなく、要件に当たることが必要です。</p>
 
-<div class="stage">
-  <h2><span class="n">第5段</span>行政の中で争う<span class="cnt">行政不服審査法 24問</span></h2>
-  <p class="lead">裁判所に行く前に、<b>行政自身にやり直させる</b>道。安く速く、違法だけでなく<b>不当</b>まで争えるのが持ち味です。もっとも国や地方公共団体が固有の資格で処分の名あて人となる場合には、この法律は適用されません(7条2項)。</p>
-  <div class="topic hot"><span class="num">16</span><span class="nm">審査請求の入口<span class="sub">対象(処分・不作為)、請求人適格、宛先(4条)、期間(3か月/1年)、書面主義、経由、取下げ</span></span><span class="law">不服審査 10問</span></div>
-  <div class="topic"><span class="num">17</span><span class="nm">審理の担い手と手続<span class="sub">審理員(処分に関与していない職員)→行政不服審査会等への諮問→審査庁の裁決という三段構え</span></span><span class="law">不服審査 1問</span></div>
-  <div class="topic"><span class="num">18</span><span class="nm">執行停止<span class="sub">原則は執行不停止。審査庁が上級庁・処分庁かで職権の可否が変わる。義務的執行停止の要件</span></span><span class="law">不服審査</span></div>
-  <div class="topic"><span class="num">19</span><span class="nm">裁決と教示<span class="sub">却下・棄却(＋事情裁決)・認容。形成力と拘束力。不利益変更の禁止。書面処分には書面で教示</span></span><span class="law">不服審査 4問</span></div>
-  <div class="topic hot"><span class="num">20</span><span class="nm">再調査の請求・再審査請求<span class="sub">個別法に定めがあるときだけ使える。前に挟むのが再調査、後ろに続けるのが再審査</span></span><span class="law">不服審査 4問</span></div>
-</div>
+<p>ここで、もう一つ確かめることがあります。<span class="warn">取り消すのは誰なのか</span>です。処分をする権限を持つ機関を<span class="term-b">行政庁</span>といい、市長がこれに当たります。これに対し、権利義務が帰属する法人そのものを<span class="term-b">行政主体</span>といい、ここでは市です。<span class="key">処分をするのは市長、後で訴えられるのは市</span>という食い違いが生じるので、この二つを分けておく必要があります。</p>
 
-<div class="stage">
-  <h2><span class="n">第6段</span>裁判所で争う<span class="cnt">行政事件訴訟法 28問</span></h2>
-  <p class="lead">行政から独立した裁判所が<b>違法かどうか</b>を裁く(不当は守備範囲外)。取消訴訟が中心で、<b>訴訟要件 → 本案 → 判決</b>の一本道を進みます。出訴期間内に提起するのが原則ですが(14条)、正当な理由があるときは期間経過後でも提起でき、処分が無効であればそもそも期間の制限を受けません。</p>
-  <div class="topic hot"><span class="num">21</span><span class="nm">訴訟要件 ── 処分性<span class="sub">争う相手がそもそも「処分」か。用途地域の指定は否定、土地区画整理の事業計画は肯定。<b>取消訴訟の入口</b></span></span><span class="law">行訴 6問</span></div>
-  <div class="topic"><span class="num">22</span><span class="nm">訴訟要件 ── 原告適格・訴えの利益<span class="sub">訴えてよい立場か。いま勝つ意味が残っているか。処分の効果が消えた後の「回復すべき法律上の利益」</span></span><span class="law">行訴 6問</span></div>
-  <div class="topic hot"><span class="num">23</span><span class="nm">訴訟要件 ── 出訴期間・被告適格・管轄<span class="sub">知った日から6か月/処分の日から1年。被告は処分庁が所属する行政主体。被告を誤っても変更の許可がある</span></span><span class="law">行訴 6問</span></div>
-  <div class="topic"><span class="num">24</span><span class="nm">本案の審理と執行停止<span class="sub">職権証拠調べ、違法性の承継、執行停止(内閣総理大臣の異議あり)</span></span><span class="law">行訴 1問</span></div>
-  <div class="topic"><span class="num">25</span><span class="nm">判決とその効力<span class="sub">却下・棄却(＋事情判決)・認容。形成力・第三者効・拘束力。拒否処分取消し後の行政庁の義務</span></span><span class="law">行訴 3問</span></div>
-  <div class="topic"><span class="num">26</span><span class="nm">取消訴訟以外の訴訟<span class="sub">無効等確認・不作為違法確認・義務付け・差止め(いずれも抗告訴訟)。当事者訴訟。民衆訴訟・機関訴訟</span></span><span class="law">行訴 4問</span></div>
-</div>
+<p>また、法律に書かれていなくても行政を縛るものがあります。<span class="key">信義則、権利の濫用の禁止、平等原則、比例原則</span>といった<span class="term-b">法の一般原則</span>です。他の店には注意で済ませているのにAさんだけ許可取消しにする、といった扱いは、法律の要件を満たしていても許されないことがあります。</p>
 
-<div class="stage">
-  <h2><span class="n">第7段</span>金銭で償わせる<span class="cnt">国家賠償法 15問</span></h2>
-  <p class="lead">処分を消せなくても、受けた損害の賠償は求められる。<b>取消訴訟と違い、処分を先に取り消してもらう必要はありません。</b>判例が7割を占める科目です。ただし処分が違法であることと国家賠償法1条1項の適用上違法であることは別であり、取り消されたからといって直ちに賠償責任が生じるわけではありません。</p>
-  <div class="topic hot"><span class="num">27</span><span class="nm"><a class="cite" href="資料/条文/%E5%9B%BD%E5%AE%B6%E8%B3%A0%E5%84%9F%E6%B3%951%E6%9D%A1.html">国家賠償法1条</a><span class="sub">公権力の行使に当たる公務員の故意過失による違法。違法性の判断枠組み、責任の性質、公務員個人の責任、求償</span></span><span class="law">国賠 11問</span></div>
-  <div class="topic"><span class="num">28</span><span class="nm"><a class="cite" href="資料/条文/%E5%9B%BD%E5%AE%B6%E8%B3%A0%E5%84%9F%E6%B3%952%E6%9D%A1.html">国家賠償法2条</a><span class="sub">営造物の設置管理の瑕疵。道路・河川で判断枠組みが違う。供用関連瑕疵(空港・道路の騒音)</span></span><span class="law">国賠 2問</span></div>
-  <div class="topic"><span class="num">29</span><span class="nm">3条・4条と損失補償<span class="sub">費用負担者の責任、失火責任法の適用。適法な行為による損失の補償(<a class="cite" href="資料/条文/%E6%86%B2%E6%B3%9529%E6%9D%A1.html">憲法29条</a>3項)</span></span><span class="law">国賠 2問</span></div>
-</div>
+<div class="q">この段で答えたこと ── <b>市長が動ける根拠はどこにあるか。</b>食品衛生法60条という条文である。</div>
+</section>
 
-<div class="stage">
-  <h2><span class="n">別枠</span>地方自治法<span class="cnt">26問</span></h2>
-  <p class="lead">物語の主人公である「行政」が地方公共団体である場合の組織法。上の7段とは軸が違うので独立させます。<b>条例と住民の権利が二本の柱</b>です。</p>
-  <div class="topic hot"><span class="num">30</span><span class="nm">条例と規則<span class="sub">条例で定めるべき事項、罰則の限度、法律との抵触(徳島市公安条例事件)、長の規則との違い</span></span><span class="law">自治 6問</span></div>
-  <div class="topic hot"><span class="num">31</span><span class="nm">住民の権利<span class="sub">住民監査請求と住民訴訟(監査請求前置)、直接請求(署名数・請求先)、外国籍住民の権利</span></span><span class="law">自治 7問</span></div>
-  <div class="topic"><span class="num">32</span><span class="nm">議会と長<span class="sub">議会の招集・議決、再議・不信任と解散、専決処分、委員会・監査委員</span></span><span class="law">自治 8問</span></div>
-  <div class="topic"><span class="num">33</span><span class="nm">事務区分と国の関与<span class="sub">自治事務と法定受託事務、是正の要求と是正の指示、関与法定主義</span></span><span class="law">自治 3問</span></div>
-  <div class="topic"><span class="num">34</span><span class="nm">団体の種類・公の施設・事務の共同処理<span class="sub">普通/特別地方公共団体、特別区、公の施設と指定管理者、連携協約・協議会</span></span><span class="law">自治 2問</span></div>
-</div>
+<section>
+<h2>第2段　「許可の取消し」とは何という種類の行為か ── 行為形式</h2>
+<p class="lead">行政が国民に働きかける方法は一つではありません。どの方法かで、この先の扱いが全部変わります。</p>
+
+<p>行政の働きかけには、次のような種類があります。</p>
+
+<div class="scroll"><table>
+  <thead><tr><th>種類</th><th>どういうものか</th><th>Aさんの事案では</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">行政立法</th><td>行政機関が一般的なルールを作ることです。国民を拘束する<b>法規命令</b>（政令・省令）と、役所の内部の基準にすぎない<b>行政規則</b>（通達・要綱）に分かれます。</td><td>営業の施設について守るべき基準は、食品衛生法54条に基づき、厚生労働省令で定める基準を参酌して都道府県等が<b>条例</b>で定めます。</td></tr>
+    <tr><th scope="row">行政行為（＝処分）</th><td>特定の相手に対して、個別・具体的に権利義務を決める行為です。<b>条文では「処分」と呼ばれます。</b></td><td><b>許可の取消しがこれです。</b>Aさん一人に対して、営業できる地位を奪っています。</td></tr>
+    <tr><th scope="row">行政指導</th><td>従うかどうかが相手の任意に委ねられている働きかけです。指導・勧告・助言がこれに当たります。</td><td>取り消す前に「衛生管理を改めてください」と指導することがあります。</td></tr>
+    <tr><th scope="row">行政契約</th><td>一方的に決めるのではなく、合意によって行うものです。</td><td>この事案では出てきません。</td></tr>
+    <tr><th scope="row">行政強制</th><td>義務を果たさない者に実力を行使することです。<b>代執行</b>などがこれに当たります。</td><td>取消し後も営業を続けたときに問題になります。</td></tr>
+    <tr><th scope="row">行政罰</th><td>義務違反に制裁を科すことです。<b>行政刑罰</b>（懲役・罰金）と<b>秩序罰</b>（過料）があります。</td><td>無許可営業には罰則があります。</td></tr>
+  </tbody>
+</table></div>
+
+<p>この中で<span class="key">許可の取消しは「行政行為＝処分」</span>です。この見分けが決定的に効きます。<span class="warn">許可の取消しのような不利益処分であれば、この先の第4段で見る事前の手続がかかります。</span>また、取消訴訟の対象になるかどうかも処分性によって決まります。もっとも、処分であれば必ず事前の手続がかかるわけではなく、第4段で見るとおり広い適用除外があります。</p>
+
+<p>もう一つ、名前に惑わされてはいけません。食品衛生法60条は「取り消し」と書いていますが、<span class="key">講学上はこれを<span class="term-b">撤回</span>と呼びます</span>。許可を出した時点では何も問題がなく、後から食中毒という新しい事情が生じたことを理由に将来に向かって効力を失わせるものだからです。成立の時点で瑕疵があった場合の<span class="term-b">職権取消し</span>とは別物です。<span class="warn">条文の言葉と講学上の言葉がずれることがある</span>ので、名前で判断せず中身を見ます。</p>
+
+<div class="q">この段で答えたこと ── <b>許可の取消しは何という行為か。</b>行政行為＝処分であり、しかも不利益処分である。だから第4段の事前手続がかかり、第6段の取消訴訟の対象にもなる。</div>
+</section>
+
+<section>
+<h2>第3段　処分が出ると何が起きるか ── 処分の力</h2>
+<p class="lead">処分は、普通の私人の行為とは違う力を持ちます。この力があるからこそ、後で見る面倒な手続が要るのです。</p>
+
+<p>市長がAさんの許可を取り消しました。このとき、たとえその取消しが違法であったとしても、<span class="key">正式に取り消されるまでは有効なものとして扱われます</span>。これを<span class="term-b">公定力</span>といいます。Aさんが「違法だから無効だ」と考えて営業を続ければ、無許可営業として処罰されます。</p>
+
+<p>なぜそんな力を認めるのか。<span class="key">各人が自分の判断で処分の効力を否定できるとすると、行政の営みが成り立たなくなるから</span>です。ある人は「あの取消しは違法だから無効だ」と考えて営業を続け、別の人は有効だと考えて従う。監督する側も、どちらを前提に動けばよいか決められません。<span class="key">そこで、違法の疑いがある処分であっても、取り消す権限のある機関が取り消すまでは有効なものとして扱う</span>ことにしています。</p>
+
+<p>処分の力は三つあります。<span class="warn">名前は似ていますが、誰を縛るのかが全部違います。</span></p>
+
+<div class="scroll"><table>
+  <thead><tr><th>力の名前</th><th>誰を縛るのか</th><th>Aさんの事案では</th></tr></thead>
+  <tbody>
+    <tr><th scope="row"><span class="term-b">公定力</span></th><td>取り消す権限のある機関が取り消すまでは、その効力を否定できないという意味で、相手方も第三者も他の機関も拘束します。<b>処分が違法であったかどうかを判断すること自体が禁じられるわけではありません。</b>国家賠償請求では、処分を有効なまま残したうえで違法性を判断できます。</td><td>Aさんは、取消判決を得るまで原則として営業できません。ただし、訴訟の間ずっと店を閉めていては生活が立ちゆかないので、取消訴訟とあわせて<b>執行停止</b>を申し立てることが考えられます（行政事件訴訟法25条）。</td></tr>
+    <tr><th scope="row"><span class="term-b">不可争力</span></th><td><b>相手方だけ</b>を縛ります。争える期間が過ぎると、Aさんの側からはもう争えなくなります。</td><td>Aさんが6か月放置すれば、原則として取消訴訟を起こせなくなります。</td></tr>
+    <tr><th scope="row"><span class="term-b">不可変更力</span></th><td><b>行政庁自身</b>を縛ります。ただし働くのは審査請求に対する裁決のような争訟裁断的な処分だけです。</td><td>Aさんの審査請求に対して市長が裁決を出したら、市長は自分でそれを覆せません。</td></tr>
+  </tbody>
+</table></div>
+
+<p>ただし、傷が重ければ話は別です。<span class="key">瑕疵が重大かつ明白であれば、その処分は初めから無効</span>で、公定力も不可争力も生じません。無効であれば、期間が過ぎていても効力を否定できます。もっとも「重大かつ明白」の壁は高く、実際に無効とされる例は多くありません。</p>
+
+<div class="q">この段で答えたこと ── <b>取消しが違法でも、Aさんは営業を続けてよいか。</b>よくない。公定力があるので、正式に取り消してもらうまで有効として扱われる。</div>
+</section>
+
+<section>
+<h2>第4段　取り消す前に、市長は何をしなければならないか ── 行政手続法</h2>
+<p class="lead">公定力という強い力を認める以上、出す前に慎重にさせる必要があります。それが事前の手続です。</p>
+
+<p>Aさんの許可の取消しは、Aさんの権利を制限する処分です。行政手続法にいう<span class="term-b">不利益処分</span>に当たります。したがって市長は、<span class="key">原則として、聴聞を経ずに取り消すことはできません</span>。公益上、緊急に処分をする必要があるときなど13条2項各号に当たる場合には、この手続が要らなくなります。</p>
+
+<div class="scroll"><table>
+  <thead><tr><th>市長がすべきこと</th><th>中身</th><th>義務の強さ</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">処分基準を定める</th><td>どういう場合に取り消し、どういう場合に停止で済ませるのかという判断の基準を、あらかじめ定めて公にしておくことです。</td><td><b>努力義務</b>にとどまります（12条1項）。ただし定めるのであれば、できる限り具体的にすることは義務です（同条2項）。</td></tr>
+    <tr><th scope="row">言い分を聴く</th><td>許可の取消しは重い処分なので、<b>聴聞</b>という手続を執らなければなりません（13条1項1号イ）。期日を通知し、Aさんに出頭して意見を述べる機会を与えます。</td><td><b>義務</b>です。</td></tr>
+    <tr><th scope="row">資料を見せる</th><td>Aさんは、市長が何を根拠に取り消そうとしているのかを知らなければ、的外れな反論しかできません。聴聞では、処分の原因となる事実を証する資料の閲覧を求められます（18条1項）。</td><td>正当な理由がなければ拒めません。</td></tr>
+    <tr><th scope="row">理由を示す</th><td>取消しをするときに、その理由をAさんに示さなければなりません（14条1項）。</td><td><b>義務</b>です。処分と<b>同時に</b>示す必要があります。</td></tr>
+  </tbody>
+</table></div>
+
+<p>行政手続法が規律しているのは、<span class="key">処分・行政指導・届出・命令等を定める手続</span>です。処分はさらに、申請に対する処分と不利益処分の二つに分かれ、それぞれ別の手続が用意されています。第2段で見た行政契約・行政計画・行政強制・行政罰には、この法律は及びません。<span class="warn">行政のすることすべてに手続法がかかるわけではありません。</span></p>
+
+<p>さらに例外があります。3条・4条に広い<span class="key">適用除外</span>が置かれており、また<span class="warn">地方公共団体の機関がする処分でも、根拠が条例・規則に置かれているものは適用から外れます</span>（3条3項）。Aさんの事案は食品衛生法という<b>法律</b>に基づく処分なので、行政手続法がかかります。もしこれが市の独自の条例に基づく処分であれば、かかるのは市の行政手続条例のほうになります。</p>
+
+<div class="q">この段で答えたこと ── <b>市長はいきなり取り消せるか。</b>できない。聴聞を経て、理由を示さなければならない。</div>
+</section>
+
+<section>
+<h2>第5段　Aさんはどこで争うか ── 三つの道</h2>
+<p class="lead">ここからが救済です。争い方は三つあり、目的が違います。</p>
+
+<div class="scroll"><table>
+  <thead><tr><th>道</th><th>何を求めるものか</th><th>どこへ</th><th>根拠法</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">審査請求</th><td>処分を<b>取り消してもらう</b>。行政自身にやり直させます。</td><td>行政の中（市長など）</td><td>行政不服審査法</td></tr>
+    <tr><th scope="row">取消訴訟</th><td>処分を<b>取り消してもらう</b>。裁判所に判断させます。</td><td>裁判所</td><td>行政事件訴訟法</td></tr>
+    <tr><th scope="row">国家賠償請求</th><td>処分は残したまま、受けた<b>損害をお金で埋め合わせてもらう</b>。取消判決を先に得る必要はありません。</td><td>裁判所</td><td>国家賠償法</td></tr>
+  </tbody>
+</table></div>
+
+<p>三つの関係を押さえます。</p>
+
+<p><span class="key">第一に、審査請求と取消訴訟は、どちらを先に使ってもかまいません。</span>これを<span class="term-b">自由選択主義</span>といいます（行政事件訴訟法8条1項）。ただし個別の法律が「まず審査請求をせよ」と定めている場合があり、これを<span class="term-b">審査請求前置</span>といいます。前置とされていても、審査請求から3か月を経て裁決がないときなどは、裁決を待たずに出訴できます（同条2項）。</p>
+
+<p><span class="key">第二に、国家賠償請求は、取消訴訟を経ずに単独で起こせます。</span>処分をあらかじめ取り消してもらう必要はありません。もっとも「いつまでも起こせる」わけではなく、国家賠償法4条により民法が適用される結果、損害賠償請求権には消滅時効がかかります。公定力は国家賠償請求の妨げになりません。理由は、<span class="warn">審理の対象が違う</span>からです。取消訴訟は処分の効力を消すかどうかを審理しますが、国家賠償は損害を賠償させるかどうかを審理します。処分は有効なまま残したうえで、その処分が違法だったことを理由に賠償を命じることができます。</p>
+
+<p><span class="key">第三に、二つの取消しの道には、審理できる範囲に違いがあります。</span></p>
+
+<div class="scroll"><table>
+  <thead><tr><th>比べる点</th><th>審査請求（行政不服審査法）</th><th>取消訴訟（行政事件訴訟法）</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">誰が審理するか</th><td>行政組織の中の<b>審査庁</b>です。処分をした行政庁自身が審査庁になるとは限りません（4条）。審理は、原則として審査庁に所属する職員のうちから指名された<b>審理員</b>が行います。その処分に関与した者は指名できません（9条）。</td><td>行政から独立した裁判所です。</td></tr>
+    <tr><th scope="row">何を審理できるか</th><td><b>違法だけでなく不当も</b>審理できます。法には反していないが妥当でない、という処分も取り消せます。</td><td><b>違法かどうかだけ</b>です。不当にとどまるものは取り消せません。</td></tr>
+    <tr><th scope="row">いつまでに</th><td>処分があったことを知った日の翌日から<b>3か月</b>、処分があった日の翌日から<b>1年</b>（18条）。</td><td>処分があったことを知った日から<b>6か月</b>、処分の日から<b>1年</b>（14条）。</td></tr>
+    <tr><th scope="row">かかる費用と時間</th><td>手数料がかからず、書面で進むので早く終わります。</td><td>訴訟費用がかかり、審理に時間がかかります。</td></tr>
+  </tbody>
+</table></div>
+
+<p>Aさんが「原因はうちの料理ではない」と主張したいのであれば、事実認定を争うことになります。<span class="key">安く早く決着させたいなら審査請求、行政から独立した判断がほしいなら取消訴訟</span>という選び方になります。</p>
+
+<div class="q">この段で答えたこと ── <b>Aさんはどこで争うか。</b>審査請求・取消訴訟・国家賠償の三つ。取消しの二つは自由に選べる。国家賠償は取消判決を先に得なくても起こせるが、消滅時効はかかる。</div>
+</section>
+
+<section>
+<h2>第6段　裁判所は何を確かめてから中身に入るか ── 訴訟要件</h2>
+<p class="lead">取消訴訟には二重の関門があります。まず入口を通らないと、中身を見てもらえません。</p>
+
+<p>Aさんが取消訴訟を起こしても、裁判所はすぐに「取消しが違法かどうか」を審理するわけではありません。<span class="key">先に、この訴えを審理してよいかを確かめます</span>。これを<span class="term-b">訴訟要件</span>といいます。</p>
+
+<div class="scroll"><table>
+  <thead><tr><th>関門</th><th>何を確かめるか</th><th>Aさんの事案では</th></tr></thead>
+  <tbody>
+    <tr><th scope="row"><span class="term-b">処分性</span></th><td>争う相手が「処分」かどうか。公権力の主体である国または公共団体が行う行為のうち、直接国民の権利義務を形成し、またはその範囲を確定することが法律上認められているものをいいます。</td><td>営業許可の取消しは、Aさんの営業できる地位を直接奪うので、<b>処分に当たります</b>。</td></tr>
+    <tr><th scope="row"><span class="term-b">原告適格</span></th><td>その人が訴えてよい立場か。処分の取消しを求めるにつき法律上の利益を有する者かどうかです。</td><td>Aさんは処分の名あて人なので、<b>当然に認められます</b>。周辺住民が争おうとする場合に問題になります。</td></tr>
+    <tr><th scope="row"><span class="term-b">訴えの利益</span></th><td>いま取り消してもらう意味が残っているか。処分の効果が消えた後でも、<b>なお回復すべき法律上の利益</b>が残っていれば訴えの利益は認められます（9条1項かっこ書）。効果が消えれば当然に失われる、というものではありません。</td><td>Aさんが廃業して店を畳んでしまえば、取り消してもらう意味が失われることがあります。</td></tr>
+    <tr><th scope="row">出訴期間</th><td>期間内に訴えを起こしたか。</td><td>知った日から6か月、処分の日から1年です。原則として、過ぎれば却下されます。ただし正当な理由があるときは、期間の経過後でも提起できます（14条1項ただし書・2項ただし書）。</td></tr>
+    <tr><th scope="row">被告適格</th><td>誰を相手にするか。処分をした行政庁が所属する行政主体です。</td><td>相手は<b>市長ではなく市</b>です。第1段の行政庁と行政主体の区別がここで効きます。</td></tr>
+  </tbody>
+</table></div>
+
+<p>関門を通れなければ<span class="term-b">却下</span>です。中身を審理したうえで負けるのが<span class="term-b">棄却</span>で、この二つは別物です。<span class="warn">「処分性がないから請求を棄却する」という言い方は成り立ちません。</span>中身に入る前に落ちているからです。</p>
+
+<p>入口を通ると、ようやく中身の審理に入ります。ここで裁判所が判断するのは、<span class="key">取消しが違法かどうか</span>です。食中毒の原因がAさんの店にあったのか、その事実認定に誤りはないか、処分基準に照らして取消しは重すぎないか、といったことを見ます。</p>
+
+<p>そして判決が出ます。認容されれば取消判決で、<span class="key">処分の効力は初めから生じなかったことになります</span>。許可の有効期間がまだ残っていれば、Aさんは営業許可を失っていなかった状態に戻ります。取消判決には、当事者だけでなく第三者にも効力が及びます（第三者効・32条1項）。</p>
+
+<div class="q">この段で答えたこと ── <b>裁判所はすぐ中身を見てくれるか。</b>くれない。処分性・原告適格・訴えの利益・出訴期間・被告適格という関門を先に通る必要がある。</div>
+</section>
+
+<section>
+<h2>第7段　勝っても戻らないものがある ── 国家賠償</h2>
+<p class="lead">処分を取り消してもらっても、失われた時間と売上は戻りません。</p>
+
+<p>Aさんが取消訴訟に勝ったとします。許可の有効期間が残っていれば、営業できる地位は戻ります。しかし<span class="key">執行停止が認められず、訴訟をしている間ずっと店を閉めていた場合、その間の売上も、離れた客も、取消判決では戻ってきません</span>。</p>
+
+<p>そこで国家賠償です。<span class="key">処分の効力を消すのではなく、受けた損害をお金で埋め合わせてもらう</span>道です。</p>
+
+<div class="scroll"><table>
+  <thead><tr><th>条文</th><th>何についての責任か</th><th>要件</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">国家賠償法1条</th><td><b>人の行為</b>についての責任です。公権力の行使に当たる公務員が、その職務を行うについて損害を加えた場合です。</td><td>故意または過失が必要です（<b>過失責任</b>）。</td></tr>
+    <tr><th scope="row">国家賠償法2条</th><td><b>物の状態</b>についての責任です。道路や河川といった公の営造物の設置または管理に瑕疵があった場合です。</td><td>管理者の過失は要りません（<b>無過失責任</b>）。</td></tr>
+  </tbody>
+</table></div>
+
+<p>Aさんの事案は1条です。ここで注意が要ります。<span class="warn">取消訴訟で処分が取り消されても、それだけで国家賠償法上の違法があったことにはなりません。</span>取消訴訟が問うのは「処分が客観的に法令に適合しているか」ですが、国家賠償が問うのは「その公務員が職務上通常尽くすべき注意義務を尽くしたか」だからです。<span class="key">ものさしが違うので、結論も一致するとは限りません。</span>市長が資料を尽くして慎重に判断したうえでなお認定を誤ったのであれば、処分は取り消されても賠償責任までは生じません。</p>
+
+<p>なお、行政の行為が<span class="key">適法</span>であっても、特定の人に特別の犠牲を強いる場合には補償が必要になることがあります。これが<span class="term-b">損失補償</span>で、憲法29条3項が根拠です。<span class="warn">違法な行為に対する賠償（国家賠償）と、適法な行為に対する補償（損失補償）は別の制度</span>です。</p>
+
+<div class="q">この段で答えたこと ── <b>取消訴訟に勝てば全部戻るか。</b>戻らない。閉店していた間の損害は、国家賠償請求で別に問題にする。ただし処分が取り消されたからといって、賠償が当然に認められるわけではない。</div>
+</section>
+
+<section>
+<h2>もう一つの軸　主人公が地方公共団体である場合 ── 地方自治法</h2>
+
+<p>ここまでの7段は、<span class="key">行政が国民に対して何をするか</span>という軸で並べてきました。地方自治法だけは軸が違います。<span class="key">その「行政」が国ではなく地方公共団体である場合の、組織と権限を定めた法律</span>だからです。</p>
+
+<p>Aさんの事案でも、実は地方自治法が背後にあります。市が保健所を置き、市長が食品衛生法上の権限を行使する立場にあること、市長がその市の執行機関であること、市が独自に条例を作れること――これらの土台は地方自治法が定めています。</p>
+
+<div class="scroll"><table>
+  <thead><tr><th>柱</th><th>中身</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">条例と規則</th><td>地方公共団体が自分で作れるルールです。条例は議会が議決して作り、規則は長が一人で定めます。作る人が違うので、置ける制裁も所管する事項も違います。国の法律とぶつかったときにどちらが優先するかも、ここで扱います。</td></tr>
+    <tr><th scope="row">住民の権利</th><td>住民が団体の運営に直接関与する仕組みです。条例の制定改廃を求める直接請求、財務会計上の行為を正す住民監査請求と住民訴訟がこれに当たります。</td></tr>
+    <tr><th scope="row">議会と長</th><td>住民が議員と長をそれぞれ直接選ぶ二元代表制です。互いに牽制する仕組みとして、長の再議権、議会の不信任議決、長の専決処分が置かれています。</td></tr>
+    <tr><th scope="row">事務の区分と国の関与</th><td>地方公共団体が処理する事務は、自治事務と法定受託事務に分かれます。国がどこまで口を出せるかは、法律またはこれに基づく政令に根拠がなければならないとされています。</td></tr>
+  </tbody>
+</table></div>
+</section>
+
+<section>
+<h2>この地図に書いた「原則」には、いずれも例外がある</h2>
+
+<p>各章で扱いますが、対応だけここに置いておきます。<span class="key">原則を覚えたら、必ず同じ場所で例外を確かめる</span>ようにしてください。</p>
+
+<div class="scroll"><table>
+  <thead><tr><th>段</th><th>原則</th><th>例外</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">第3段</th><td>処分には公定力があり、取り消されるまで有効として扱われます。</td><td>瑕疵が重大かつ明白であれば初めから無効で、公定力も不可争力も生じません。また課税処分のように処分を信頼する第三者がいない場面では、明白性を欠いても無効となりうるとされています。</td></tr>
+    <tr><th scope="row">第4段</th><td>行政手続法は処分・行政指導・届出・命令等の4つを規律します。</td><td>3条・4条に広い適用除外があります。また地方公共団体の機関がする処分と届出は、根拠が条例・規則に置かれているものが外れます。行政指導と命令等は根拠を問わず外れます（3条3項）。</td></tr>
+    <tr><th scope="row">第5段</th><td>審査請求と取消訴訟は自由に選べます（行政事件訴訟法8条1項）。</td><td>個別の法律が審査請求前置を定めていれば、その順序に従います。ただし前置とされていても、審査請求から3か月を経て裁決がないときなどは裁決を待たずに出訴できます（同条2項）。</td></tr>
+    <tr><th scope="row">第6段</th><td>取消訴訟は出訴期間内に提起しなければなりません（14条）。</td><td>正当な理由があるときは期間経過後でも提起できます。また処分が無効であれば、そもそも出訴期間の制限を受けません。</td></tr>
+    <tr><th scope="row">第7段</th><td>国家賠償は、処分を取り消してもらわなくても請求できます。</td><td>この点に例外はありません。ただし、取り消されたからといって国家賠償法上も当然に違法になるわけではない、という別の限定があります。</td></tr>
+  </tbody>
+</table></div>
+</section>
+
+<section>
+<h2>ここまでを1枚に</h2>
+
+<figure>
+<svg viewBox="0 0 860 470" role="img" aria-label="一つの処分が、法律の根拠にはじまり、事前の手続を経て出され、公定力を持ち、審査請求・取消訴訟・国家賠償の三つの道で争われるまでの流れ">
+<defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs>
+
+<text x="16" y="26" font-size="12" font-weight="700" fill="var(--hai)">第1段・第2段</text>
+<rect x="16" y="36" width="190" height="62" rx="5" fill="var(--fill)" stroke="currentColor" stroke-width="1.3"/>
+<text x="111" y="60" text-anchor="middle" font-size="14" font-weight="700" fill="currentColor">法律の根拠</text>
+<text x="111" y="80" text-anchor="middle" font-size="11" fill="var(--ink-sub)">食品衛生法60条の要件に当たること</text>
+
+<line x1="206" y1="67" x2="256" y2="67" stroke="currentColor" stroke-width="2" marker-end="url(#ar)"/>
+
+<text x="266" y="26" font-size="12" font-weight="700" fill="var(--hai)">第4段</text>
+<rect x="266" y="36" width="190" height="62" rx="5" fill="var(--seiji-soft)" stroke="var(--seiji)" stroke-width="2"/>
+<text x="361" y="60" text-anchor="middle" font-size="14" font-weight="700" fill="var(--seiji)">出す前の手続</text>
+<text x="361" y="80" text-anchor="middle" font-size="11" fill="var(--seiji)">聴聞を経て理由を示す</text>
+
+<line x1="456" y1="67" x2="506" y2="67" stroke="currentColor" stroke-width="2" marker-end="url(#ar)"/>
+
+<text x="516" y="26" font-size="12" font-weight="700" fill="var(--hai)">第3段</text>
+<rect x="516" y="36" width="200" height="62" rx="5" fill="var(--card)" stroke="currentColor" stroke-width="2.4"/>
+<text x="616" y="60" text-anchor="middle" font-size="14" font-weight="700" fill="currentColor">処分が出る</text>
+<text x="616" y="80" text-anchor="middle" font-size="11" fill="var(--ink-sub)">公定力と不可争力を持つ</text>
+
+<line x1="616" y1="98" x2="616" y2="150" stroke="currentColor" stroke-width="2" marker-end="url(#ar)"/>
+<text x="628" y="128" font-size="11" fill="var(--shu)" font-weight="700">Aさんは納得できない</text>
+
+<text x="16" y="176" font-size="12" font-weight="700" fill="var(--hai)">第5段・第6段・第7段 ── 争い方は三つ</text>
+
+<rect x="16" y="188" width="256" height="112" rx="5" fill="var(--card)" stroke="currentColor" stroke-width="1.4"/>
+<text x="144" y="212" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor">審査請求</text>
+<text x="144" y="234" text-anchor="middle" font-size="11" fill="var(--ink-sub)">行政の中で争う（3か月以内）</text>
+<text x="144" y="252" text-anchor="middle" font-size="11" fill="var(--ink-sub)">違法だけでなく不当も審理できる</text>
+<text x="144" y="276" text-anchor="middle" font-size="11" fill="var(--midori)" font-weight="700">処分が消える</text>
+
+<rect x="292" y="188" width="256" height="112" rx="5" fill="var(--card)" stroke="currentColor" stroke-width="1.4"/>
+<text x="420" y="212" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor">取消訴訟</text>
+<text x="420" y="234" text-anchor="middle" font-size="11" fill="var(--ink-sub)">裁判所で争う（6か月以内）</text>
+<text x="420" y="252" text-anchor="middle" font-size="11" fill="var(--ink-sub)">違法だけを審理し、先に訴訟要件を見る</text>
+<text x="420" y="276" text-anchor="middle" font-size="11" fill="var(--midori)" font-weight="700">処分が消える</text>
+
+<rect x="568" y="188" width="276" height="112" rx="5" fill="var(--card)" stroke="var(--shu)" stroke-width="1.8"/>
+<text x="706" y="212" text-anchor="middle" font-size="13" font-weight="700" fill="var(--shu)">国家賠償請求</text>
+<text x="706" y="234" text-anchor="middle" font-size="11" fill="var(--shu)">裁判所に単独で提起できる（時効はある）</text>
+<text x="706" y="252" text-anchor="middle" font-size="11" fill="var(--shu)">先に取消判決を得る必要はない</text>
+<text x="706" y="276" text-anchor="middle" font-size="11" fill="var(--shu)" font-weight="700">処分は残り、金銭が支払われる</text>
+
+<line x1="144" y1="188" x2="580" y2="150" stroke="currentColor" stroke-width="0" />
+<polyline points="616,150 144,150 144,184" stroke="currentColor" stroke-width="1.6" fill="none" marker-end="url(#ar)"/>
+<polyline points="616,150 420,150 420,184" stroke="currentColor" stroke-width="1.6" fill="none" marker-end="url(#ar)"/>
+<polyline points="616,150 706,150 706,184" stroke="var(--shu)" stroke-width="1.6" fill="none" marker-end="url(#ar)"/>
+
+<rect x="16" y="326" width="828" height="52" rx="5" fill="var(--seiji-soft)" stroke="var(--seiji)" stroke-width="1.3"/>
+<text x="430" y="348" text-anchor="middle" font-size="12" font-weight="700" fill="var(--seiji)">左の二つは自由に選べる（自由選択主義・行政事件訴訟法8条1項）。個別の法律が審査請求前置を定めていればその順序による</text>
+<text x="430" y="368" text-anchor="middle" font-size="12" fill="var(--seiji)">右の一つは、取消判決を先に得なくても単独で起こせる。ただし損害賠償請求権には消滅時効がかかる</text>
+
+<rect x="16" y="396" width="828" height="58" rx="5" fill="var(--fill)" stroke="currentColor" stroke-width="1.2" stroke-dasharray="6 4"/>
+<text x="430" y="418" text-anchor="middle" font-size="12" font-weight="700" fill="currentColor">別の軸 ── 地方自治法</text>
+<text x="430" y="440" text-anchor="middle" font-size="11" fill="var(--ink-sub)">この図の「行政」が地方公共団体である場合の組織と権限。条例と規則、住民の権利、議会と長、事務の区分</text>
+</svg>
+<figcaption>一軒の飲食店の営業許可が取り消されるまでと、その後の争い方。上段が処分が出るまで、下段が出た後の三つの道。</figcaption>
+</figure>
+
+<p>この図を頭に置いて各章に入ってください。<span class="key">いま読んでいるのがどの段の話なのかが分かれば、細かい制度も置き場所が決まります。</span></p>
+</section>
 
 <footer>
-  <p>数字は当アプリ収録8年分・行政法147問の実測(<a href="論点台帳.md">論点台帳</a>に全問の割付あり)。青地は分量がとくに厚い領域です。<br>
-  執筆済み: <a href="02-行政法総論1-効力と瑕疵.html">10・11(効力と瑕疵)</a> ／ <a href="../行政不服審査法.html">16〜20(不服審査)</a> ／ <a href="救済の三つの道.html">第5段〜第7段の関係図</a> ／ <a href="用語集.html">用語集</a></p>
+  <p><a href="index.html">目次</a> ／ <a href="用語集.html">用語集</a> ／ <a href="救済の三つの道.html">救済の三つの争訟方法</a> ／ <a href="義務のレベル.html">義務のレベル</a><br>
+  条文は e-Gov の現行法令から機械取得したものを引用しています。判例は収録データのうち確度の高いものだけを引きました。過去問については、その論点が扱われた問題の番号だけを載せ、問題文および選択肢の本文は載せていません。</p>
 </footer>
 </div>
