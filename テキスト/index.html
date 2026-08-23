@@ -93,27 +93,27 @@ body{display:flex; align-items:flex-start}
 <div class="audit-block">
   <div class="audit-title">教材の検算状態</div>
   <div class="audit-body">
-    <p>このテキストは Claude（Anthropic の言語モデル）と Codex（OpenAI の言語モデル）が書き、Codex が検算しています。<b>人が内容を確かめてはいません。</b></p>
-    <p>これまでに次のことが起きました。</p>
+    <p>この教材は Claude（Anthropic の言語モデル）と Codex（OpenAI の言語モデル）が書き、Codex が検算しています。</p>
+    <p>この教材について確認できている事実は次のとおりです。</p>
     <ul>
-      <li><b>条文の原文を人手で書き写していたため、17箇所で号の脱落・かっこ書の削除・項の欠落が起きていました。</b>現在は条文データベースから生成する形に変え、写しをやめています（330枚）。</li>
+      <li><b>章別ファイルの条文カードは合計212枚です。</b>全章版に束ねた重複分を含めると、公開HTML全体では330枚あります。カード内の条文本文は、条文データベースから自動生成しています。</li>
+      <li><b>章別ファイルの判例カードは合計124枚です。</b>全章版に束ねた重複分を含めると、公開HTML全体では173枚あります。判例カードの照合状態は章ごとの欄に分けています。</li>
       <li><b>Codex の検算で、法律上の誤りが49件見つかり、修正しました。</b>誤りの型は、義務のレベルの取り違え（行政手続法11条を努力義務と書いたが実際は禁止規定）、条文番号の誤り、限定を落とした断定（消滅時効を落とすなど）、判例の射程の拡大です。</li>
       <li><b>本文を直しても、覚えるカードや表に古い断定が残る事故が繰り返し起きています。</b></li>
     </ul>
-    <p class="audit-warn">読者は、書いてあることをそのまま信じないでください。条文と判例は、必ず原典で確かめてください。</p>
     <div class="audit-table-wrap"><table class="audit-table">
-      <thead><tr><th>章</th><th>書いた者</th><th>Codexの採点</th><th>直した後に採点し直したか</th><th>残っている穴</th></tr></thead>
+      <thead><tr><th>章</th><th>書いた者</th><th>Codexの採点</th><th>直した後に採点し直したか</th><th>条文カード</th><th>判例カード</th><th>残っている穴</th></tr></thead>
       <tbody>
-        <tr><td><a href="02-行政法総論1-効力と瑕疵.html"><code>docs/テキスト/02-行政法総論1-効力と瑕疵.html</code></a></td><td>Claude</td><td>72点</td><td><b>していない</b></td><td>─</td></tr>
-        <tr><td><a href="02-行政法総論2-行為形式と統制.html"><code>docs/テキスト/02-行政法総論2-行為形式と統制.html</code></a></td><td><b>Codex</b></td><td>86点</td><td>していない（修正は反映済み）</td><td>─</td></tr>
-        <tr><td><a href="03-行政手続法1-定義と適用範囲.html"><code>docs/テキスト/03-行政手続法1-定義と適用範囲.html</code></a></td><td>Claude</td><td>62点</td><td><b>していない</b></td><td>─</td></tr>
-        <tr><td><a href="03-行政手続法2-申請と不利益処分.html"><code>docs/テキスト/03-行政手続法2-申請と不利益処分.html</code></a></td><td>Claude</td><td>84点</td><td><b>していない</b></td><td>─</td></tr>
-        <tr><td><a href="05-行政事件訴訟法1-処分性.html"><code>docs/テキスト/05-行政事件訴訟法1-処分性.html</code></a></td><td>Claude</td><td>78→<b>76点</b>（2回）</td><td>済み</td><td>─</td></tr>
-        <tr><td><a href="05-行政事件訴訟法2-訴訟要件と判決.html"><code>docs/テキスト/05-行政事件訴訟法2-訴訟要件と判決.html</code></a></td><td><b>Claudeのサブエージェント</b></td><td><b>未採点</b></td><td>─</td><td><b>一度も検算を受けていない。条文データに無い規定（13条・15条・16条・17条・19条・20条・23条の2・34条・41条、土地収用法133条）を、原文を持たずに書いた箇所がある。とくに41条について「執行停止は準用されていない」と書いた点は条文で裏を取れていない。判例データに無い判例を結論だけ書いた箇所が5つある（成田新幹線、成田新法、富山大学事件系、公立中学校教員の転任、市立小学校廃止条例）</b></td></tr>
-        <tr><td><a href="06-国家賠償法1-国家賠償.html"><code>docs/テキスト/06-国家賠償法1-国家賠償.html</code></a></td><td>Claude</td><td>82点</td><td><b>していない</b></td><td><b>Geminiの検証で「教材に記載がない」と判定された問題が11件ある。この章だけ、教材を渡しても正答率が上がらない</b></td></tr>
-        <tr><td><a href="07-地方自治法1-条例と規則.html"><code>docs/テキスト/07-地方自治法1-条例と規則.html</code></a></td><td>Claude</td><td>84点</td><td><b>していない</b></td><td>─</td></tr>
-        <tr><td><a href="../行政不服審査法.html"><code>docs/行政不服審査法.html</code></a></td><td>Claude</td><td>78→<b>72点</b>（2回）</td><td>済み</td><td>─</td></tr>
-        <tr><td><a href="全体像.html"><code>docs/テキスト/全体像.html</code></a></td><td>Claude</td><td>73→82点（2回）</td><td>済み</td><td>─</td></tr>
+        <tr><td><a href="02-行政法総論1-効力と瑕疵.html"><code>docs/テキスト/02-行政法総論1-効力と瑕疵.html</code></a></td><td>Claude</td><td>72点</td><td><b>していない</b></td><td>4枚</td><td>6枚</td><td>─</td></tr>
+        <tr><td><a href="02-行政法総論2-行為形式と統制.html"><code>docs/テキスト/02-行政法総論2-行為形式と統制.html</code></a></td><td><b>Codex</b></td><td>86点</td><td>していない（修正は反映済み）</td><td>39枚</td><td>40枚</td><td>─</td></tr>
+        <tr><td><a href="03-行政手続法1-定義と適用範囲.html"><code>docs/テキスト/03-行政手続法1-定義と適用範囲.html</code></a></td><td>Claude</td><td>62点</td><td><b>していない</b></td><td>16枚</td><td>0枚</td><td>─</td></tr>
+        <tr><td><a href="03-行政手続法2-申請と不利益処分.html"><code>docs/テキスト/03-行政手続法2-申請と不利益処分.html</code></a></td><td>Claude</td><td>84点</td><td><b>していない</b></td><td>29枚</td><td>3枚</td><td>─</td></tr>
+        <tr><td><a href="05-行政事件訴訟法1-処分性.html"><code>docs/テキスト/05-行政事件訴訟法1-処分性.html</code></a></td><td>Claude</td><td>78→<b>76点</b>（2回）</td><td>済み</td><td>21枚</td><td>10枚</td><td>─</td></tr>
+        <tr><td><a href="05-行政事件訴訟法2-訴訟要件と判決.html"><code>docs/テキスト/05-行政事件訴訟法2-訴訟要件と判決.html</code></a></td><td><b>Claudeのサブエージェント</b></td><td><b>未採点</b></td><td>─</td><td>51枚</td><td>34枚</td><td><b>一度も検算を受けていない。条文データに無い規定（13条・15条・16条・17条・19条・20条・23条の2・34条・41条、土地収用法133条）を、原文を持たずに書いた箇所がある。とくに41条について「執行停止は準用されていない」と書いた点は条文で裏を取れていない。判例データに無い判例を結論だけ書いた箇所が5つある（成田新幹線、成田新法、富山大学事件系、公立中学校教員の転任、市立小学校廃止条例）</b></td></tr>
+        <tr><td><a href="06-国家賠償法1-国家賠償.html"><code>docs/テキスト/06-国家賠償法1-国家賠償.html</code></a></td><td>Claude</td><td>82点</td><td><b>していない</b></td><td>6枚</td><td>24枚</td><td><b>Geminiの検証で「教材に記載がない」と判定された問題が11件ある。この章だけ、教材を渡しても正答率が上がらない</b></td></tr>
+        <tr><td><a href="07-地方自治法1-条例と規則.html"><code>docs/テキスト/07-地方自治法1-条例と規則.html</code></a></td><td>Claude</td><td>84点</td><td><b>していない</b></td><td>24枚</td><td>7枚</td><td>─</td></tr>
+        <tr><td><a href="../行政不服審査法.html"><code>docs/行政不服審査法.html</code></a></td><td>Claude</td><td>78→<b>72点</b>（2回）</td><td>済み</td><td>22枚</td><td>0枚</td><td>─</td></tr>
+        <tr><td><a href="全体像.html"><code>docs/テキスト/全体像.html</code></a></td><td>Claude</td><td>73→82点（2回）</td><td>済み</td><td>0枚</td><td>0枚</td><td>─</td></tr>
       </tbody>
     </table></div>
   </div>
