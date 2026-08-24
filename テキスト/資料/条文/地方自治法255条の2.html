@@ -24,55 +24,7 @@
 .hmk.x{color:var(--shu); background:var(--shu-soft)}
 .hnote{flex:1; color:var(--ink-sub)}
 .back{font-size:.85rem; margin-bottom:1.2rem}
-
-/* ── 横に長いものは、その箱の中だけでスクロールさせる（本文は横スクロールしない） ── */
-.scroll{overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%}
-.scroll table{min-width:max-content}
-figure,.fig{overflow-x:auto; max-width:100%}
-svg{max-width:100%; height:auto}
-img{max-width:100%; height:auto}
-pre,code{overflow-x:auto; word-break:break-word}
-.wrap{overflow-x:hidden}
-@media(max-width:640px){
-  html{font-size:15px}
-  table{font-size:.84rem}
-  th,td{padding:.4rem .5rem}
-  .wrap{padding-left:.8rem; padding-right:.8rem}
-}
-
-/* ── 読みやすさ ── 1行の長さ・文字の大きさ・見出しの階層 ── */
-/* 日本語は1行35〜45字が読みやすい。画面幅いっぱいに伸ばすと目の動きが大きくなり、
-   443ページの教材では疲労が積み上がる。 */
-.wrap{max-width:52rem; margin-left:auto; margin-right:auto}
-.wrap > *{max-width:100%}
-
-/* 本文は16px相当まで上げる。長時間読む教材なので、14.4pxでは小さい。 */
-p, .case p, dd, td, th{font-size:1rem}
-.art .atext{font-size:1rem}
-li{font-size:1rem; line-height:1.85}
-
-/* 見出しが本文より小さいと、節の区切りが見えない。
-   h2 > h3 > 本文 の順に大きさが下がるようにする。 */
-h3{font-size:1.06rem !important; letter-spacing:.02em !important;
-   color:var(--ink) !important; margin:1.9rem 0 .8rem !important;
-   padding-bottom:.35rem !important; border-bottom:2px solid var(--line2) !important}
-
-/* 節と節の間を空ける */
-h2{margin-top:3rem}
-section + section{margin-top:1.5rem}
-
-@media(max-width:900px){
-  .wrap{max-width:none}
-}
-@media(max-width:640px){
-  html{font-size:15px}
-  p, .case p, dd, td, th, li{font-size:.97rem}
-  table{font-size:.9rem}
-  th,td{padding:.45rem .55rem}
-  h3{font-size:1.02rem !important}
-}
 </style>
 <div class="wrap">
 <p class="back"><a href="../索引.html">資料の索引へ</a> ／ <a href="../../index.html">テキスト目次へ</a></p>
-<h1>地方自治法255条の2</h1><div class="src-body">法定受託事務に係る次の各号に掲げる処分及びその不作為についての審査請求は、他の法律に特別の定めがある場合を除くほか、当該各号に定める者に対してするものとする。この場合において、不作為についての審査請求は、他の法律に特別の定めがある場合を除くほか、当該各号に定める者に代えて、当該不作為に係る執行機関に対してすることもできる。
-2 普通地方公共団体の長その他の執行機関が法定受託事務に係る処分をする権限を当該執行機関の事務を補助する職員若しくは当該執行機関の管理に属する機関の職員又は当該執行機関の管理に属する行政機関の長に委任した場合において、委任を受けた職員又は行政機関の長がその委任に基づいてした処分に係る審査請求につき、当該委任をした執行機関が裁決をしたときは、他の法律に特別の定めがある場合を除くほか、当該裁決に不服がある者は、再審査請求をすることができる。この場合において、当該再審査請求は、当該委任をした執行機関が自ら当該処分をしたものとした場合におけるその処分に係る審査請求をすべき者に対してするものとする。</div><div class="note"><p><b>かみくだくと</b>　法定受託事務についての処分や不作為に不服があるときは、その事務を所管する大臣や知事など、国・都道府県の側に審査請求をする。もともと国の仕事を自治体が代わって処理しているため、国の側がチェックする形になっている。権限の委任を受けた職員がした処分について委任元の執行機関が裁決した場合には、さらに再審査請求ができる。自治事務なら通常どおり自治体内部に審査請求する点との対比が急所。</p></div><details class="hits"><summary>過去問での出題 2件</summary><div class="hit"><span class="hid">令和4年 問24-3</span><span class="hmk x">誤り</span><span class="hnote">法定受託事務の審査請求先を、事務を所管する各大臣から総務大臣一本にすり替えている</span></div><div class="hit"><span class="hid">令和6年 問22-4</span><span class="hmk x">誤り</span><span class="hnote">地方自治法2条8項の自治事務は法定受託事務以外のもので、両者は排他的な区分である</span></div></details></div>
+<h1>地方自治法255条の2</h1><div class="src-body">法定受託事務に係る次の各号に掲げる処分及びその不作為についての審査請求は、他の法律に特別の定めがある場合を除くほか、当該各号に定める者に対してするものとする。この場合において、不作為についての審査請求は、他の法律に特別の定めがある場合を除くほか、当該各号に定める者に代えて、当該不作為に係る執行機関に対してすることもできる。一都道府県知事その他の都道府県の執行機関の処分当該処分に係る事務を規定する法律又はこれに基づく政令を所管する各大臣二市町村長その他の市町村の執行機関（教育委員会及び選挙管理委員会を除く。）の処分都道府県知事三市町村教育委員会の処分都道府県教育委員会四市町村選挙管理委員会の処分都道府県選挙管理委員会２普通地方公共団体の長その他の執行機関が法定受託事務に係る処分をする権限を当該執行機関の事務を補助する職員若しくは当該執行機関の管理に属する機関の職員又は当該執行機関の管理に属する行政機関の長に委任した場合において、委任を受けた職員又は行政機関の長がその委任に基づいてした処分に係る審査請求につき、当該委任をした執行機関が裁決をしたときは、他の法律に特別の定めがある場合を除くほか、当該裁決に不服がある者は、再審査請求をすることができる。この場合において、当該再審査請求は、当該委任をした執行機関が自ら当該処分をしたものとした場合におけるその処分に係る審査請求をすべき者に対してするものとする。</div><details class="hits"><summary>過去問での出題 2件</summary><div class="hit"><span class="hid">令和4年 問24-3</span><span class="hmk x">誤り</span><span class="hnote">法定受託事務の審査請求先を、事務を所管する各大臣から総務大臣一本にすり替えている</span></div><div class="hit"><span class="hid">令和6年 問22-4</span><span class="hmk x">誤り</span><span class="hnote">地方自治法2条8項の自治事務は法定受託事務以外のもので、両者は排他的な区分である</span></div></details></div>

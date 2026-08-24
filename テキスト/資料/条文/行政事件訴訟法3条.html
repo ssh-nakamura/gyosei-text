@@ -24,60 +24,7 @@
 .hmk.x{color:var(--shu); background:var(--shu-soft)}
 .hnote{flex:1; color:var(--ink-sub)}
 .back{font-size:.85rem; margin-bottom:1.2rem}
-
-/* ── 横に長いものは、その箱の中だけでスクロールさせる（本文は横スクロールしない） ── */
-.scroll{overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%}
-.scroll table{min-width:max-content}
-figure,.fig{overflow-x:auto; max-width:100%}
-svg{max-width:100%; height:auto}
-img{max-width:100%; height:auto}
-pre,code{overflow-x:auto; word-break:break-word}
-.wrap{overflow-x:hidden}
-@media(max-width:640px){
-  html{font-size:15px}
-  table{font-size:.84rem}
-  th,td{padding:.4rem .5rem}
-  .wrap{padding-left:.8rem; padding-right:.8rem}
-}
-
-/* ── 読みやすさ ── 1行の長さ・文字の大きさ・見出しの階層 ── */
-/* 日本語は1行35〜45字が読みやすい。画面幅いっぱいに伸ばすと目の動きが大きくなり、
-   443ページの教材では疲労が積み上がる。 */
-.wrap{max-width:52rem; margin-left:auto; margin-right:auto}
-.wrap > *{max-width:100%}
-
-/* 本文は16px相当まで上げる。長時間読む教材なので、14.4pxでは小さい。 */
-p, .case p, dd, td, th{font-size:1rem}
-.art .atext{font-size:1rem}
-li{font-size:1rem; line-height:1.85}
-
-/* 見出しが本文より小さいと、節の区切りが見えない。
-   h2 > h3 > 本文 の順に大きさが下がるようにする。 */
-h3{font-size:1.06rem !important; letter-spacing:.02em !important;
-   color:var(--ink) !important; margin:1.9rem 0 .8rem !important;
-   padding-bottom:.35rem !important; border-bottom:2px solid var(--line2) !important}
-
-/* 節と節の間を空ける */
-h2{margin-top:3rem}
-section + section{margin-top:1.5rem}
-
-@media(max-width:900px){
-  .wrap{max-width:none}
-}
-@media(max-width:640px){
-  html{font-size:15px}
-  p, .case p, dd, td, th, li{font-size:.97rem}
-  table{font-size:.9rem}
-  th,td{padding:.45rem .55rem}
-  h3{font-size:1.02rem !important}
-}
 </style>
 <div class="wrap">
 <p class="back"><a href="../索引.html">資料の索引へ</a> ／ <a href="../../index.html">テキスト目次へ</a></p>
-<h1>行政事件訴訟法3条</h1><p class="meta">抗告訴訟</p><div class="src-body">この法律において「抗告訴訟」とは、行政庁の公権力の行使に関する不服の訴訟をいう。
-2 この法律において「処分の取消しの訴え」とは、行政庁の処分その他公権力の行使に当たる行為（次項に規定する裁決、決定その他の行為を除く。以下単に「処分」という。）の取消しを求める訴訟をいう。
-3 この法律において「裁決の取消しの訴え」とは、審査請求その他の不服申立て（以下単に「審査請求」という。）に対する行政庁の裁決、決定その他の行為（以下単に「裁決」という。）の取消しを求める訴訟をいう。
-4 この法律において「無効等確認の訴え」とは、処分若しくは裁決の存否又はその効力の有無の確認を求める訴訟をいう。
-5 この法律において「不作為の違法確認の訴え」とは、行政庁が法令に基づく申請に対し、相当の期間内に何らかの処分又は裁決をすべきであるにかかわらず、これをしないことについての違法の確認を求める訴訟をいう。
-6 この法律において「義務付けの訴え」とは、次に掲げる場合において、行政庁がその処分又は裁決をすべき旨を命ずることを求める訴訟をいう。
-7 この法律において「差止めの訴え」とは、行政庁が一定の処分又は裁決をすべきでないにかかわらずこれがされようとしている場合において、行政庁がその処分又は裁決をしてはならない旨を命ずることを求める訴訟をいう。</div><div class="note"><p><b>かみくだくと</b>　行政庁の公権力の行使に対する不服を申し立てる訴訟を抗告訴訟と呼び、処分の取消しや無効確認、不作為の違法確認、義務付け、差止めなど、目的に応じて複数の種類があります。試験では、それぞれの訴訟要件や対象となる行為の範囲が厳格に問われるため、各訴訟の定義を正確に区別して理解しておくことが重要です。</p></div><details class="hits"><summary>過去問での出題 22件</summary><div class="hit"><span class="hid">平成30年 問8-イ</span><span class="hmk o">正しい</span><span class="hnote">行政代執行法3条の戒告・通知に審査請求の特則はないが、行政不服審査法2条により審査請求できる</span></div><div class="hit"><span class="hid">平成30年 問10-1</span><span class="hmk x">誤り</span><span class="hnote">無効の瑕疵は取消しの瑕疵を含むので、無効な処分でも取消訴訟を提起して無効事由を主張できる</span></div><div class="hit"><span class="hid">平成30年 問10-4</span><span class="hmk x">誤り</span><span class="hnote">職権取消しを争う直接の対象は取消処分自体で、無効等確認の訴えは他の訴えで目的を達せない場合に限る(行政事件訴訟法36条)</span></div><div class="hit"><span class="hid">平成30年 問14-4</span><span class="hmk x">誤り</span><span class="hnote">審理中に拒否処分がされても審査請求がみなし変更される規定はなく、改めて審査請求をする必要がある</span></div><div class="hit"><span class="hid">平成30年 問26-1</span><span class="hmk x">誤り</span><span class="hnote">執行停止は処分の取消しの訴えの提起があった場合にできる(行政事件訴訟法25条2項)ので本案の係属が前提</span></div><div class="hit"><span class="hid">平成30年 問44</span><span class="hmk o">正しい</span><span class="hnote">記述式の解説で引用</span></div><div class="hit"><span class="hid">令和元年 問13-3</span><span class="hmk x">誤り</span><span class="hnote"></span></div><div class="hit"><span class="hid">令和元年 問13-4</span><span class="hmk x">誤り</span><span class="hnote"></span></div><div class="hit"><span class="hid">令和元年 問13-イ</span><span class="hmk x">誤り</span><span class="hnote">不作為の違法確認は行政事件訴訟法3条5項の相当の期間で判断され、標準処理期間の徒過は一資料にとどまる</span></div><div class="hit"><span class="hid">令和元年 問16-4</span><span class="hmk x">誤り</span><span class="hnote">議会の議決によってされる処分は、行政不服審査法7条1項1号により審査請求の対象から除かれる</span></div><div class="hit"><span class="hid">令和2年 問13-オ</span><span class="hmk x">誤り</span><span class="hnote">行政手続法6条の標準処理期間が過ぎても拒否処分とみなす効果はなく、応答義務は続く</span></div><div class="hit"><span class="hid">令和2年 問16-エ</span><span class="hmk x">誤り</span><span class="hnote">上級行政庁である審査庁は処分をすべき旨を命じ、不作為庁である審査庁は自ら処分する(行政不服審査法49条3項)</span></div><div class="hit"><span class="hid">令和2年 問18-3</span><span class="hmk x">誤り</span><span class="hnote">不作為の違法確認の訴えに出訴期間はなく、行政事件訴訟法38条4項は14条を準用していない</span></div><div class="hit"><span class="hid">令和2年 問18-5</span><span class="hmk x">誤り</span><span class="hnote">解説が根拠として引いている</span></div><div class="hit"><span class="hid">令和2年 問44</span><span class="hmk o">正しい</span><span class="hnote">記述式の解説で引用</span></div><div class="hit"><span class="hid">令和4年 問17-1</span><span class="hmk x">誤り</span><span class="hnote">無名抗告訴訟の余地を否定し、適法な抗告訴訟を法定の類型のみに狭めている</span></div><div class="hit"><span class="hid">令和4年 問17-3</span><span class="hmk x">誤り</span><span class="hnote">「法令に基づく申請」であることという要件を落として、原告適格を広げている</span></div><div class="hit"><span class="hid">令和4年 問44</span><span class="hmk o">正しい</span><span class="hnote">記述式の解説で引用</span></div><div class="hit"><span class="hid">令和5年 問9-ア</span><span class="hmk x">誤り</span><span class="hnote">社会保障給付は行政庁の処分で規律され、行政事件訴訟法3条2項の取消訴訟で争うことになる</span></div><div class="hit"><span class="hid">令和5年 問17-ア</span><span class="hmk o">正しい</span><span class="hnote">代執行の戒告と代執行令書による通知には処分性が認められ、取消訴訟の対象となる(行政代執行法3条1項・2項)</span></div><div class="hit"><span class="hid">令和5年 問43</span><span class="hmk o">正しい</span><span class="hnote">多肢選択式の解説で引用</span></div><div class="hit"><span class="hid">令和5年 問44</span><span class="hmk o">正しい</span><span class="hnote">記述式の解説で引用</span></div></details></div>
+<h1>行政事件訴訟法3条</h1><p class="meta">抗告訴訟</p><div class="src-body">（抗告訴訟）この法律において「抗告訴訟」とは、行政庁の公権力の行使に関する不服の訴訟をいう。２この法律において「処分の取消しの訴え」とは、行政庁の処分その他公権力の行使に当たる行為（次項に規定する裁決、決定その他の行為を除く。以下単に「処分」という。）の取消しを求める訴訟をいう。３この法律において「裁決の取消しの訴え」とは、審査請求その他の不服申立て（以下単に「審査請求」という。）に対する行政庁の裁決、決定その他の行為（以下単に「裁決」という。）の取消しを求める訴訟をいう。４この法律において「無効等確認の訴え」とは、処分若しくは裁決の存否又はその効力の有無の確認を求める訴訟をいう。５この法律において「不作為の違法確認の訴え」とは、行政庁が法令に基づく申請に対し、相当の期間内に何らかの処分又は裁決をすべきであるにかかわらず、これをしないことについての違法の確認を求める訴訟をいう。６この法律において「義務付けの訴え」とは、次に掲げる場合において、行政庁がその処分又は裁決をすべき旨を命ずることを求める訴訟をいう。一行政庁が一定の処分をすべきであるにかかわらずこれがされないとき（次号に掲げる場合を除く。）。二行政庁に対し一定の処分又は裁決を求める旨の法令に基づく申請又は審査請求がされた場合において、当該行政庁がその処分又は裁決をすべきであるにかかわらずこれがされないとき。７この法律において「差止めの訴え」とは、行政庁が一定の処分又は裁決をすべきでないにかかわらずこれがされようとしている場合において、行政庁がその処分又は裁決をしてはならない旨を命ずることを求める訴訟をいう。</div><div class="note"><p><b>かみくだくと</b>　行政庁の公権力の行使に対する不服を申し立てる訴訟を抗告訴訟と呼び、処分の取消しや無効確認、不作為の違法確認、義務付け、差止めなど、目的に応じて複数の種類があります。試験では、それぞれの訴訟要件や対象となる行為の範囲が厳格に問われるため、各訴訟の定義を正確に区別して理解しておくことが重要です。</p></div><details class="hits"><summary>過去問での出題 22件</summary><div class="hit"><span class="hid">平成30年 問8-イ</span><span class="hmk o">正しい</span><span class="hnote">行政代執行法3条の戒告・通知に審査請求の特則はないが、行政不服審査法2条により審査請求できる</span></div><div class="hit"><span class="hid">平成30年 問10-1</span><span class="hmk x">誤り</span><span class="hnote">無効の瑕疵は取消しの瑕疵を含むので、無効な処分でも取消訴訟を提起して無効事由を主張できる</span></div><div class="hit"><span class="hid">平成30年 問10-4</span><span class="hmk x">誤り</span><span class="hnote">職権取消しを争う直接の対象は取消処分自体で、無効等確認の訴えは他の訴えで目的を達せない場合に限る(行政事件訴訟法36条)</span></div><div class="hit"><span class="hid">平成30年 問14-4</span><span class="hmk x">誤り</span><span class="hnote">審理中に拒否処分がされても審査請求がみなし変更される規定はなく、改めて審査請求をする必要がある</span></div><div class="hit"><span class="hid">平成30年 問26-1</span><span class="hmk x">誤り</span><span class="hnote">執行停止は処分の取消しの訴えの提起があった場合にできる(行政事件訴訟法25条2項)ので本案の係属が前提</span></div><div class="hit"><span class="hid">平成30年 問44</span><span class="hmk o">正しい</span><span class="hnote">記述式の解説で引用</span></div><div class="hit"><span class="hid">令和元年 問13-3</span><span class="hmk x">誤り</span><span class="hnote"></span></div><div class="hit"><span class="hid">令和元年 問13-4</span><span class="hmk x">誤り</span><span class="hnote"></span></div><div class="hit"><span class="hid">令和元年 問13-イ</span><span class="hmk x">誤り</span><span class="hnote">不作為の違法確認は行政事件訴訟法3条5項の相当の期間で判断され、標準処理期間の徒過は一資料にとどまる</span></div><div class="hit"><span class="hid">令和元年 問16-4</span><span class="hmk x">誤り</span><span class="hnote">議会の議決によってされる処分は、行政不服審査法7条1項1号により審査請求の対象から除かれる</span></div><div class="hit"><span class="hid">令和2年 問13-オ</span><span class="hmk x">誤り</span><span class="hnote">行政手続法6条の標準処理期間が過ぎても拒否処分とみなす効果はなく、応答義務は続く</span></div><div class="hit"><span class="hid">令和2年 問16-エ</span><span class="hmk x">誤り</span><span class="hnote">上級行政庁である審査庁は処分をすべき旨を命じ、不作為庁である審査庁は自ら処分する(行政不服審査法49条3項)</span></div><div class="hit"><span class="hid">令和2年 問18-3</span><span class="hmk x">誤り</span><span class="hnote">不作為の違法確認の訴えに出訴期間はなく、行政事件訴訟法38条4項は14条を準用していない</span></div><div class="hit"><span class="hid">令和2年 問18-5</span><span class="hmk x">誤り</span><span class="hnote">解説が根拠として引いている</span></div><div class="hit"><span class="hid">令和2年 問44</span><span class="hmk o">正しい</span><span class="hnote">記述式の解説で引用</span></div><div class="hit"><span class="hid">令和4年 問17-1</span><span class="hmk x">誤り</span><span class="hnote">無名抗告訴訟の余地を否定し、適法な抗告訴訟を法定の類型のみに狭めている</span></div><div class="hit"><span class="hid">令和4年 問17-3</span><span class="hmk x">誤り</span><span class="hnote">「法令に基づく申請」であることという要件を落として、原告適格を広げている</span></div><div class="hit"><span class="hid">令和4年 問44</span><span class="hmk o">正しい</span><span class="hnote">記述式の解説で引用</span></div><div class="hit"><span class="hid">令和5年 問9-ア</span><span class="hmk x">誤り</span><span class="hnote">社会保障給付は行政庁の処分で規律され、行政事件訴訟法3条2項の取消訴訟で争うことになる</span></div><div class="hit"><span class="hid">令和5年 問17-ア</span><span class="hmk o">正しい</span><span class="hnote">代執行の戒告と代執行令書による通知には処分性が認められ、取消訴訟の対象となる(行政代執行法3条1項・2項)</span></div><div class="hit"><span class="hid">令和5年 問43</span><span class="hmk o">正しい</span><span class="hnote">多肢選択式の解説で引用</span></div><div class="hit"><span class="hid">令和5年 問44</span><span class="hmk o">正しい</span><span class="hnote">記述式の解説で引用</span></div></details></div>

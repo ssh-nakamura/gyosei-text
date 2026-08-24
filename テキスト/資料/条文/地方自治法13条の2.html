@@ -24,54 +24,7 @@
 .hmk.x{color:var(--shu); background:var(--shu-soft)}
 .hnote{flex:1; color:var(--ink-sub)}
 .back{font-size:.85rem; margin-bottom:1.2rem}
-
-/* ── 横に長いものは、その箱の中だけでスクロールさせる（本文は横スクロールしない） ── */
-.scroll{overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%}
-.scroll table{min-width:max-content}
-figure,.fig{overflow-x:auto; max-width:100%}
-svg{max-width:100%; height:auto}
-img{max-width:100%; height:auto}
-pre,code{overflow-x:auto; word-break:break-word}
-.wrap{overflow-x:hidden}
-@media(max-width:640px){
-  html{font-size:15px}
-  table{font-size:.84rem}
-  th,td{padding:.4rem .5rem}
-  .wrap{padding-left:.8rem; padding-right:.8rem}
-}
-
-/* ── 読みやすさ ── 1行の長さ・文字の大きさ・見出しの階層 ── */
-/* 日本語は1行35〜45字が読みやすい。画面幅いっぱいに伸ばすと目の動きが大きくなり、
-   443ページの教材では疲労が積み上がる。 */
-.wrap{max-width:52rem; margin-left:auto; margin-right:auto}
-.wrap > *{max-width:100%}
-
-/* 本文は16px相当まで上げる。長時間読む教材なので、14.4pxでは小さい。 */
-p, .case p, dd, td, th{font-size:1rem}
-.art .atext{font-size:1rem}
-li{font-size:1rem; line-height:1.85}
-
-/* 見出しが本文より小さいと、節の区切りが見えない。
-   h2 > h3 > 本文 の順に大きさが下がるようにする。 */
-h3{font-size:1.06rem !important; letter-spacing:.02em !important;
-   color:var(--ink) !important; margin:1.9rem 0 .8rem !important;
-   padding-bottom:.35rem !important; border-bottom:2px solid var(--line2) !important}
-
-/* 節と節の間を空ける */
-h2{margin-top:3rem}
-section + section{margin-top:1.5rem}
-
-@media(max-width:900px){
-  .wrap{max-width:none}
-}
-@media(max-width:640px){
-  html{font-size:15px}
-  p, .case p, dd, td, th, li{font-size:.97rem}
-  table{font-size:.9rem}
-  th,td{padding:.45rem .55rem}
-  h3{font-size:1.02rem !important}
-}
 </style>
 <div class="wrap">
 <p class="back"><a href="../索引.html">資料の索引へ</a> ／ <a href="../../index.html">テキスト目次へ</a></p>
-<h1>地方自治法13条の2</h1><div class="src-body">市町村は、別に法律の定めるところにより、その住民につき、住民たる地位に関する正確な記録を常に整備しておかなければならない。</div><div class="note"><p><b>かみくだくと</b>　市町村は、誰が自分のところの住民なのかを常に正確に記録しておかなければならない。住民基本台帳制度の根拠となる規定で、選挙権や住民サービスの土台になる。</p></div><details class="hits"><summary>過去問での出題 1件</summary><div class="hit"><span class="hid">令和2年 問22-オ</span><span class="hmk x">誤り</span><span class="hnote">住民たる地位に関する正確な記録を常に整備する義務を負うのは市町村である(地方自治法13条の2)</span></div></details></div>
+<h1>地方自治法13条の2</h1><div class="src-body">市町村は、別に法律の定めるところにより、その住民につき、住民たる地位に関する正確な記録を常に整備しておかなければならない。</div><details class="hits"><summary>過去問での出題 1件</summary><div class="hit"><span class="hid">令和2年 問22-オ</span><span class="hmk x">誤り</span><span class="hnote">住民たる地位に関する正確な記録を常に整備する義務を負うのは市町村である(地方自治法13条の2)</span></div></details></div>

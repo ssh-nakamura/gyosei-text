@@ -24,59 +24,7 @@
 .hmk.x{color:var(--shu); background:var(--shu-soft)}
 .hnote{flex:1; color:var(--ink-sub)}
 .back{font-size:.85rem; margin-bottom:1.2rem}
-
-/* ── 横に長いものは、その箱の中だけでスクロールさせる（本文は横スクロールしない） ── */
-.scroll{overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%}
-.scroll table{min-width:max-content}
-figure,.fig{overflow-x:auto; max-width:100%}
-svg{max-width:100%; height:auto}
-img{max-width:100%; height:auto}
-pre,code{overflow-x:auto; word-break:break-word}
-.wrap{overflow-x:hidden}
-@media(max-width:640px){
-  html{font-size:15px}
-  table{font-size:.84rem}
-  th,td{padding:.4rem .5rem}
-  .wrap{padding-left:.8rem; padding-right:.8rem}
-}
-
-/* ── 読みやすさ ── 1行の長さ・文字の大きさ・見出しの階層 ── */
-/* 日本語は1行35〜45字が読みやすい。画面幅いっぱいに伸ばすと目の動きが大きくなり、
-   443ページの教材では疲労が積み上がる。 */
-.wrap{max-width:52rem; margin-left:auto; margin-right:auto}
-.wrap > *{max-width:100%}
-
-/* 本文は16px相当まで上げる。長時間読む教材なので、14.4pxでは小さい。 */
-p, .case p, dd, td, th{font-size:1rem}
-.art .atext{font-size:1rem}
-li{font-size:1rem; line-height:1.85}
-
-/* 見出しが本文より小さいと、節の区切りが見えない。
-   h2 > h3 > 本文 の順に大きさが下がるようにする。 */
-h3{font-size:1.06rem !important; letter-spacing:.02em !important;
-   color:var(--ink) !important; margin:1.9rem 0 .8rem !important;
-   padding-bottom:.35rem !important; border-bottom:2px solid var(--line2) !important}
-
-/* 節と節の間を空ける */
-h2{margin-top:3rem}
-section + section{margin-top:1.5rem}
-
-@media(max-width:900px){
-  .wrap{max-width:none}
-}
-@media(max-width:640px){
-  html{font-size:15px}
-  p, .case p, dd, td, th, li{font-size:.97rem}
-  table{font-size:.9rem}
-  th,td{padding:.45rem .55rem}
-  h3{font-size:1.02rem !important}
-}
 </style>
 <div class="wrap">
 <p class="back"><a href="../索引.html">資料の索引へ</a> ／ <a href="../../index.html">テキスト目次へ</a></p>
-<h1>行政事件訴訟法11条</h1><p class="meta">被告適格等</p><div class="src-body">処分又は裁決をした行政庁（処分又は裁決があつた後に当該行政庁の権限が他の行政庁に承継されたときは、当該他の行政庁。以下同じ。）が国又は公共団体に所属する場合には、取消訴訟は、次の各号に掲げる訴えの区分に応じてそれぞれ当該各号に定める者を被告として提起しなければならない。
-2 処分又は裁決をした行政庁が国又は公共団体に所属しない場合には、取消訴訟は、当該行政庁を被告として提起しなければならない。
-3 前二項の規定により被告とすべき国若しくは公共団体又は行政庁がない場合には、取消訴訟は、当該処分又は裁決に係る事務の帰属する国又は公共団体を被告として提起しなければならない。
-4 第一項又は前項の規定により国又は公共団体を被告として取消訴訟を提起する場合には、訴状には、民事訴訟の例により記載すべき事項のほか、次の各号に掲げる訴えの区分に応じてそれぞれ当該各号に定める行政庁を記載するものとする。
-5 第一項又は第三項の規定により国又は公共団体を被告として取消訴訟が提起された場合には、被告は、遅滞なく、裁判所に対し、前項各号に掲げる訴えの区分に応じてそれぞれ当該各号に定める行政庁を明らかにしなければならない。
-6 処分又は裁決をした行政庁は、当該処分又は裁決に係る第一項の規定による国又は公共団体を被告とする訴訟について、裁判上の一切の行為をする権限を有する。</div><div class="note"><p><b>かみくだくと</b>　処分をした行政庁が国や公共団体に属する場合、訴訟の被告は「国または公共団体」となります。ただし、訴状には処分をした行政庁名を記載し、その行政庁が裁判上の行為を行う権限を持ちます。一方、国等に属さない場合はその行政庁自身を被告とします。被告適格は試験で頻出の論点であり、特に「誰を被告にするか」の判断基準を正確に押さえておくことが重要です。</p></div><details class="hits"><summary>過去問での出題 7件</summary><div class="hit"><span class="hid">令和元年 問18-2</span><span class="hmk o">正しい</span><span class="hnote">被告となるのは国または公共団体で、処分庁は被告ではなく訴訟追行の権限を与えられた立場にとどまる(行政事件訴訟法11条6項)</span></div><div class="hit"><span class="hid">令和元年 問18-1</span><span class="hmk o">正しい</span><span class="hnote">解説が根拠として引いている</span></div><div class="hit"><span class="hid">令和元年 問18-3</span><span class="hmk x">誤り</span><span class="hnote">解説が根拠として引いている</span></div><div class="hit"><span class="hid">令和2年 問44</span><span class="hmk o">正しい</span><span class="hnote">記述式の解説で引用</span></div><div class="hit"><span class="hid">令和3年 問18-1</span><span class="hmk x">誤り</span><span class="hnote">11条1項の被告は所属する国または公共団体なのに、処分をした行政庁自身としている</span></div><div class="hit"><span class="hid">令和3年 問18-3</span><span class="hmk x">誤り</span><span class="hnote">11条2項は当該行政庁自身を被告とするのに、法務大臣を被告にすり替えている</span></div><div class="hit"><span class="hid">令和6年 問44</span><span class="hmk o">正しい</span><span class="hnote">記述式の解説で引用</span></div></details></div>
+<h1>行政事件訴訟法11条</h1><p class="meta">被告適格等</p><div class="src-body">（被告適格等）処分又は裁決をした行政庁（処分又は裁決があつた後に当該行政庁の権限が他の行政庁に承継されたときは、当該他の行政庁。以下同じ。）が国又は公共団体に所属する場合には、取消訴訟は、次の各号に掲げる訴えの区分に応じてそれぞれ当該各号に定める者を被告として提起しなければならない。一処分の取消しの訴え当該処分をした行政庁の所属する国又は公共団体二裁決の取消しの訴え当該裁決をした行政庁の所属する国又は公共団体２処分又は裁決をした行政庁が国又は公共団体に所属しない場合には、取消訴訟は、当該行政庁を被告として提起しなければならない。３前二項の規定により被告とすべき国若しくは公共団体又は行政庁がない場合には、取消訴訟は、当該処分又は裁決に係る事務の帰属する国又は公共団体を被告として提起しなければならない。４第一項又は前項の規定により国又は公共団体を被告として取消訴訟を提起する場合には、訴状には、民事訴訟の例により記載すべき事項のほか、次の各号に掲げる訴えの区分に応じてそれぞれ当該各号に定める行政庁を記載するものとする。一処分の取消しの訴え当該処分をした行政庁二裁決の取消しの訴え当該裁決をした行政庁５第一項又は第三項の規定により国又は公共団体を被告として取消訴訟が提起された場合には、被告は、遅滞なく、裁判所に対し、前項各号に掲げる訴えの区分に応じてそれぞれ当該各号に定める行政庁を明らかにしなければならない。６処分又は裁決をした行政庁は、当該処分又は裁決に係る第一項の規定による国又は公共団体を被告とする訴訟について、裁判上の一切の行為をする権限を有する。</div><div class="note"><p><b>かみくだくと</b>　処分をした行政庁が国や公共団体に属する場合、訴訟の被告は「国または公共団体」となります。ただし、訴状には処分をした行政庁名を記載し、その行政庁が裁判上の行為を行う権限を持ちます。一方、国等に属さない場合はその行政庁自身を被告とします。被告適格は試験で頻出の論点であり、特に「誰を被告にするか」の判断基準を正確に押さえておくことが重要です。</p></div><details class="hits"><summary>過去問での出題 7件</summary><div class="hit"><span class="hid">令和元年 問18-2</span><span class="hmk o">正しい</span><span class="hnote">被告となるのは国または公共団体で、処分庁は被告ではなく訴訟追行の権限を与えられた立場にとどまる(行政事件訴訟法11条6項)</span></div><div class="hit"><span class="hid">令和元年 問18-1</span><span class="hmk o">正しい</span><span class="hnote">解説が根拠として引いている</span></div><div class="hit"><span class="hid">令和元年 問18-3</span><span class="hmk x">誤り</span><span class="hnote">解説が根拠として引いている</span></div><div class="hit"><span class="hid">令和2年 問44</span><span class="hmk o">正しい</span><span class="hnote">記述式の解説で引用</span></div><div class="hit"><span class="hid">令和3年 問18-1</span><span class="hmk x">誤り</span><span class="hnote">11条1項の被告は所属する国または公共団体なのに、処分をした行政庁自身としている</span></div><div class="hit"><span class="hid">令和3年 問18-3</span><span class="hmk x">誤り</span><span class="hnote">11条2項は当該行政庁自身を被告とするのに、法務大臣を被告にすり替えている</span></div><div class="hit"><span class="hid">令和6年 問44</span><span class="hmk o">正しい</span><span class="hnote">記述式の解説で引用</span></div></details></div>

@@ -24,56 +24,7 @@
 .hmk.x{color:var(--shu); background:var(--shu-soft)}
 .hnote{flex:1; color:var(--ink-sub)}
 .back{font-size:.85rem; margin-bottom:1.2rem}
-
-/* ── 横に長いものは、その箱の中だけでスクロールさせる（本文は横スクロールしない） ── */
-.scroll{overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%}
-.scroll table{min-width:max-content}
-figure,.fig{overflow-x:auto; max-width:100%}
-svg{max-width:100%; height:auto}
-img{max-width:100%; height:auto}
-pre,code{overflow-x:auto; word-break:break-word}
-.wrap{overflow-x:hidden}
-@media(max-width:640px){
-  html{font-size:15px}
-  table{font-size:.84rem}
-  th,td{padding:.4rem .5rem}
-  .wrap{padding-left:.8rem; padding-right:.8rem}
-}
-
-/* ── 読みやすさ ── 1行の長さ・文字の大きさ・見出しの階層 ── */
-/* 日本語は1行35〜45字が読みやすい。画面幅いっぱいに伸ばすと目の動きが大きくなり、
-   443ページの教材では疲労が積み上がる。 */
-.wrap{max-width:52rem; margin-left:auto; margin-right:auto}
-.wrap > *{max-width:100%}
-
-/* 本文は16px相当まで上げる。長時間読む教材なので、14.4pxでは小さい。 */
-p, .case p, dd, td, th{font-size:1rem}
-.art .atext{font-size:1rem}
-li{font-size:1rem; line-height:1.85}
-
-/* 見出しが本文より小さいと、節の区切りが見えない。
-   h2 > h3 > 本文 の順に大きさが下がるようにする。 */
-h3{font-size:1.06rem !important; letter-spacing:.02em !important;
-   color:var(--ink) !important; margin:1.9rem 0 .8rem !important;
-   padding-bottom:.35rem !important; border-bottom:2px solid var(--line2) !important}
-
-/* 節と節の間を空ける */
-h2{margin-top:3rem}
-section + section{margin-top:1.5rem}
-
-@media(max-width:900px){
-  .wrap{max-width:none}
-}
-@media(max-width:640px){
-  html{font-size:15px}
-  p, .case p, dd, td, th, li{font-size:.97rem}
-  table{font-size:.9rem}
-  th,td{padding:.45rem .55rem}
-  h3{font-size:1.02rem !important}
-}
 </style>
 <div class="wrap">
 <p class="back"><a href="../索引.html">資料の索引へ</a> ／ <a href="../../index.html">テキスト目次へ</a></p>
-<h1>民法166条</h1><p class="meta">債権等の消滅時効</p><div class="src-body">債権は、次に掲げる場合には、時効によって消滅する。
-2 債権又は所有権以外の財産権は、権利を行使することができる時から二十年間行使しないときは、時効によって消滅する。
-3 前二項の規定は、始期付権利又は停止条件付権利の目的物を占有する第三者のために、その占有の開始の時から取得時効が進行することを妨げない。ただし、権利者は、その時効を更新するため、いつでも占有者の承認を求めることができる。</div><div class="note"><p><b>かみくだくと</b>　債権は、権利を行使できると知った時から5年、または権利を行使できる時から10年で時効消滅します。また、債権や所有権以外の財産権は、行使できる時から20年で消滅します。なお、条件付きの権利であっても、第三者が目的物を占有すれば取得時効は進行しますが、権利者は承認を求めることで時効を更新できます。</p></div><details class="hits"><summary>過去問での出題 5件</summary><div class="hit"><span class="hid">令和3年 問33-オ</span><span class="hmk x">誤り</span><span class="hnote">民法566条が求めるのは不適合を知った時から一年以内の通知で、請求権の行使ではない</span></div><div class="hit"><span class="hid">令和5年 問27-1</span><span class="hmk o">正しい</span><span class="hnote">主観的起算点から5年で債権は時効消滅(166条1項1号)</span></div><div class="hit"><span class="hid">令和5年 問27-2</span><span class="hmk o">正しい</span><span class="hnote">客観的起算点から10年で債権は時効消滅(166条1項2号)</span></div><div class="hit"><span class="hid">令和5年 問27-3</span><span class="hmk o">正しい</span><span class="hnote">生命身体侵害の賠償請求権は客観的起算点から20年(167条)</span></div><div class="hit"><span class="hid">令和5年 問27-5</span><span class="hmk o">正しい</span><span class="hnote">債権・所有権以外の財産権は20年で時効消滅(166条2項)</span></div></details></div>
+<h1>民法166条</h1><p class="meta">債権等の消滅時効</p><div class="src-body">（債権等の消滅時効）債権は、次に掲げる場合には、時効によって消滅する。一債権者が権利を行使することができることを知った時から五年間行使しないとき。二権利を行使することができる時から十年間行使しないとき。２債権又は所有権以外の財産権は、権利を行使することができる時から二十年間行使しないときは、時効によって消滅する。３前二項の規定は、始期付権利又は停止条件付権利の目的物を占有する第三者のために、その占有の開始の時から取得時効が進行することを妨げない。ただし、権利者は、その時効を更新するため、いつでも占有者の承認を求めることができる。</div><div class="note"><p><b>かみくだくと</b>　債権は、権利を行使できると知った時から5年、または権利を行使できる時から10年で時効消滅します。また、債権や所有権以外の財産権は、行使できる時から20年で消滅します。なお、条件付きの権利であっても、第三者が目的物を占有すれば取得時効は進行しますが、権利者は承認を求めることで時効を更新できます。</p></div><details class="hits"><summary>過去問での出題 5件</summary><div class="hit"><span class="hid">令和3年 問33-オ</span><span class="hmk x">誤り</span><span class="hnote">民法566条が求めるのは不適合を知った時から一年以内の通知で、請求権の行使ではない</span></div><div class="hit"><span class="hid">令和5年 問27-1</span><span class="hmk o">正しい</span><span class="hnote">主観的起算点から5年で債権は時効消滅(166条1項1号)</span></div><div class="hit"><span class="hid">令和5年 問27-2</span><span class="hmk o">正しい</span><span class="hnote">客観的起算点から10年で債権は時効消滅(166条1項2号)</span></div><div class="hit"><span class="hid">令和5年 問27-3</span><span class="hmk o">正しい</span><span class="hnote">生命身体侵害の賠償請求権は客観的起算点から20年(167条)</span></div><div class="hit"><span class="hid">令和5年 問27-5</span><span class="hmk o">正しい</span><span class="hnote">債権・所有権以外の財産権は20年で時効消滅(166条2項)</span></div></details></div>

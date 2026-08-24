@@ -24,54 +24,7 @@
 .hmk.x{color:var(--shu); background:var(--shu-soft)}
 .hnote{flex:1; color:var(--ink-sub)}
 .back{font-size:.85rem; margin-bottom:1.2rem}
-
-/* ── 横に長いものは、その箱の中だけでスクロールさせる（本文は横スクロールしない） ── */
-.scroll{overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%}
-.scroll table{min-width:max-content}
-figure,.fig{overflow-x:auto; max-width:100%}
-svg{max-width:100%; height:auto}
-img{max-width:100%; height:auto}
-pre,code{overflow-x:auto; word-break:break-word}
-.wrap{overflow-x:hidden}
-@media(max-width:640px){
-  html{font-size:15px}
-  table{font-size:.84rem}
-  th,td{padding:.4rem .5rem}
-  .wrap{padding-left:.8rem; padding-right:.8rem}
-}
-
-/* ── 読みやすさ ── 1行の長さ・文字の大きさ・見出しの階層 ── */
-/* 日本語は1行35〜45字が読みやすい。画面幅いっぱいに伸ばすと目の動きが大きくなり、
-   443ページの教材では疲労が積み上がる。 */
-.wrap{max-width:52rem; margin-left:auto; margin-right:auto}
-.wrap > *{max-width:100%}
-
-/* 本文は16px相当まで上げる。長時間読む教材なので、14.4pxでは小さい。 */
-p, .case p, dd, td, th{font-size:1rem}
-.art .atext{font-size:1rem}
-li{font-size:1rem; line-height:1.85}
-
-/* 見出しが本文より小さいと、節の区切りが見えない。
-   h2 > h3 > 本文 の順に大きさが下がるようにする。 */
-h3{font-size:1.06rem !important; letter-spacing:.02em !important;
-   color:var(--ink) !important; margin:1.9rem 0 .8rem !important;
-   padding-bottom:.35rem !important; border-bottom:2px solid var(--line2) !important}
-
-/* 節と節の間を空ける */
-h2{margin-top:3rem}
-section + section{margin-top:1.5rem}
-
-@media(max-width:900px){
-  .wrap{max-width:none}
-}
-@media(max-width:640px){
-  html{font-size:15px}
-  p, .case p, dd, td, th, li{font-size:.97rem}
-  table{font-size:.9rem}
-  th,td{padding:.45rem .55rem}
-  h3{font-size:1.02rem !important}
-}
 </style>
 <div class="wrap">
 <p class="back"><a href="../索引.html">資料の索引へ</a> ／ <a href="../../index.html">テキスト目次へ</a></p>
-<h1>地方自治法252条の16の2</h1><p class="meta">事務の委託の効果</p><div class="src-body">普通地方公共団体の事務を、他の普通地方公共団体に委託して、当該他の普通地方公共団体の長又は同種の委員会若しくは委員をして管理し及び執行させる場合においては、当該事務の管理及び執行に関する法令中委託した普通地方公共団体又はその執行機関に適用すべき規定は、当該委託された事務の範囲内において、その事務の委託を受けた普通地方公共団体又はその執行機関について適用があるものとし、別に規約で定めをするものを除くほか、事務の委託を受けた普通地方公共団体の当該委託された事務の管理及び執行に関する条例、規則又はその機関の定める規程は、委託した普通地方公共団体の条例、規則又はその機関の定める規程としての効力を有する。</div><div class="note"><p><b>かみくだくと</b>　事務を他の自治体に委託すると、その事務についての法令の規定は受託した側に当てはまるようになり、受託側の条例・規則が委託した側の条例・規則としての効力を持つ。つまり住民から見れば、受け入れ先自治体のルールで処理されることになる。単なる手伝いではなく権限そのものが移る点が特徴。</p></div><details class="hits"><summary>過去問での出題 1件</summary><div class="hit"><span class="hid">令和5年 問24-4</span><span class="hmk x">誤り</span><span class="hnote">受託団体が自己の事務として処理するという『事務の委託』の特徴を、代替執行の説明に持ち込んでいる</span></div></details></div>
+<h1>地方自治法252条の16の2</h1><p class="meta">事務の代替執行</p><div class="src-body">（事務の代替執行）普通地方公共団体は、他の普通地方公共団体の求めに応じて、協議により規約を定め、当該他の普通地方公共団体の事務の一部を、当該他の普通地方公共団体又は当該他の普通地方公共団体の長若しくは同種の委員会若しくは委員の名において管理し及び執行すること（以下この条及び次条において「事務の代替執行」という。）ができる。２前項の規定により事務の代替執行をする事務（以下この款において「代替執行事務」という。）を変更し、又は事務の代替執行を廃止しようとするときは、関係普通地方公共団体は、同項の例により、協議してこれを行わなければならない。３第二百五十二条の二の二第二項及び第三項本文の規定は前二項の規定により事務の代替執行をし、又は代替執行事務を変更し、若しくは事務の代替執行を廃止する場合に、同条第四項の規定は第一項の場合に準用する。</div><div class="note"><p><b>かみくだくと</b>　普通地方公共団体は、他の普通地方公共団体の求めに応じて、当該他の普通地方公共団体などの名で事務の一部を管理執行できます。事務の委託と異なり、求めをした団体の名で処理する点が特徴です。</p></div><details class="hits"><summary>過去問での出題 1件</summary><div class="hit"><span class="hid">令和5年 問24-4</span><span class="hmk x">誤り</span><span class="hnote">受託団体が自己の事務として処理するという『事務の委託』の特徴を、代替執行の説明に持ち込んでいる</span></div></details></div>

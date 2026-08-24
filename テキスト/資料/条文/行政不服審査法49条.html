@@ -24,58 +24,7 @@
 .hmk.x{color:var(--shu); background:var(--shu-soft)}
 .hnote{flex:1; color:var(--ink-sub)}
 .back{font-size:.85rem; margin-bottom:1.2rem}
-
-/* ── 横に長いものは、その箱の中だけでスクロールさせる（本文は横スクロールしない） ── */
-.scroll{overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%}
-.scroll table{min-width:max-content}
-figure,.fig{overflow-x:auto; max-width:100%}
-svg{max-width:100%; height:auto}
-img{max-width:100%; height:auto}
-pre,code{overflow-x:auto; word-break:break-word}
-.wrap{overflow-x:hidden}
-@media(max-width:640px){
-  html{font-size:15px}
-  table{font-size:.84rem}
-  th,td{padding:.4rem .5rem}
-  .wrap{padding-left:.8rem; padding-right:.8rem}
-}
-
-/* ── 読みやすさ ── 1行の長さ・文字の大きさ・見出しの階層 ── */
-/* 日本語は1行35〜45字が読みやすい。画面幅いっぱいに伸ばすと目の動きが大きくなり、
-   443ページの教材では疲労が積み上がる。 */
-.wrap{max-width:52rem; margin-left:auto; margin-right:auto}
-.wrap > *{max-width:100%}
-
-/* 本文は16px相当まで上げる。長時間読む教材なので、14.4pxでは小さい。 */
-p, .case p, dd, td, th{font-size:1rem}
-.art .atext{font-size:1rem}
-li{font-size:1rem; line-height:1.85}
-
-/* 見出しが本文より小さいと、節の区切りが見えない。
-   h2 > h3 > 本文 の順に大きさが下がるようにする。 */
-h3{font-size:1.06rem !important; letter-spacing:.02em !important;
-   color:var(--ink) !important; margin:1.9rem 0 .8rem !important;
-   padding-bottom:.35rem !important; border-bottom:2px solid var(--line2) !important}
-
-/* 節と節の間を空ける */
-h2{margin-top:3rem}
-section + section{margin-top:1.5rem}
-
-@media(max-width:900px){
-  .wrap{max-width:none}
-}
-@media(max-width:640px){
-  html{font-size:15px}
-  p, .case p, dd, td, th, li{font-size:.97rem}
-  table{font-size:.9rem}
-  th,td{padding:.45rem .55rem}
-  h3{font-size:1.02rem !important}
-}
 </style>
 <div class="wrap">
 <p class="back"><a href="../索引.html">資料の索引へ</a> ／ <a href="../../index.html">テキスト目次へ</a></p>
-<h1>行政不服審査法49条</h1><p class="meta">不作為についての審査請求の裁決</p><div class="src-body">不作為についての審査請求が当該不作為に係る処分についての申請から相当の期間が経過しないでされたものである場合その他不適法である場合には、審査庁は、裁決で、当該審査請求を却下する。
-2 不作為についての審査請求が理由がない場合には、審査庁は、裁決で、当該審査請求を棄却する。
-3 不作為についての審査請求が理由がある場合には、審査庁は、裁決で、当該不作為が違法又は不当である旨を宣言する。この場合において、次の各号に掲げる審査庁は、当該申請に対して一定の処分をすべきものと認めるときは、当該各号に定める措置をとる。
-4 審査請求に係る不作為に係る処分に関し、第四十三条第一項第一号に規定する議を経るべき旨の定めがある場合において、審査庁が前項各号に定める措置をとるために必要があると認めるときは、審査庁は、当該定めに係る審議会等の議を経ることができる。
-5 前項に規定する定めがある場合のほか、審査請求に係る不作為に係る処分に関し、他の法令に関係行政機関との協議の実施その他の手続をとるべき旨の定めがある場合において、審査庁が第三項各号に定める措置をとるために必要があると認めるときは、審査庁は、当該手続をとることができる。</div><div class="note"><p><b>かみくだくと</b>　役所が申請を放置している(不作為)ことへの審査請求は、申請から相当の期間がまだ経っていないなど不適法なら却下、理由がなければ棄却。理由があれば裁決で不作為が違法または不当だと宣言する。さらに一定の処分をすべきだと判断したときは、上級行政庁である審査庁は処分庁にその処分を命じ、処分庁自身が審査庁ならみずから処分をする。宣言で終わらず実際の処分まで踏み込める点が特徴。</p></div><details class="hits"><summary>過去問での出題 6件</summary><div class="hit"><span class="hid">令和2年 問16-ア</span><span class="hmk x">誤り</span><span class="hnote">相当の期間の経過前など不適法な不作為の審査請求は、裁決で却下される(行政不服審査法49条1項)</span></div><div class="hit"><span class="hid">令和2年 問16-イ</span><span class="hmk o">正しい</span><span class="hnote">不作為の審査請求に理由がないときは行政不服審査法49条2項により裁決で棄却される</span></div><div class="hit"><span class="hid">令和2年 問16-ウ</span><span class="hmk o">正しい</span><span class="hnote">不作為の審査請求に理由があるときは行政不服審査法49条3項前段により違法または不当である旨を宣言する</span></div><div class="hit"><span class="hid">令和2年 問16-エ</span><span class="hmk x">誤り</span><span class="hnote">上級行政庁である審査庁は処分をすべき旨を命じ、不作為庁である審査庁は自ら処分する(行政不服審査法49条3項)</span></div><div class="hit"><span class="hid">令和5年 問14-2</span><span class="hmk o">正しい</span><span class="hnote">行政不服審査法49条3項は不作為の違法・不当を宣言させたうえで、上級行政庁の審査庁は処分を命じ不作為庁自身は自ら処分をする</span></div><div class="hit"><span class="hid">令和5年 問14-3</span><span class="hmk x">誤り</span><span class="hnote">行政不服審査法3条の要件は相当の期間の経過であり、法定された一定期間の経過ではない</span></div></details></div>
+<h1>行政不服審査法49条</h1><p class="meta">不作為についての審査請求の裁決</p><div class="src-body">（不作為についての審査請求の裁決）不作為についての審査請求が当該不作為に係る処分についての申請から相当の期間が経過しないでされたものである場合その他不適法である場合には、審査庁は、裁決で、当該審査請求を却下する。２不作為についての審査請求が理由がない場合には、審査庁は、裁決で、当該審査請求を棄却する。３不作為についての審査請求が理由がある場合には、審査庁は、裁決で、当該不作為が違法又は不当である旨を宣言する。この場合において、次の各号に掲げる審査庁は、当該申請に対して一定の処分をすべきものと認めるときは、当該各号に定める措置をとる。一不作為庁の上級行政庁である審査庁当該不作為庁に対し、当該処分をすべき旨を命ずること。二不作為庁である審査庁当該処分をすること。４審査請求に係る不作為に係る処分に関し、第四十三条第一項第一号に規定する議を経るべき旨の定めがある場合において、審査庁が前項各号に定める措置をとるために必要があると認めるときは、審査庁は、当該定めに係る審議会等の議を経ることができる。５前項に規定する定めがある場合のほか、審査請求に係る不作為に係る処分に関し、他の法令に関係行政機関との協議の実施その他の手続をとるべき旨の定めがある場合において、審査庁が第三項各号に定める措置をとるために必要があると認めるときは、審査庁は、当該手続をとることができる。</div><div class="note"><p><b>かみくだくと</b>　役所が申請を放置している(不作為)ことへの審査請求は、申請から相当の期間がまだ経っていないなど不適法なら却下、理由がなければ棄却。理由があれば裁決で不作為が違法または不当だと宣言する。さらに一定の処分をすべきだと判断したときは、上級行政庁である審査庁は処分庁にその処分を命じ、処分庁自身が審査庁ならみずから処分をする。宣言で終わらず実際の処分まで踏み込める点が特徴。</p></div><details class="hits"><summary>過去問での出題 6件</summary><div class="hit"><span class="hid">令和2年 問16-ア</span><span class="hmk x">誤り</span><span class="hnote">相当の期間の経過前など不適法な不作為の審査請求は、裁決で却下される(行政不服審査法49条1項)</span></div><div class="hit"><span class="hid">令和2年 問16-イ</span><span class="hmk o">正しい</span><span class="hnote">不作為の審査請求に理由がないときは行政不服審査法49条2項により裁決で棄却される</span></div><div class="hit"><span class="hid">令和2年 問16-ウ</span><span class="hmk o">正しい</span><span class="hnote">不作為の審査請求に理由があるときは行政不服審査法49条3項前段により違法または不当である旨を宣言する</span></div><div class="hit"><span class="hid">令和2年 問16-エ</span><span class="hmk x">誤り</span><span class="hnote">上級行政庁である審査庁は処分をすべき旨を命じ、不作為庁である審査庁は自ら処分する(行政不服審査法49条3項)</span></div><div class="hit"><span class="hid">令和5年 問14-2</span><span class="hmk o">正しい</span><span class="hnote">行政不服審査法49条3項は不作為の違法・不当を宣言させたうえで、上級行政庁の審査庁は処分を命じ不作為庁自身は自ら処分をする</span></div><div class="hit"><span class="hid">令和5年 問14-3</span><span class="hmk x">誤り</span><span class="hnote">行政不服審査法3条の要件は相当の期間の経過であり、法定された一定期間の経過ではない</span></div></details></div>

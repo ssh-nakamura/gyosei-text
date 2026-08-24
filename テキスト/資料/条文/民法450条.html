@@ -24,56 +24,7 @@
 .hmk.x{color:var(--shu); background:var(--shu-soft)}
 .hnote{flex:1; color:var(--ink-sub)}
 .back{font-size:.85rem; margin-bottom:1.2rem}
-
-/* ── 横に長いものは、その箱の中だけでスクロールさせる（本文は横スクロールしない） ── */
-.scroll{overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%}
-.scroll table{min-width:max-content}
-figure,.fig{overflow-x:auto; max-width:100%}
-svg{max-width:100%; height:auto}
-img{max-width:100%; height:auto}
-pre,code{overflow-x:auto; word-break:break-word}
-.wrap{overflow-x:hidden}
-@media(max-width:640px){
-  html{font-size:15px}
-  table{font-size:.84rem}
-  th,td{padding:.4rem .5rem}
-  .wrap{padding-left:.8rem; padding-right:.8rem}
-}
-
-/* ── 読みやすさ ── 1行の長さ・文字の大きさ・見出しの階層 ── */
-/* 日本語は1行35〜45字が読みやすい。画面幅いっぱいに伸ばすと目の動きが大きくなり、
-   443ページの教材では疲労が積み上がる。 */
-.wrap{max-width:52rem; margin-left:auto; margin-right:auto}
-.wrap > *{max-width:100%}
-
-/* 本文は16px相当まで上げる。長時間読む教材なので、14.4pxでは小さい。 */
-p, .case p, dd, td, th{font-size:1rem}
-.art .atext{font-size:1rem}
-li{font-size:1rem; line-height:1.85}
-
-/* 見出しが本文より小さいと、節の区切りが見えない。
-   h2 > h3 > 本文 の順に大きさが下がるようにする。 */
-h3{font-size:1.06rem !important; letter-spacing:.02em !important;
-   color:var(--ink) !important; margin:1.9rem 0 .8rem !important;
-   padding-bottom:.35rem !important; border-bottom:2px solid var(--line2) !important}
-
-/* 節と節の間を空ける */
-h2{margin-top:3rem}
-section + section{margin-top:1.5rem}
-
-@media(max-width:900px){
-  .wrap{max-width:none}
-}
-@media(max-width:640px){
-  html{font-size:15px}
-  p, .case p, dd, td, th, li{font-size:.97rem}
-  table{font-size:.9rem}
-  th,td{padding:.45rem .55rem}
-  h3{font-size:1.02rem !important}
-}
 </style>
 <div class="wrap">
 <p class="back"><a href="../索引.html">資料の索引へ</a> ／ <a href="../../index.html">テキスト目次へ</a></p>
-<h1>民法450条</h1><p class="meta">保証人の要件</p><div class="src-body">債務者が保証人を立てる義務を負う場合には、その保証人は、次に掲げる要件を具備する者でなければならない。
-2 保証人が前項第二号に掲げる要件を欠くに至ったときは、債権者は、同項各号に掲げる要件を具備する者をもってこれに代えることを請求することができる。
-3 前二項の規定は、債権者が保証人を指名した場合には、適用しない。</div><div class="note"><p><b>かみくだくと</b>　債務者が保証人を立てる義務を負う場合、その保証人は行為能力者で弁済の資力がある者でなければならない。資力を失えば債権者は交替を請求できる(債権者が指名した場合を除く)。</p></div><details class="hits"><summary>過去問での出題 2件</summary><div class="hit"><span class="hid">令和6年 問31-1</span><span class="hmk o">正しい</span><span class="hnote">債権者が保証人を指名したときは、行為能力と資力の要件も資力を欠いた場合の代替請求も働かない(民法450条1項)</span></div><div class="hit"><span class="hid">令和6年 問31-2</span><span class="hmk x">誤り</span><span class="hnote">民法450条3項により、債権者が保証人を指名した場合には行為能力者の要件が適用されない</span></div></details></div>
+<h1>民法450条</h1><p class="meta">保証人の要件</p><div class="src-body">（保証人の要件）債務者が保証人を立てる義務を負う場合には、その保証人は、次に掲げる要件を具備する者でなければならない。一行為能力者であること。二弁済をする資力を有すること。２保証人が前項第二号に掲げる要件を欠くに至ったときは、債権者は、同項各号に掲げる要件を具備する者をもってこれに代えることを請求することができる。３前二項の規定は、債権者が保証人を指名した場合には、適用しない。</div><div class="note"><p><b>かみくだくと</b>　債務者が保証人を立てる義務を負う場合、その保証人は行為能力者で弁済の資力がある者でなければならない。資力を失えば債権者は交替を請求できる(債権者が指名した場合を除く)。</p></div><details class="hits"><summary>過去問での出題 2件</summary><div class="hit"><span class="hid">令和6年 問31-1</span><span class="hmk o">正しい</span><span class="hnote">債権者が保証人を指名したときは、行為能力と資力の要件も資力を欠いた場合の代替請求も働かない(民法450条1項)</span></div><div class="hit"><span class="hid">令和6年 問31-2</span><span class="hmk x">誤り</span><span class="hnote">民法450条3項により、債権者が保証人を指名した場合には行為能力者の要件が適用されない</span></div></details></div>
