@@ -97,6 +97,38 @@ pre,code{overflow-x:auto; word-break:break-word}
   th,td{padding:.4rem .5rem}
   .wrap{padding-left:.8rem; padding-right:.8rem}
 }
+
+/* ── 読みやすさ ── 1行の長さ・文字の大きさ・見出しの階層 ── */
+/* 日本語は1行35〜45字が読みやすい。画面幅いっぱいに伸ばすと目の動きが大きくなり、
+   443ページの教材では疲労が積み上がる。 */
+.wrap{max-width:52rem; margin-left:auto; margin-right:auto}
+.wrap > *{max-width:100%}
+
+/* 本文は16px相当まで上げる。長時間読む教材なので、14.4pxでは小さい。 */
+p, .case p, dd, td, th{font-size:1rem}
+.art .atext{font-size:1rem}
+li{font-size:1rem; line-height:1.85}
+
+/* 見出しが本文より小さいと、節の区切りが見えない。
+   h2 > h3 > 本文 の順に大きさが下がるようにする。 */
+h3{font-size:1.06rem !important; letter-spacing:.02em !important;
+   color:var(--ink) !important; margin:1.9rem 0 .8rem !important;
+   padding-bottom:.35rem !important; border-bottom:2px solid var(--line2) !important}
+
+/* 節と節の間を空ける */
+h2{margin-top:3rem}
+section + section{margin-top:1.5rem}
+
+@media(max-width:900px){
+  .wrap{max-width:none}
+}
+@media(max-width:640px){
+  html{font-size:15px}
+  p, .case p, dd, td, th, li{font-size:.97rem}
+  table{font-size:.9rem}
+  th,td{padding:.45rem .55rem}
+  h3{font-size:1.02rem !important}
+}
 </style>
 <div id="navbtn" onclick="document.getElementById('nav').classList.toggle('open')">☰</div>
 <nav id="nav">
