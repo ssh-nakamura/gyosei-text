@@ -2250,7 +2250,216 @@ body{display:flex; align-items:flex-start; margin:0}
 </section>
 
 
+</div>
+<!-- reader v1 -->
+<style id="reader-css">
+/* ── 読むための仕掛け ── */
+#rd-bar{position:fixed; top:0; left:0; height:3px; background:var(--shu,#c0392b);
+  width:0; z-index:200; transition:width .15s}
+#rd-tools{position:fixed; right:1rem; bottom:1rem; z-index:190;
+  display:flex; flex-direction:column; gap:.4rem; align-items:flex-end}
+#rd-tools button{font:inherit; font-size:.78rem; padding:.42rem .7rem; cursor:pointer;
+  background:var(--card,#fff); color:var(--ink,#222); border:1px solid var(--line2,#ccc);
+  border-radius:5px; box-shadow:0 1px 4px rgba(0,0,0,.12); white-space:nowrap}
+#rd-tools button:hover{background:var(--fill,#f4f4f4)}
+#rd-resume{background:var(--shu,#c0392b) !important; color:#fff !important; border-color:transparent !important}
+#rd-find{position:fixed; top:0; left:0; right:0; z-index:210; background:var(--card,#fff);
+  border-bottom:1px solid var(--line2,#ccc); padding:.55rem .8rem; display:none;
+  box-shadow:0 2px 10px rgba(0,0,0,.12)}
+#rd-find input{font:inherit; font-size:1rem; width:min(28rem,60vw); padding:.35rem .55rem;
+  border:1px solid var(--line2,#ccc); border-radius:4px; background:var(--paper,#fff); color:var(--ink,#222)}
+#rd-find .n{font-size:.8rem; color:var(--hai,#888); margin-left:.6rem}
+#rd-find button{font:inherit; font-size:.8rem; margin-left:.35rem; padding:.32rem .6rem;
+  cursor:pointer; background:var(--fill,#f4f4f4); color:var(--ink,#222);
+  border:1px solid var(--line2,#ccc); border-radius:4px}
+mark.rd-hit{background:#ffe08a; color:#000}
+mark.rd-cur{background:var(--shu,#c0392b); color:#fff}
+/* 既読の印 */
+h2.rd-done::after{content:"読了"; font-size:.62rem; letter-spacing:.1em; margin-left:.7rem;
+  padding:.12rem .45rem; border-radius:3px; background:var(--fill,#eee);
+  color:var(--hai,#888); vertical-align:middle; font-weight:400}
+a.rd-done::before{content:"✓ "; color:var(--shu,#c0392b); font-weight:700}
+/* 条文カードの畳み込み */
+body.rd-fold .art .ain, body.rd-fold .case .cin{display:none}
+body.rd-fold .art h4, body.rd-fold .case h4{cursor:pointer}
+body.rd-fold .art h4::after, body.rd-fold .case h4::after{content:" ▸"; opacity:.6}
+body.rd-fold .art.rd-open .ain, body.rd-fold .case.rd-open .cin{display:block}
+body.rd-fold .art.rd-open h4::after, body.rd-fold .case.rd-open h4::after{content:" ▾"}
+@media(max-width:640px){
+  #rd-tools{right:.5rem; bottom:.5rem}
+  #rd-tools button{font-size:.72rem; padding:.36rem .55rem}
+}
+@media print{#rd-bar,#rd-tools,#rd-find{display:none}}
+</style>
 
+<script id="reader-js">
+(function(){
+  var KEY = 'gyosei:' + location.pathname.replace(/^.*\//,'');
+  var st = {};
+  try { st = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e) {}
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(st)); } catch(e) {} }
+
+  // ── 部品を置く ────────────────────────────────
+  var bar = document.createElement('div'); bar.id = 'rd-bar';
+  var tools = document.createElement('div'); tools.id = 'rd-tools';
+  var find = document.createElement('div'); find.id = 'rd-find';
+  find.innerHTML = '<input type="search" placeholder="このページの中を探す" ' +
+    'aria-label="このページの中を探す"><span class="n"></span>' +
+    '<button data-a="prev">前へ</button><button data-a="next">次へ</button>' +
+    '<button data-a="close">閉じる</button>';
+  document.body.appendChild(bar); document.body.appendChild(tools); document.body.appendChild(find);
+
+  function btn(id, label, title){
+    var b = document.createElement('button');
+    b.id = id; b.textContent = label; if (title) b.title = title;
+    tools.appendChild(b); return b;
+  }
+  var bResume = btn('rd-resume', '続きから', '前に閉じた場所へ戻ります');
+  var bFold   = btn('rd-fold', '条文をたたむ', '条文カードと判例カードを閉じて、本文の筋だけを追います');
+  var bFind   = btn('rd-findbtn', 'ページ内を探す', 'このページの中を語で探します');
+  var bReset  = btn('rd-reset', '読んだ印を消す');
+
+  var secs = Array.prototype.slice.call(document.querySelectorAll('section[id]'));
+  var h2s  = secs.map(function(s){ return s.querySelector('h2'); });
+
+  // ── 既読の印 ─────────────────────────────────
+  st.done = st.done || {};
+  function paintDone(){
+    secs.forEach(function(s, i){
+      if (!st.done[s.id]) return;
+      if (h2s[i]) h2s[i].classList.add('rd-done');
+      // 既読の印は、章内の目次（nav.toc2 の href="#zentai-t1" 形式）に出す。
+      // 左の #nav は章へのリンクで、節のアンカーを持たない。
+      document.querySelectorAll('a[href="#' + s.id + '"]').forEach(function(a){
+        a.classList.add('rd-done');
+      });
+    });
+    var n = Object.keys(st.done).length;
+    if (secs.length) bReset.textContent = '読んだ印を消す（' + n + '/' + secs.length + '）';
+  }
+  paintDone();
+
+  // ── 進み具合と読書位置 ──────────────────────────
+  var tick;
+  function onScroll(){
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    var p = max > 0 ? h.scrollTop / max : 0;
+    bar.style.width = (p * 100).toFixed(1) + '%';
+    clearTimeout(tick);
+    tick = setTimeout(function(){
+      st.y = h.scrollTop; st.at = Date.now();
+      // 画面の上端を通り過ぎた節を既読にする
+      secs.forEach(function(s){
+        if (s.getBoundingClientRect().bottom < h.clientHeight * 0.5) st.done[s.id] = 1;
+      });
+      save(); paintDone();
+    }, 400);
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  if (!st.y || st.y < 200 || location.hash) {
+    bResume.style.display = 'none';
+  } else {
+    var d = Math.round((Date.now() - (st.at || 0)) / 86400000);
+    bResume.title = d > 0 ? d + '日前に閉じた場所へ戻ります' : '前に閉じた場所へ戻ります';
+  }
+  bResume.onclick = function(){
+    window.scrollTo({top: st.y, behavior: 'smooth'});
+    bResume.style.display = 'none';
+  };
+
+  bReset.onclick = function(){
+    st.done = {}; st.y = 0; save();
+    document.querySelectorAll('.rd-done').forEach(function(e){ e.classList.remove('rd-done'); });
+    paintDone();
+  };
+
+  // ── 条文カードの畳み込み ────────────────────────
+  function applyFold(){
+    document.body.classList.toggle('rd-fold', !!st.fold);
+    bFold.textContent = st.fold ? '条文をひらく' : '条文をたたむ';
+  }
+  if (st.fold) applyFold();
+  bFold.onclick = function(){ st.fold = !st.fold; save(); applyFold(); };
+  document.addEventListener('click', function(e){
+    if (!st.fold) return;
+    var h = e.target.closest('.art > h4, .case > h4');
+    if (h) h.parentNode.classList.toggle('rd-open');
+  });
+
+  // ── ページ内を探す ──────────────────────────────
+  var hits = [], cur = -1, input = find.querySelector('input'), cnt = find.querySelector('.n');
+  function clearHits(){
+    document.querySelectorAll('mark.rd-hit').forEach(function(m){
+      var t = document.createTextNode(m.textContent);
+      m.parentNode.replaceChild(t, m); t.parentNode.normalize();
+    });
+    hits = []; cur = -1;
+  }
+  function doFind(q){
+    clearHits();
+    if (!q || q.length < 2) { cnt.textContent = ''; return; }
+    var root = document.querySelector('.wrap') || document.body;
+    var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function(n){
+        if (!n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        var p = n.parentNode;
+        while (p && p !== root) {
+          var t = p.tagName;
+          if (t === 'SCRIPT' || t === 'STYLE' || t === 'NAV' || p.id === 'rd-find')
+            return NodeFilter.FILTER_REJECT;
+          p = p.parentNode;
+        }
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    var nodes = [], n;
+    while ((n = w.nextNode())) nodes.push(n);
+    nodes.forEach(function(node){
+      var i = node.nodeValue.indexOf(q);
+      if (i < 0) return;
+      var rest = node.splitText(i);
+      rest.splitText(q.length);
+      var m = document.createElement('mark');
+      m.className = 'rd-hit'; m.textContent = rest.nodeValue;
+      rest.parentNode.replaceChild(m, rest);
+      hits.push(m);
+    });
+    cnt.textContent = hits.length ? '1 / ' + hits.length : '見つかりません';
+    if (hits.length) go(0);
+  }
+  function go(i){
+    if (!hits.length) return;
+    if (cur >= 0 && hits[cur]) hits[cur].classList.remove('rd-cur');
+    cur = (i + hits.length) % hits.length;
+    hits[cur].classList.add('rd-cur');
+    hits[cur].scrollIntoView({block:'center', behavior:'smooth'});
+    cnt.textContent = (cur + 1) + ' / ' + hits.length;
+  }
+  var ft;
+  input.addEventListener('input', function(){
+    clearTimeout(ft); ft = setTimeout(function(){ doFind(input.value.trim()); }, 250);
+  });
+  input.addEventListener('keydown', function(e){
+    if (e.key === 'Enter') { e.preventDefault(); go(cur + (e.shiftKey ? -1 : 1)); }
+    if (e.key === 'Escape') closeFind();
+  });
+  find.addEventListener('click', function(e){
+    var a = e.target.dataset && e.target.dataset.a;
+    if (a === 'next') go(cur + 1);
+    if (a === 'prev') go(cur - 1);
+    if (a === 'close') closeFind();
+  });
+  function openFind(){ find.style.display = 'block'; input.focus(); input.select(); }
+  function closeFind(){ find.style.display = 'none'; clearHits(); cnt.textContent = ''; }
+  bFind.onclick = openFind;
+  document.addEventListener('keydown', function(e){
+    if ((e.metaKey || e.ctrlKey) && e.key === 'f') { e.preventDefault(); openFind(); }
+  });
+})();
+</script>
 </section>
 
 <section class="chap" id="kyusai">
@@ -2361,7 +2570,216 @@ body{display:flex; align-items:flex-start; margin:0}
 </section>
 
 
+</div>
+<!-- reader v1 -->
+<style id="reader-css">
+/* ── 読むための仕掛け ── */
+#rd-bar{position:fixed; top:0; left:0; height:3px; background:var(--shu,#c0392b);
+  width:0; z-index:200; transition:width .15s}
+#rd-tools{position:fixed; right:1rem; bottom:1rem; z-index:190;
+  display:flex; flex-direction:column; gap:.4rem; align-items:flex-end}
+#rd-tools button{font:inherit; font-size:.78rem; padding:.42rem .7rem; cursor:pointer;
+  background:var(--card,#fff); color:var(--ink,#222); border:1px solid var(--line2,#ccc);
+  border-radius:5px; box-shadow:0 1px 4px rgba(0,0,0,.12); white-space:nowrap}
+#rd-tools button:hover{background:var(--fill,#f4f4f4)}
+#rd-resume{background:var(--shu,#c0392b) !important; color:#fff !important; border-color:transparent !important}
+#rd-find{position:fixed; top:0; left:0; right:0; z-index:210; background:var(--card,#fff);
+  border-bottom:1px solid var(--line2,#ccc); padding:.55rem .8rem; display:none;
+  box-shadow:0 2px 10px rgba(0,0,0,.12)}
+#rd-find input{font:inherit; font-size:1rem; width:min(28rem,60vw); padding:.35rem .55rem;
+  border:1px solid var(--line2,#ccc); border-radius:4px; background:var(--paper,#fff); color:var(--ink,#222)}
+#rd-find .n{font-size:.8rem; color:var(--hai,#888); margin-left:.6rem}
+#rd-find button{font:inherit; font-size:.8rem; margin-left:.35rem; padding:.32rem .6rem;
+  cursor:pointer; background:var(--fill,#f4f4f4); color:var(--ink,#222);
+  border:1px solid var(--line2,#ccc); border-radius:4px}
+mark.rd-hit{background:#ffe08a; color:#000}
+mark.rd-cur{background:var(--shu,#c0392b); color:#fff}
+/* 既読の印 */
+h2.rd-done::after{content:"読了"; font-size:.62rem; letter-spacing:.1em; margin-left:.7rem;
+  padding:.12rem .45rem; border-radius:3px; background:var(--fill,#eee);
+  color:var(--hai,#888); vertical-align:middle; font-weight:400}
+a.rd-done::before{content:"✓ "; color:var(--shu,#c0392b); font-weight:700}
+/* 条文カードの畳み込み */
+body.rd-fold .art .ain, body.rd-fold .case .cin{display:none}
+body.rd-fold .art h4, body.rd-fold .case h4{cursor:pointer}
+body.rd-fold .art h4::after, body.rd-fold .case h4::after{content:" ▸"; opacity:.6}
+body.rd-fold .art.rd-open .ain, body.rd-fold .case.rd-open .cin{display:block}
+body.rd-fold .art.rd-open h4::after, body.rd-fold .case.rd-open h4::after{content:" ▾"}
+@media(max-width:640px){
+  #rd-tools{right:.5rem; bottom:.5rem}
+  #rd-tools button{font-size:.72rem; padding:.36rem .55rem}
+}
+@media print{#rd-bar,#rd-tools,#rd-find{display:none}}
+</style>
 
+<script id="reader-js">
+(function(){
+  var KEY = 'gyosei:' + location.pathname.replace(/^.*\//,'');
+  var st = {};
+  try { st = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e) {}
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(st)); } catch(e) {} }
+
+  // ── 部品を置く ────────────────────────────────
+  var bar = document.createElement('div'); bar.id = 'rd-bar';
+  var tools = document.createElement('div'); tools.id = 'rd-tools';
+  var find = document.createElement('div'); find.id = 'rd-find';
+  find.innerHTML = '<input type="search" placeholder="このページの中を探す" ' +
+    'aria-label="このページの中を探す"><span class="n"></span>' +
+    '<button data-a="prev">前へ</button><button data-a="next">次へ</button>' +
+    '<button data-a="close">閉じる</button>';
+  document.body.appendChild(bar); document.body.appendChild(tools); document.body.appendChild(find);
+
+  function btn(id, label, title){
+    var b = document.createElement('button');
+    b.id = id; b.textContent = label; if (title) b.title = title;
+    tools.appendChild(b); return b;
+  }
+  var bResume = btn('rd-resume', '続きから', '前に閉じた場所へ戻ります');
+  var bFold   = btn('rd-fold', '条文をたたむ', '条文カードと判例カードを閉じて、本文の筋だけを追います');
+  var bFind   = btn('rd-findbtn', 'ページ内を探す', 'このページの中を語で探します');
+  var bReset  = btn('rd-reset', '読んだ印を消す');
+
+  var secs = Array.prototype.slice.call(document.querySelectorAll('section[id]'));
+  var h2s  = secs.map(function(s){ return s.querySelector('h2'); });
+
+  // ── 既読の印 ─────────────────────────────────
+  st.done = st.done || {};
+  function paintDone(){
+    secs.forEach(function(s, i){
+      if (!st.done[s.id]) return;
+      if (h2s[i]) h2s[i].classList.add('rd-done');
+      // 既読の印は、章内の目次（nav.toc2 の href="#kyusai-t1" 形式）に出す。
+      // 左の #nav は章へのリンクで、節のアンカーを持たない。
+      document.querySelectorAll('a[href="#' + s.id + '"]').forEach(function(a){
+        a.classList.add('rd-done');
+      });
+    });
+    var n = Object.keys(st.done).length;
+    if (secs.length) bReset.textContent = '読んだ印を消す（' + n + '/' + secs.length + '）';
+  }
+  paintDone();
+
+  // ── 進み具合と読書位置 ──────────────────────────
+  var tick;
+  function onScroll(){
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    var p = max > 0 ? h.scrollTop / max : 0;
+    bar.style.width = (p * 100).toFixed(1) + '%';
+    clearTimeout(tick);
+    tick = setTimeout(function(){
+      st.y = h.scrollTop; st.at = Date.now();
+      // 画面の上端を通り過ぎた節を既読にする
+      secs.forEach(function(s){
+        if (s.getBoundingClientRect().bottom < h.clientHeight * 0.5) st.done[s.id] = 1;
+      });
+      save(); paintDone();
+    }, 400);
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  if (!st.y || st.y < 200 || location.hash) {
+    bResume.style.display = 'none';
+  } else {
+    var d = Math.round((Date.now() - (st.at || 0)) / 86400000);
+    bResume.title = d > 0 ? d + '日前に閉じた場所へ戻ります' : '前に閉じた場所へ戻ります';
+  }
+  bResume.onclick = function(){
+    window.scrollTo({top: st.y, behavior: 'smooth'});
+    bResume.style.display = 'none';
+  };
+
+  bReset.onclick = function(){
+    st.done = {}; st.y = 0; save();
+    document.querySelectorAll('.rd-done').forEach(function(e){ e.classList.remove('rd-done'); });
+    paintDone();
+  };
+
+  // ── 条文カードの畳み込み ────────────────────────
+  function applyFold(){
+    document.body.classList.toggle('rd-fold', !!st.fold);
+    bFold.textContent = st.fold ? '条文をひらく' : '条文をたたむ';
+  }
+  if (st.fold) applyFold();
+  bFold.onclick = function(){ st.fold = !st.fold; save(); applyFold(); };
+  document.addEventListener('click', function(e){
+    if (!st.fold) return;
+    var h = e.target.closest('.art > h4, .case > h4');
+    if (h) h.parentNode.classList.toggle('rd-open');
+  });
+
+  // ── ページ内を探す ──────────────────────────────
+  var hits = [], cur = -1, input = find.querySelector('input'), cnt = find.querySelector('.n');
+  function clearHits(){
+    document.querySelectorAll('mark.rd-hit').forEach(function(m){
+      var t = document.createTextNode(m.textContent);
+      m.parentNode.replaceChild(t, m); t.parentNode.normalize();
+    });
+    hits = []; cur = -1;
+  }
+  function doFind(q){
+    clearHits();
+    if (!q || q.length < 2) { cnt.textContent = ''; return; }
+    var root = document.querySelector('.wrap') || document.body;
+    var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function(n){
+        if (!n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        var p = n.parentNode;
+        while (p && p !== root) {
+          var t = p.tagName;
+          if (t === 'SCRIPT' || t === 'STYLE' || t === 'NAV' || p.id === 'rd-find')
+            return NodeFilter.FILTER_REJECT;
+          p = p.parentNode;
+        }
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    var nodes = [], n;
+    while ((n = w.nextNode())) nodes.push(n);
+    nodes.forEach(function(node){
+      var i = node.nodeValue.indexOf(q);
+      if (i < 0) return;
+      var rest = node.splitText(i);
+      rest.splitText(q.length);
+      var m = document.createElement('mark');
+      m.className = 'rd-hit'; m.textContent = rest.nodeValue;
+      rest.parentNode.replaceChild(m, rest);
+      hits.push(m);
+    });
+    cnt.textContent = hits.length ? '1 / ' + hits.length : '見つかりません';
+    if (hits.length) go(0);
+  }
+  function go(i){
+    if (!hits.length) return;
+    if (cur >= 0 && hits[cur]) hits[cur].classList.remove('rd-cur');
+    cur = (i + hits.length) % hits.length;
+    hits[cur].classList.add('rd-cur');
+    hits[cur].scrollIntoView({block:'center', behavior:'smooth'});
+    cnt.textContent = (cur + 1) + ' / ' + hits.length;
+  }
+  var ft;
+  input.addEventListener('input', function(){
+    clearTimeout(ft); ft = setTimeout(function(){ doFind(input.value.trim()); }, 250);
+  });
+  input.addEventListener('keydown', function(e){
+    if (e.key === 'Enter') { e.preventDefault(); go(cur + (e.shiftKey ? -1 : 1)); }
+    if (e.key === 'Escape') closeFind();
+  });
+  find.addEventListener('click', function(e){
+    var a = e.target.dataset && e.target.dataset.a;
+    if (a === 'next') go(cur + 1);
+    if (a === 'prev') go(cur - 1);
+    if (a === 'close') closeFind();
+  });
+  function openFind(){ find.style.display = 'block'; input.focus(); input.select(); }
+  function closeFind(){ find.style.display = 'none'; clearHits(); cnt.textContent = ''; }
+  bFind.onclick = openFind;
+  document.addEventListener('keydown', function(e){
+    if ((e.metaKey || e.ctrlKey) && e.key === 'f') { e.preventDefault(); openFind(); }
+  });
+})();
+</script>
 </section>
 
 <section class="chap" id="gimu">
@@ -2441,7 +2859,216 @@ body{display:flex; align-items:flex-start; margin:0}
   <div class="refs"><h4>過去問での出題</h4><span class="rid">H30-15-イ</span><span class="rid">R7-14-3</span></div></section>
 
 
+</div>
+<!-- reader v1 -->
+<style id="reader-css">
+/* ── 読むための仕掛け ── */
+#rd-bar{position:fixed; top:0; left:0; height:3px; background:var(--shu,#c0392b);
+  width:0; z-index:200; transition:width .15s}
+#rd-tools{position:fixed; right:1rem; bottom:1rem; z-index:190;
+  display:flex; flex-direction:column; gap:.4rem; align-items:flex-end}
+#rd-tools button{font:inherit; font-size:.78rem; padding:.42rem .7rem; cursor:pointer;
+  background:var(--card,#fff); color:var(--ink,#222); border:1px solid var(--line2,#ccc);
+  border-radius:5px; box-shadow:0 1px 4px rgba(0,0,0,.12); white-space:nowrap}
+#rd-tools button:hover{background:var(--fill,#f4f4f4)}
+#rd-resume{background:var(--shu,#c0392b) !important; color:#fff !important; border-color:transparent !important}
+#rd-find{position:fixed; top:0; left:0; right:0; z-index:210; background:var(--card,#fff);
+  border-bottom:1px solid var(--line2,#ccc); padding:.55rem .8rem; display:none;
+  box-shadow:0 2px 10px rgba(0,0,0,.12)}
+#rd-find input{font:inherit; font-size:1rem; width:min(28rem,60vw); padding:.35rem .55rem;
+  border:1px solid var(--line2,#ccc); border-radius:4px; background:var(--paper,#fff); color:var(--ink,#222)}
+#rd-find .n{font-size:.8rem; color:var(--hai,#888); margin-left:.6rem}
+#rd-find button{font:inherit; font-size:.8rem; margin-left:.35rem; padding:.32rem .6rem;
+  cursor:pointer; background:var(--fill,#f4f4f4); color:var(--ink,#222);
+  border:1px solid var(--line2,#ccc); border-radius:4px}
+mark.rd-hit{background:#ffe08a; color:#000}
+mark.rd-cur{background:var(--shu,#c0392b); color:#fff}
+/* 既読の印 */
+h2.rd-done::after{content:"読了"; font-size:.62rem; letter-spacing:.1em; margin-left:.7rem;
+  padding:.12rem .45rem; border-radius:3px; background:var(--fill,#eee);
+  color:var(--hai,#888); vertical-align:middle; font-weight:400}
+a.rd-done::before{content:"✓ "; color:var(--shu,#c0392b); font-weight:700}
+/* 条文カードの畳み込み */
+body.rd-fold .art .ain, body.rd-fold .case .cin{display:none}
+body.rd-fold .art h4, body.rd-fold .case h4{cursor:pointer}
+body.rd-fold .art h4::after, body.rd-fold .case h4::after{content:" ▸"; opacity:.6}
+body.rd-fold .art.rd-open .ain, body.rd-fold .case.rd-open .cin{display:block}
+body.rd-fold .art.rd-open h4::after, body.rd-fold .case.rd-open h4::after{content:" ▾"}
+@media(max-width:640px){
+  #rd-tools{right:.5rem; bottom:.5rem}
+  #rd-tools button{font-size:.72rem; padding:.36rem .55rem}
+}
+@media print{#rd-bar,#rd-tools,#rd-find{display:none}}
+</style>
 
+<script id="reader-js">
+(function(){
+  var KEY = 'gyosei:' + location.pathname.replace(/^.*\//,'');
+  var st = {};
+  try { st = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e) {}
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(st)); } catch(e) {} }
+
+  // ── 部品を置く ────────────────────────────────
+  var bar = document.createElement('div'); bar.id = 'rd-bar';
+  var tools = document.createElement('div'); tools.id = 'rd-tools';
+  var find = document.createElement('div'); find.id = 'rd-find';
+  find.innerHTML = '<input type="search" placeholder="このページの中を探す" ' +
+    'aria-label="このページの中を探す"><span class="n"></span>' +
+    '<button data-a="prev">前へ</button><button data-a="next">次へ</button>' +
+    '<button data-a="close">閉じる</button>';
+  document.body.appendChild(bar); document.body.appendChild(tools); document.body.appendChild(find);
+
+  function btn(id, label, title){
+    var b = document.createElement('button');
+    b.id = id; b.textContent = label; if (title) b.title = title;
+    tools.appendChild(b); return b;
+  }
+  var bResume = btn('rd-resume', '続きから', '前に閉じた場所へ戻ります');
+  var bFold   = btn('rd-fold', '条文をたたむ', '条文カードと判例カードを閉じて、本文の筋だけを追います');
+  var bFind   = btn('rd-findbtn', 'ページ内を探す', 'このページの中を語で探します');
+  var bReset  = btn('rd-reset', '読んだ印を消す');
+
+  var secs = Array.prototype.slice.call(document.querySelectorAll('section[id]'));
+  var h2s  = secs.map(function(s){ return s.querySelector('h2'); });
+
+  // ── 既読の印 ─────────────────────────────────
+  st.done = st.done || {};
+  function paintDone(){
+    secs.forEach(function(s, i){
+      if (!st.done[s.id]) return;
+      if (h2s[i]) h2s[i].classList.add('rd-done');
+      // 既読の印は、章内の目次（nav.toc2 の href="#gimu-t1" 形式）に出す。
+      // 左の #nav は章へのリンクで、節のアンカーを持たない。
+      document.querySelectorAll('a[href="#' + s.id + '"]').forEach(function(a){
+        a.classList.add('rd-done');
+      });
+    });
+    var n = Object.keys(st.done).length;
+    if (secs.length) bReset.textContent = '読んだ印を消す（' + n + '/' + secs.length + '）';
+  }
+  paintDone();
+
+  // ── 進み具合と読書位置 ──────────────────────────
+  var tick;
+  function onScroll(){
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    var p = max > 0 ? h.scrollTop / max : 0;
+    bar.style.width = (p * 100).toFixed(1) + '%';
+    clearTimeout(tick);
+    tick = setTimeout(function(){
+      st.y = h.scrollTop; st.at = Date.now();
+      // 画面の上端を通り過ぎた節を既読にする
+      secs.forEach(function(s){
+        if (s.getBoundingClientRect().bottom < h.clientHeight * 0.5) st.done[s.id] = 1;
+      });
+      save(); paintDone();
+    }, 400);
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  if (!st.y || st.y < 200 || location.hash) {
+    bResume.style.display = 'none';
+  } else {
+    var d = Math.round((Date.now() - (st.at || 0)) / 86400000);
+    bResume.title = d > 0 ? d + '日前に閉じた場所へ戻ります' : '前に閉じた場所へ戻ります';
+  }
+  bResume.onclick = function(){
+    window.scrollTo({top: st.y, behavior: 'smooth'});
+    bResume.style.display = 'none';
+  };
+
+  bReset.onclick = function(){
+    st.done = {}; st.y = 0; save();
+    document.querySelectorAll('.rd-done').forEach(function(e){ e.classList.remove('rd-done'); });
+    paintDone();
+  };
+
+  // ── 条文カードの畳み込み ────────────────────────
+  function applyFold(){
+    document.body.classList.toggle('rd-fold', !!st.fold);
+    bFold.textContent = st.fold ? '条文をひらく' : '条文をたたむ';
+  }
+  if (st.fold) applyFold();
+  bFold.onclick = function(){ st.fold = !st.fold; save(); applyFold(); };
+  document.addEventListener('click', function(e){
+    if (!st.fold) return;
+    var h = e.target.closest('.art > h4, .case > h4');
+    if (h) h.parentNode.classList.toggle('rd-open');
+  });
+
+  // ── ページ内を探す ──────────────────────────────
+  var hits = [], cur = -1, input = find.querySelector('input'), cnt = find.querySelector('.n');
+  function clearHits(){
+    document.querySelectorAll('mark.rd-hit').forEach(function(m){
+      var t = document.createTextNode(m.textContent);
+      m.parentNode.replaceChild(t, m); t.parentNode.normalize();
+    });
+    hits = []; cur = -1;
+  }
+  function doFind(q){
+    clearHits();
+    if (!q || q.length < 2) { cnt.textContent = ''; return; }
+    var root = document.querySelector('.wrap') || document.body;
+    var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function(n){
+        if (!n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        var p = n.parentNode;
+        while (p && p !== root) {
+          var t = p.tagName;
+          if (t === 'SCRIPT' || t === 'STYLE' || t === 'NAV' || p.id === 'rd-find')
+            return NodeFilter.FILTER_REJECT;
+          p = p.parentNode;
+        }
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    var nodes = [], n;
+    while ((n = w.nextNode())) nodes.push(n);
+    nodes.forEach(function(node){
+      var i = node.nodeValue.indexOf(q);
+      if (i < 0) return;
+      var rest = node.splitText(i);
+      rest.splitText(q.length);
+      var m = document.createElement('mark');
+      m.className = 'rd-hit'; m.textContent = rest.nodeValue;
+      rest.parentNode.replaceChild(m, rest);
+      hits.push(m);
+    });
+    cnt.textContent = hits.length ? '1 / ' + hits.length : '見つかりません';
+    if (hits.length) go(0);
+  }
+  function go(i){
+    if (!hits.length) return;
+    if (cur >= 0 && hits[cur]) hits[cur].classList.remove('rd-cur');
+    cur = (i + hits.length) % hits.length;
+    hits[cur].classList.add('rd-cur');
+    hits[cur].scrollIntoView({block:'center', behavior:'smooth'});
+    cnt.textContent = (cur + 1) + ' / ' + hits.length;
+  }
+  var ft;
+  input.addEventListener('input', function(){
+    clearTimeout(ft); ft = setTimeout(function(){ doFind(input.value.trim()); }, 250);
+  });
+  input.addEventListener('keydown', function(e){
+    if (e.key === 'Enter') { e.preventDefault(); go(cur + (e.shiftKey ? -1 : 1)); }
+    if (e.key === 'Escape') closeFind();
+  });
+  find.addEventListener('click', function(e){
+    var a = e.target.dataset && e.target.dataset.a;
+    if (a === 'next') go(cur + 1);
+    if (a === 'prev') go(cur - 1);
+    if (a === 'close') closeFind();
+  });
+  function openFind(){ find.style.display = 'block'; input.focus(); input.select(); }
+  function closeFind(){ find.style.display = 'none'; clearHits(); cnt.textContent = ''; }
+  bFind.onclick = openFind;
+  document.addEventListener('keydown', function(e){
+    if ((e.metaKey || e.ctrlKey) && e.key === 'f') { e.preventDefault(); openFind(); }
+  });
+})();
+</script>
 </section>
 
 <section class="chap" id="ch02">
@@ -3000,7 +3627,216 @@ body{display:flex; align-items:flex-start; margin:0}
 </section>
 
 
+</div>
+<!-- reader v1 -->
+<style id="reader-css">
+/* ── 読むための仕掛け ── */
+#rd-bar{position:fixed; top:0; left:0; height:3px; background:var(--shu,#c0392b);
+  width:0; z-index:200; transition:width .15s}
+#rd-tools{position:fixed; right:1rem; bottom:1rem; z-index:190;
+  display:flex; flex-direction:column; gap:.4rem; align-items:flex-end}
+#rd-tools button{font:inherit; font-size:.78rem; padding:.42rem .7rem; cursor:pointer;
+  background:var(--card,#fff); color:var(--ink,#222); border:1px solid var(--line2,#ccc);
+  border-radius:5px; box-shadow:0 1px 4px rgba(0,0,0,.12); white-space:nowrap}
+#rd-tools button:hover{background:var(--fill,#f4f4f4)}
+#rd-resume{background:var(--shu,#c0392b) !important; color:#fff !important; border-color:transparent !important}
+#rd-find{position:fixed; top:0; left:0; right:0; z-index:210; background:var(--card,#fff);
+  border-bottom:1px solid var(--line2,#ccc); padding:.55rem .8rem; display:none;
+  box-shadow:0 2px 10px rgba(0,0,0,.12)}
+#rd-find input{font:inherit; font-size:1rem; width:min(28rem,60vw); padding:.35rem .55rem;
+  border:1px solid var(--line2,#ccc); border-radius:4px; background:var(--paper,#fff); color:var(--ink,#222)}
+#rd-find .n{font-size:.8rem; color:var(--hai,#888); margin-left:.6rem}
+#rd-find button{font:inherit; font-size:.8rem; margin-left:.35rem; padding:.32rem .6rem;
+  cursor:pointer; background:var(--fill,#f4f4f4); color:var(--ink,#222);
+  border:1px solid var(--line2,#ccc); border-radius:4px}
+mark.rd-hit{background:#ffe08a; color:#000}
+mark.rd-cur{background:var(--shu,#c0392b); color:#fff}
+/* 既読の印 */
+h2.rd-done::after{content:"読了"; font-size:.62rem; letter-spacing:.1em; margin-left:.7rem;
+  padding:.12rem .45rem; border-radius:3px; background:var(--fill,#eee);
+  color:var(--hai,#888); vertical-align:middle; font-weight:400}
+a.rd-done::before{content:"✓ "; color:var(--shu,#c0392b); font-weight:700}
+/* 条文カードの畳み込み */
+body.rd-fold .art .ain, body.rd-fold .case .cin{display:none}
+body.rd-fold .art h4, body.rd-fold .case h4{cursor:pointer}
+body.rd-fold .art h4::after, body.rd-fold .case h4::after{content:" ▸"; opacity:.6}
+body.rd-fold .art.rd-open .ain, body.rd-fold .case.rd-open .cin{display:block}
+body.rd-fold .art.rd-open h4::after, body.rd-fold .case.rd-open h4::after{content:" ▾"}
+@media(max-width:640px){
+  #rd-tools{right:.5rem; bottom:.5rem}
+  #rd-tools button{font-size:.72rem; padding:.36rem .55rem}
+}
+@media print{#rd-bar,#rd-tools,#rd-find{display:none}}
+</style>
 
+<script id="reader-js">
+(function(){
+  var KEY = 'gyosei:' + location.pathname.replace(/^.*\//,'');
+  var st = {};
+  try { st = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e) {}
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(st)); } catch(e) {} }
+
+  // ── 部品を置く ────────────────────────────────
+  var bar = document.createElement('div'); bar.id = 'rd-bar';
+  var tools = document.createElement('div'); tools.id = 'rd-tools';
+  var find = document.createElement('div'); find.id = 'rd-find';
+  find.innerHTML = '<input type="search" placeholder="このページの中を探す" ' +
+    'aria-label="このページの中を探す"><span class="n"></span>' +
+    '<button data-a="prev">前へ</button><button data-a="next">次へ</button>' +
+    '<button data-a="close">閉じる</button>';
+  document.body.appendChild(bar); document.body.appendChild(tools); document.body.appendChild(find);
+
+  function btn(id, label, title){
+    var b = document.createElement('button');
+    b.id = id; b.textContent = label; if (title) b.title = title;
+    tools.appendChild(b); return b;
+  }
+  var bResume = btn('rd-resume', '続きから', '前に閉じた場所へ戻ります');
+  var bFold   = btn('rd-fold', '条文をたたむ', '条文カードと判例カードを閉じて、本文の筋だけを追います');
+  var bFind   = btn('rd-findbtn', 'ページ内を探す', 'このページの中を語で探します');
+  var bReset  = btn('rd-reset', '読んだ印を消す');
+
+  var secs = Array.prototype.slice.call(document.querySelectorAll('section[id]'));
+  var h2s  = secs.map(function(s){ return s.querySelector('h2'); });
+
+  // ── 既読の印 ─────────────────────────────────
+  st.done = st.done || {};
+  function paintDone(){
+    secs.forEach(function(s, i){
+      if (!st.done[s.id]) return;
+      if (h2s[i]) h2s[i].classList.add('rd-done');
+      // 既読の印は、章内の目次（nav.toc2 の href="#ch02-t1" 形式）に出す。
+      // 左の #nav は章へのリンクで、節のアンカーを持たない。
+      document.querySelectorAll('a[href="#' + s.id + '"]').forEach(function(a){
+        a.classList.add('rd-done');
+      });
+    });
+    var n = Object.keys(st.done).length;
+    if (secs.length) bReset.textContent = '読んだ印を消す（' + n + '/' + secs.length + '）';
+  }
+  paintDone();
+
+  // ── 進み具合と読書位置 ──────────────────────────
+  var tick;
+  function onScroll(){
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    var p = max > 0 ? h.scrollTop / max : 0;
+    bar.style.width = (p * 100).toFixed(1) + '%';
+    clearTimeout(tick);
+    tick = setTimeout(function(){
+      st.y = h.scrollTop; st.at = Date.now();
+      // 画面の上端を通り過ぎた節を既読にする
+      secs.forEach(function(s){
+        if (s.getBoundingClientRect().bottom < h.clientHeight * 0.5) st.done[s.id] = 1;
+      });
+      save(); paintDone();
+    }, 400);
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  if (!st.y || st.y < 200 || location.hash) {
+    bResume.style.display = 'none';
+  } else {
+    var d = Math.round((Date.now() - (st.at || 0)) / 86400000);
+    bResume.title = d > 0 ? d + '日前に閉じた場所へ戻ります' : '前に閉じた場所へ戻ります';
+  }
+  bResume.onclick = function(){
+    window.scrollTo({top: st.y, behavior: 'smooth'});
+    bResume.style.display = 'none';
+  };
+
+  bReset.onclick = function(){
+    st.done = {}; st.y = 0; save();
+    document.querySelectorAll('.rd-done').forEach(function(e){ e.classList.remove('rd-done'); });
+    paintDone();
+  };
+
+  // ── 条文カードの畳み込み ────────────────────────
+  function applyFold(){
+    document.body.classList.toggle('rd-fold', !!st.fold);
+    bFold.textContent = st.fold ? '条文をひらく' : '条文をたたむ';
+  }
+  if (st.fold) applyFold();
+  bFold.onclick = function(){ st.fold = !st.fold; save(); applyFold(); };
+  document.addEventListener('click', function(e){
+    if (!st.fold) return;
+    var h = e.target.closest('.art > h4, .case > h4');
+    if (h) h.parentNode.classList.toggle('rd-open');
+  });
+
+  // ── ページ内を探す ──────────────────────────────
+  var hits = [], cur = -1, input = find.querySelector('input'), cnt = find.querySelector('.n');
+  function clearHits(){
+    document.querySelectorAll('mark.rd-hit').forEach(function(m){
+      var t = document.createTextNode(m.textContent);
+      m.parentNode.replaceChild(t, m); t.parentNode.normalize();
+    });
+    hits = []; cur = -1;
+  }
+  function doFind(q){
+    clearHits();
+    if (!q || q.length < 2) { cnt.textContent = ''; return; }
+    var root = document.querySelector('.wrap') || document.body;
+    var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function(n){
+        if (!n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        var p = n.parentNode;
+        while (p && p !== root) {
+          var t = p.tagName;
+          if (t === 'SCRIPT' || t === 'STYLE' || t === 'NAV' || p.id === 'rd-find')
+            return NodeFilter.FILTER_REJECT;
+          p = p.parentNode;
+        }
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    var nodes = [], n;
+    while ((n = w.nextNode())) nodes.push(n);
+    nodes.forEach(function(node){
+      var i = node.nodeValue.indexOf(q);
+      if (i < 0) return;
+      var rest = node.splitText(i);
+      rest.splitText(q.length);
+      var m = document.createElement('mark');
+      m.className = 'rd-hit'; m.textContent = rest.nodeValue;
+      rest.parentNode.replaceChild(m, rest);
+      hits.push(m);
+    });
+    cnt.textContent = hits.length ? '1 / ' + hits.length : '見つかりません';
+    if (hits.length) go(0);
+  }
+  function go(i){
+    if (!hits.length) return;
+    if (cur >= 0 && hits[cur]) hits[cur].classList.remove('rd-cur');
+    cur = (i + hits.length) % hits.length;
+    hits[cur].classList.add('rd-cur');
+    hits[cur].scrollIntoView({block:'center', behavior:'smooth'});
+    cnt.textContent = (cur + 1) + ' / ' + hits.length;
+  }
+  var ft;
+  input.addEventListener('input', function(){
+    clearTimeout(ft); ft = setTimeout(function(){ doFind(input.value.trim()); }, 250);
+  });
+  input.addEventListener('keydown', function(e){
+    if (e.key === 'Enter') { e.preventDefault(); go(cur + (e.shiftKey ? -1 : 1)); }
+    if (e.key === 'Escape') closeFind();
+  });
+  find.addEventListener('click', function(e){
+    var a = e.target.dataset && e.target.dataset.a;
+    if (a === 'next') go(cur + 1);
+    if (a === 'prev') go(cur - 1);
+    if (a === 'close') closeFind();
+  });
+  function openFind(){ find.style.display = 'block'; input.focus(); input.select(); }
+  function closeFind(){ find.style.display = 'none'; clearHits(); cnt.textContent = ''; }
+  bFind.onclick = openFind;
+  document.addEventListener('keydown', function(e){
+    if ((e.metaKey || e.ctrlKey) && e.key === 'f') { e.preventDefault(); openFind(); }
+  });
+})();
+</script>
 </section>
 
 <section class="chap" id="ch03a">
@@ -3404,7 +4240,216 @@ body{display:flex; align-items:flex-start; margin:0}
 </section>
 
 
+</div>
+<!-- reader v1 -->
+<style id="reader-css">
+/* ── 読むための仕掛け ── */
+#rd-bar{position:fixed; top:0; left:0; height:3px; background:var(--shu,#c0392b);
+  width:0; z-index:200; transition:width .15s}
+#rd-tools{position:fixed; right:1rem; bottom:1rem; z-index:190;
+  display:flex; flex-direction:column; gap:.4rem; align-items:flex-end}
+#rd-tools button{font:inherit; font-size:.78rem; padding:.42rem .7rem; cursor:pointer;
+  background:var(--card,#fff); color:var(--ink,#222); border:1px solid var(--line2,#ccc);
+  border-radius:5px; box-shadow:0 1px 4px rgba(0,0,0,.12); white-space:nowrap}
+#rd-tools button:hover{background:var(--fill,#f4f4f4)}
+#rd-resume{background:var(--shu,#c0392b) !important; color:#fff !important; border-color:transparent !important}
+#rd-find{position:fixed; top:0; left:0; right:0; z-index:210; background:var(--card,#fff);
+  border-bottom:1px solid var(--line2,#ccc); padding:.55rem .8rem; display:none;
+  box-shadow:0 2px 10px rgba(0,0,0,.12)}
+#rd-find input{font:inherit; font-size:1rem; width:min(28rem,60vw); padding:.35rem .55rem;
+  border:1px solid var(--line2,#ccc); border-radius:4px; background:var(--paper,#fff); color:var(--ink,#222)}
+#rd-find .n{font-size:.8rem; color:var(--hai,#888); margin-left:.6rem}
+#rd-find button{font:inherit; font-size:.8rem; margin-left:.35rem; padding:.32rem .6rem;
+  cursor:pointer; background:var(--fill,#f4f4f4); color:var(--ink,#222);
+  border:1px solid var(--line2,#ccc); border-radius:4px}
+mark.rd-hit{background:#ffe08a; color:#000}
+mark.rd-cur{background:var(--shu,#c0392b); color:#fff}
+/* 既読の印 */
+h2.rd-done::after{content:"読了"; font-size:.62rem; letter-spacing:.1em; margin-left:.7rem;
+  padding:.12rem .45rem; border-radius:3px; background:var(--fill,#eee);
+  color:var(--hai,#888); vertical-align:middle; font-weight:400}
+a.rd-done::before{content:"✓ "; color:var(--shu,#c0392b); font-weight:700}
+/* 条文カードの畳み込み */
+body.rd-fold .art .ain, body.rd-fold .case .cin{display:none}
+body.rd-fold .art h4, body.rd-fold .case h4{cursor:pointer}
+body.rd-fold .art h4::after, body.rd-fold .case h4::after{content:" ▸"; opacity:.6}
+body.rd-fold .art.rd-open .ain, body.rd-fold .case.rd-open .cin{display:block}
+body.rd-fold .art.rd-open h4::after, body.rd-fold .case.rd-open h4::after{content:" ▾"}
+@media(max-width:640px){
+  #rd-tools{right:.5rem; bottom:.5rem}
+  #rd-tools button{font-size:.72rem; padding:.36rem .55rem}
+}
+@media print{#rd-bar,#rd-tools,#rd-find{display:none}}
+</style>
 
+<script id="reader-js">
+(function(){
+  var KEY = 'gyosei:' + location.pathname.replace(/^.*\//,'');
+  var st = {};
+  try { st = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e) {}
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(st)); } catch(e) {} }
+
+  // ── 部品を置く ────────────────────────────────
+  var bar = document.createElement('div'); bar.id = 'rd-bar';
+  var tools = document.createElement('div'); tools.id = 'rd-tools';
+  var find = document.createElement('div'); find.id = 'rd-find';
+  find.innerHTML = '<input type="search" placeholder="このページの中を探す" ' +
+    'aria-label="このページの中を探す"><span class="n"></span>' +
+    '<button data-a="prev">前へ</button><button data-a="next">次へ</button>' +
+    '<button data-a="close">閉じる</button>';
+  document.body.appendChild(bar); document.body.appendChild(tools); document.body.appendChild(find);
+
+  function btn(id, label, title){
+    var b = document.createElement('button');
+    b.id = id; b.textContent = label; if (title) b.title = title;
+    tools.appendChild(b); return b;
+  }
+  var bResume = btn('rd-resume', '続きから', '前に閉じた場所へ戻ります');
+  var bFold   = btn('rd-fold', '条文をたたむ', '条文カードと判例カードを閉じて、本文の筋だけを追います');
+  var bFind   = btn('rd-findbtn', 'ページ内を探す', 'このページの中を語で探します');
+  var bReset  = btn('rd-reset', '読んだ印を消す');
+
+  var secs = Array.prototype.slice.call(document.querySelectorAll('section[id]'));
+  var h2s  = secs.map(function(s){ return s.querySelector('h2'); });
+
+  // ── 既読の印 ─────────────────────────────────
+  st.done = st.done || {};
+  function paintDone(){
+    secs.forEach(function(s, i){
+      if (!st.done[s.id]) return;
+      if (h2s[i]) h2s[i].classList.add('rd-done');
+      // 既読の印は、章内の目次（nav.toc2 の href="#ch03a-t1" 形式）に出す。
+      // 左の #nav は章へのリンクで、節のアンカーを持たない。
+      document.querySelectorAll('a[href="#' + s.id + '"]').forEach(function(a){
+        a.classList.add('rd-done');
+      });
+    });
+    var n = Object.keys(st.done).length;
+    if (secs.length) bReset.textContent = '読んだ印を消す（' + n + '/' + secs.length + '）';
+  }
+  paintDone();
+
+  // ── 進み具合と読書位置 ──────────────────────────
+  var tick;
+  function onScroll(){
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    var p = max > 0 ? h.scrollTop / max : 0;
+    bar.style.width = (p * 100).toFixed(1) + '%';
+    clearTimeout(tick);
+    tick = setTimeout(function(){
+      st.y = h.scrollTop; st.at = Date.now();
+      // 画面の上端を通り過ぎた節を既読にする
+      secs.forEach(function(s){
+        if (s.getBoundingClientRect().bottom < h.clientHeight * 0.5) st.done[s.id] = 1;
+      });
+      save(); paintDone();
+    }, 400);
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  if (!st.y || st.y < 200 || location.hash) {
+    bResume.style.display = 'none';
+  } else {
+    var d = Math.round((Date.now() - (st.at || 0)) / 86400000);
+    bResume.title = d > 0 ? d + '日前に閉じた場所へ戻ります' : '前に閉じた場所へ戻ります';
+  }
+  bResume.onclick = function(){
+    window.scrollTo({top: st.y, behavior: 'smooth'});
+    bResume.style.display = 'none';
+  };
+
+  bReset.onclick = function(){
+    st.done = {}; st.y = 0; save();
+    document.querySelectorAll('.rd-done').forEach(function(e){ e.classList.remove('rd-done'); });
+    paintDone();
+  };
+
+  // ── 条文カードの畳み込み ────────────────────────
+  function applyFold(){
+    document.body.classList.toggle('rd-fold', !!st.fold);
+    bFold.textContent = st.fold ? '条文をひらく' : '条文をたたむ';
+  }
+  if (st.fold) applyFold();
+  bFold.onclick = function(){ st.fold = !st.fold; save(); applyFold(); };
+  document.addEventListener('click', function(e){
+    if (!st.fold) return;
+    var h = e.target.closest('.art > h4, .case > h4');
+    if (h) h.parentNode.classList.toggle('rd-open');
+  });
+
+  // ── ページ内を探す ──────────────────────────────
+  var hits = [], cur = -1, input = find.querySelector('input'), cnt = find.querySelector('.n');
+  function clearHits(){
+    document.querySelectorAll('mark.rd-hit').forEach(function(m){
+      var t = document.createTextNode(m.textContent);
+      m.parentNode.replaceChild(t, m); t.parentNode.normalize();
+    });
+    hits = []; cur = -1;
+  }
+  function doFind(q){
+    clearHits();
+    if (!q || q.length < 2) { cnt.textContent = ''; return; }
+    var root = document.querySelector('.wrap') || document.body;
+    var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function(n){
+        if (!n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        var p = n.parentNode;
+        while (p && p !== root) {
+          var t = p.tagName;
+          if (t === 'SCRIPT' || t === 'STYLE' || t === 'NAV' || p.id === 'rd-find')
+            return NodeFilter.FILTER_REJECT;
+          p = p.parentNode;
+        }
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    var nodes = [], n;
+    while ((n = w.nextNode())) nodes.push(n);
+    nodes.forEach(function(node){
+      var i = node.nodeValue.indexOf(q);
+      if (i < 0) return;
+      var rest = node.splitText(i);
+      rest.splitText(q.length);
+      var m = document.createElement('mark');
+      m.className = 'rd-hit'; m.textContent = rest.nodeValue;
+      rest.parentNode.replaceChild(m, rest);
+      hits.push(m);
+    });
+    cnt.textContent = hits.length ? '1 / ' + hits.length : '見つかりません';
+    if (hits.length) go(0);
+  }
+  function go(i){
+    if (!hits.length) return;
+    if (cur >= 0 && hits[cur]) hits[cur].classList.remove('rd-cur');
+    cur = (i + hits.length) % hits.length;
+    hits[cur].classList.add('rd-cur');
+    hits[cur].scrollIntoView({block:'center', behavior:'smooth'});
+    cnt.textContent = (cur + 1) + ' / ' + hits.length;
+  }
+  var ft;
+  input.addEventListener('input', function(){
+    clearTimeout(ft); ft = setTimeout(function(){ doFind(input.value.trim()); }, 250);
+  });
+  input.addEventListener('keydown', function(e){
+    if (e.key === 'Enter') { e.preventDefault(); go(cur + (e.shiftKey ? -1 : 1)); }
+    if (e.key === 'Escape') closeFind();
+  });
+  find.addEventListener('click', function(e){
+    var a = e.target.dataset && e.target.dataset.a;
+    if (a === 'next') go(cur + 1);
+    if (a === 'prev') go(cur - 1);
+    if (a === 'close') closeFind();
+  });
+  function openFind(){ find.style.display = 'block'; input.focus(); input.select(); }
+  function closeFind(){ find.style.display = 'none'; clearHits(); cnt.textContent = ''; }
+  bFind.onclick = openFind;
+  document.addEventListener('keydown', function(e){
+    if ((e.metaKey || e.ctrlKey) && e.key === 'f') { e.preventDefault(); openFind(); }
+  });
+})();
+</script>
 </section>
 
 <section class="chap" id="ch03b">
@@ -4886,7 +5931,216 @@ body{display:flex; align-items:flex-start; margin:0}
 </section>
 
 
+</div>
+<!-- reader v1 -->
+<style id="reader-css">
+/* ── 読むための仕掛け ── */
+#rd-bar{position:fixed; top:0; left:0; height:3px; background:var(--shu,#c0392b);
+  width:0; z-index:200; transition:width .15s}
+#rd-tools{position:fixed; right:1rem; bottom:1rem; z-index:190;
+  display:flex; flex-direction:column; gap:.4rem; align-items:flex-end}
+#rd-tools button{font:inherit; font-size:.78rem; padding:.42rem .7rem; cursor:pointer;
+  background:var(--card,#fff); color:var(--ink,#222); border:1px solid var(--line2,#ccc);
+  border-radius:5px; box-shadow:0 1px 4px rgba(0,0,0,.12); white-space:nowrap}
+#rd-tools button:hover{background:var(--fill,#f4f4f4)}
+#rd-resume{background:var(--shu,#c0392b) !important; color:#fff !important; border-color:transparent !important}
+#rd-find{position:fixed; top:0; left:0; right:0; z-index:210; background:var(--card,#fff);
+  border-bottom:1px solid var(--line2,#ccc); padding:.55rem .8rem; display:none;
+  box-shadow:0 2px 10px rgba(0,0,0,.12)}
+#rd-find input{font:inherit; font-size:1rem; width:min(28rem,60vw); padding:.35rem .55rem;
+  border:1px solid var(--line2,#ccc); border-radius:4px; background:var(--paper,#fff); color:var(--ink,#222)}
+#rd-find .n{font-size:.8rem; color:var(--hai,#888); margin-left:.6rem}
+#rd-find button{font:inherit; font-size:.8rem; margin-left:.35rem; padding:.32rem .6rem;
+  cursor:pointer; background:var(--fill,#f4f4f4); color:var(--ink,#222);
+  border:1px solid var(--line2,#ccc); border-radius:4px}
+mark.rd-hit{background:#ffe08a; color:#000}
+mark.rd-cur{background:var(--shu,#c0392b); color:#fff}
+/* 既読の印 */
+h2.rd-done::after{content:"読了"; font-size:.62rem; letter-spacing:.1em; margin-left:.7rem;
+  padding:.12rem .45rem; border-radius:3px; background:var(--fill,#eee);
+  color:var(--hai,#888); vertical-align:middle; font-weight:400}
+a.rd-done::before{content:"✓ "; color:var(--shu,#c0392b); font-weight:700}
+/* 条文カードの畳み込み */
+body.rd-fold .art .ain, body.rd-fold .case .cin{display:none}
+body.rd-fold .art h4, body.rd-fold .case h4{cursor:pointer}
+body.rd-fold .art h4::after, body.rd-fold .case h4::after{content:" ▸"; opacity:.6}
+body.rd-fold .art.rd-open .ain, body.rd-fold .case.rd-open .cin{display:block}
+body.rd-fold .art.rd-open h4::after, body.rd-fold .case.rd-open h4::after{content:" ▾"}
+@media(max-width:640px){
+  #rd-tools{right:.5rem; bottom:.5rem}
+  #rd-tools button{font-size:.72rem; padding:.36rem .55rem}
+}
+@media print{#rd-bar,#rd-tools,#rd-find{display:none}}
+</style>
 
+<script id="reader-js">
+(function(){
+  var KEY = 'gyosei:' + location.pathname.replace(/^.*\//,'');
+  var st = {};
+  try { st = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e) {}
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(st)); } catch(e) {} }
+
+  // ── 部品を置く ────────────────────────────────
+  var bar = document.createElement('div'); bar.id = 'rd-bar';
+  var tools = document.createElement('div'); tools.id = 'rd-tools';
+  var find = document.createElement('div'); find.id = 'rd-find';
+  find.innerHTML = '<input type="search" placeholder="このページの中を探す" ' +
+    'aria-label="このページの中を探す"><span class="n"></span>' +
+    '<button data-a="prev">前へ</button><button data-a="next">次へ</button>' +
+    '<button data-a="close">閉じる</button>';
+  document.body.appendChild(bar); document.body.appendChild(tools); document.body.appendChild(find);
+
+  function btn(id, label, title){
+    var b = document.createElement('button');
+    b.id = id; b.textContent = label; if (title) b.title = title;
+    tools.appendChild(b); return b;
+  }
+  var bResume = btn('rd-resume', '続きから', '前に閉じた場所へ戻ります');
+  var bFold   = btn('rd-fold', '条文をたたむ', '条文カードと判例カードを閉じて、本文の筋だけを追います');
+  var bFind   = btn('rd-findbtn', 'ページ内を探す', 'このページの中を語で探します');
+  var bReset  = btn('rd-reset', '読んだ印を消す');
+
+  var secs = Array.prototype.slice.call(document.querySelectorAll('section[id]'));
+  var h2s  = secs.map(function(s){ return s.querySelector('h2'); });
+
+  // ── 既読の印 ─────────────────────────────────
+  st.done = st.done || {};
+  function paintDone(){
+    secs.forEach(function(s, i){
+      if (!st.done[s.id]) return;
+      if (h2s[i]) h2s[i].classList.add('rd-done');
+      // 既読の印は、章内の目次（nav.toc2 の href="#ch03b-t1" 形式）に出す。
+      // 左の #nav は章へのリンクで、節のアンカーを持たない。
+      document.querySelectorAll('a[href="#' + s.id + '"]').forEach(function(a){
+        a.classList.add('rd-done');
+      });
+    });
+    var n = Object.keys(st.done).length;
+    if (secs.length) bReset.textContent = '読んだ印を消す（' + n + '/' + secs.length + '）';
+  }
+  paintDone();
+
+  // ── 進み具合と読書位置 ──────────────────────────
+  var tick;
+  function onScroll(){
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    var p = max > 0 ? h.scrollTop / max : 0;
+    bar.style.width = (p * 100).toFixed(1) + '%';
+    clearTimeout(tick);
+    tick = setTimeout(function(){
+      st.y = h.scrollTop; st.at = Date.now();
+      // 画面の上端を通り過ぎた節を既読にする
+      secs.forEach(function(s){
+        if (s.getBoundingClientRect().bottom < h.clientHeight * 0.5) st.done[s.id] = 1;
+      });
+      save(); paintDone();
+    }, 400);
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  if (!st.y || st.y < 200 || location.hash) {
+    bResume.style.display = 'none';
+  } else {
+    var d = Math.round((Date.now() - (st.at || 0)) / 86400000);
+    bResume.title = d > 0 ? d + '日前に閉じた場所へ戻ります' : '前に閉じた場所へ戻ります';
+  }
+  bResume.onclick = function(){
+    window.scrollTo({top: st.y, behavior: 'smooth'});
+    bResume.style.display = 'none';
+  };
+
+  bReset.onclick = function(){
+    st.done = {}; st.y = 0; save();
+    document.querySelectorAll('.rd-done').forEach(function(e){ e.classList.remove('rd-done'); });
+    paintDone();
+  };
+
+  // ── 条文カードの畳み込み ────────────────────────
+  function applyFold(){
+    document.body.classList.toggle('rd-fold', !!st.fold);
+    bFold.textContent = st.fold ? '条文をひらく' : '条文をたたむ';
+  }
+  if (st.fold) applyFold();
+  bFold.onclick = function(){ st.fold = !st.fold; save(); applyFold(); };
+  document.addEventListener('click', function(e){
+    if (!st.fold) return;
+    var h = e.target.closest('.art > h4, .case > h4');
+    if (h) h.parentNode.classList.toggle('rd-open');
+  });
+
+  // ── ページ内を探す ──────────────────────────────
+  var hits = [], cur = -1, input = find.querySelector('input'), cnt = find.querySelector('.n');
+  function clearHits(){
+    document.querySelectorAll('mark.rd-hit').forEach(function(m){
+      var t = document.createTextNode(m.textContent);
+      m.parentNode.replaceChild(t, m); t.parentNode.normalize();
+    });
+    hits = []; cur = -1;
+  }
+  function doFind(q){
+    clearHits();
+    if (!q || q.length < 2) { cnt.textContent = ''; return; }
+    var root = document.querySelector('.wrap') || document.body;
+    var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function(n){
+        if (!n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        var p = n.parentNode;
+        while (p && p !== root) {
+          var t = p.tagName;
+          if (t === 'SCRIPT' || t === 'STYLE' || t === 'NAV' || p.id === 'rd-find')
+            return NodeFilter.FILTER_REJECT;
+          p = p.parentNode;
+        }
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    var nodes = [], n;
+    while ((n = w.nextNode())) nodes.push(n);
+    nodes.forEach(function(node){
+      var i = node.nodeValue.indexOf(q);
+      if (i < 0) return;
+      var rest = node.splitText(i);
+      rest.splitText(q.length);
+      var m = document.createElement('mark');
+      m.className = 'rd-hit'; m.textContent = rest.nodeValue;
+      rest.parentNode.replaceChild(m, rest);
+      hits.push(m);
+    });
+    cnt.textContent = hits.length ? '1 / ' + hits.length : '見つかりません';
+    if (hits.length) go(0);
+  }
+  function go(i){
+    if (!hits.length) return;
+    if (cur >= 0 && hits[cur]) hits[cur].classList.remove('rd-cur');
+    cur = (i + hits.length) % hits.length;
+    hits[cur].classList.add('rd-cur');
+    hits[cur].scrollIntoView({block:'center', behavior:'smooth'});
+    cnt.textContent = (cur + 1) + ' / ' + hits.length;
+  }
+  var ft;
+  input.addEventListener('input', function(){
+    clearTimeout(ft); ft = setTimeout(function(){ doFind(input.value.trim()); }, 250);
+  });
+  input.addEventListener('keydown', function(e){
+    if (e.key === 'Enter') { e.preventDefault(); go(cur + (e.shiftKey ? -1 : 1)); }
+    if (e.key === 'Escape') closeFind();
+  });
+  find.addEventListener('click', function(e){
+    var a = e.target.dataset && e.target.dataset.a;
+    if (a === 'next') go(cur + 1);
+    if (a === 'prev') go(cur - 1);
+    if (a === 'close') closeFind();
+  });
+  function openFind(){ find.style.display = 'block'; input.focus(); input.select(); }
+  function closeFind(){ find.style.display = 'none'; clearHits(); cnt.textContent = ''; }
+  bFind.onclick = openFind;
+  document.addEventListener('keydown', function(e){
+    if ((e.metaKey || e.ctrlKey) && e.key === 'f') { e.preventDefault(); openFind(); }
+  });
+})();
+</script>
 </section>
 
 <section class="chap" id="ch04">
@@ -4909,7 +6163,7 @@ body{display:flex; align-items:flex-start; margin:0}
   <h2><span class="ch">一</span>全体の流れを1枚で</h2>
   <p class="why">どの条文も、この流れ図のどこかに置ける。迷子になったらここへ戻ってください。</p>
 <figure>
-<svg viewBox="0 0 880 1060" role="img" aria-label="前段: 処分・行政指導・届出・命令等のうち不服申立ての門を通れるのは処分と不作為だけ。本流: 人民が原則3か月以内に審査請求書を出し、行政側で審理員が審理し、審査庁が原則として行政不服審査会等に諮問したうえで裁決する。18条1項の3か月には、再調査の請求を経た場合の1か月への置き換えと、正当な理由がある場合の救済がある。">
+<svg viewBox="0 0 880 1060" role="img" aria-label="前段: 処分・行政指導・届出・命令等のうち不服申立ての門を通れるのは処分と不作為だけ。本流: 人民が原則3か月以内に審査請求書を出し、処分庁等、審理員、審査庁の順に行政側で処理され、審査庁が原則として行政不服審査会等に諮問したうえで裁決する。処分庁等とは、処分庁と不作為庁をまとめた呼び名である。18条1項の3か月には、再調査の請求を経た場合の1か月への置き換えと、正当な理由がある場合の救済がある。18条2項の1年は、再調査の請求を経た場合には再調査の請求についての決定があった日の翌日から数える。">
 <defs><marker id="a1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker>
 <marker id="a1s" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--seiji)"/></marker>
 <marker id="a1g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--midori)"/></marker></defs>
@@ -4973,8 +6227,8 @@ body{display:flex; align-items:flex-start; margin:0}
 <text x="780" y="438" text-anchor="middle" font-size="11" fill="var(--hai)">51条</text>
 
 <rect x="50" y="576" width="170" height="90" rx="4" fill="var(--card)" stroke="currentColor" stroke-width="1.3"/>
-<text x="135" y="608" text-anchor="middle" font-size="14" font-weight="700" fill="currentColor">処分庁</text>
-<text x="135" y="629" text-anchor="middle" font-size="11" fill="var(--ink-sub)">処分をした役所</text>
+<text x="135" y="608" text-anchor="middle" font-size="14" font-weight="700" fill="currentColor">処分庁等</text>
+<text x="135" y="629" text-anchor="middle" font-size="11" fill="var(--ink-sub)">処分庁・不作為庁</text>
 <rect x="300" y="576" width="170" height="90" rx="4" fill="var(--card)" stroke="var(--seiji)" stroke-width="2"/>
 <text x="385" y="604" text-anchor="middle" font-size="14" font-weight="700" fill="var(--seiji)">審理員</text>
 <text x="385" y="624" text-anchor="middle" font-size="10.5" fill="var(--ink-sub)">審査庁の職員のうち</text>
@@ -5008,14 +6262,14 @@ body{display:flex; align-items:flex-start; margin:0}
 
 <!-- ══ ※注記: 3か月と関連する期間制限 ══ -->
 <rect x="50" y="920" width="780" height="122" rx="4" fill="var(--shu-soft)" stroke="var(--shu)" stroke-width="1.4"/>
-<text x="70" y="950" font-size="13" font-weight="700" fill="var(--shu)">※ ②の「3か月」(18条1項)は原則。3か月の扱いが変わる場面は2つ</text>
+<text x="70" y="950" font-size="13" font-weight="700" fill="var(--shu)">※ ②の期間制限(18条)は、主観・客観・再調査経由を分けて読む</text>
 <g font-size="12" fill="var(--ink)">
 <text x="70" y="978">・再調査の請求を経たときは、決定を知った日の翌日から1か月に置き換わる</text>
 <text x="70" y="1002">・正当な理由があれば、3か月を過ぎても請求できる(18条1項ただし書)</text>
-<text x="70" y="1026">・1年の制限(18条2項)と不作為の期限なし(3条)は、3か月の例外ではなく別のルール</text>
+<text x="70" y="1026">・1年の制限は、再調査の請求を経たときは決定があった日の翌日から数える(18条2項)</text>
 </g>
 </svg>
-<figcaption>前段の門・3レーンの本流・期間の置き場所(※)まで1枚に。各箱の下の灰色数字が根拠条文。18条1項の3か月、18条2項の1年、不作為の期限なしは、それぞれ別の位置に置く。</figcaption>
+<figcaption>前段の門・3レーンの本流・期間の置き場所(※)まで1枚に。各箱の下の灰色数字が根拠条文。処分庁等とは、処分庁と不作為庁をまとめた呼び名である。18条1項の3か月、再調査の請求を経た場合の1か月、18条2項の1年は、それぞれ起算点を分けて読む。</figcaption>
 </figure>
 </section>
 <section id="ch04-c2">
@@ -5115,6 +6369,17 @@ body{display:flex; align-items:flex-start; margin:0}
 
   <p><span class="chip gen">原則</span>再調査は<b>選択制</b>です。定めがあっても直ちに審査請求してよい。ただし選択には片方向の縛りがあります: <b>先に審査請求をしたら再調査はできない</b>。逆に<b>先に再調査を選んだら、その決定を経た後でなければ審査請求できない</b>(5条2項本文)。並行は許されません。同じ処分を2つの手続が同時に審理して結論が割れるのを防ぐためです。</p>
   <p><span class="chip rei">例外</span>再調査を選んでも、再調査の請求をした日の翌日から<b>3か月</b>を経て決定がないときなどは、決定を待たずに審査請求へ進めます(5条2項ただし書)。ただし、補正命令があった場合は、再調査の請求をした日ではなく、<b>不備を補正した日の翌日</b>から3か月を数えます。このとき「棄却とみなす」制度は<b>ありません</b>——みなし裁決を置くと、処分庁が放置するほど請求人に不利になるからです。<span class="warn">この点は審査請求についても同じで、期間内に裁決がないことをもって棄却されたものとみなす、という制度は行政不服審査法に置かれていません。</span>16条の標準審理期間はあくまで目安であり、これを過ぎたことに法律上の効果は結びついていません。<span class="key">審査請求前置の場面では、審査請求があった日から3か月を経過しても裁決がないときは、行政事件訴訟法8条2項1号により、裁決を経ないで処分の取消訴訟を提起できます。</span>不作為の違法確認の訴えは、行政庁が法令に基づく申請に対して何らの処分もしないこと自体を争う別の訴えです。</p>
+  <div class="scroll"><table>
+    <caption>再調査を選んだ後に分けて読む規律</caption>
+    <thead><tr><th>場面</th><th>中身</th><th>条文</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">決定を待つ原則</th><td>再調査の請求をしたときは、その決定を経た後でなければ審査請求できません。</td><td>根拠は5条2項本文です。</td></tr>
+      <tr><th scope="row">決定を待たずに審査請求できる場合</th><td>再調査の請求をした日の翌日から<b>3か月</b>を経過しても決定がないときは、決定を待たずに審査請求できます。補正命令があった場合は、不備を補正した日の翌日から3か月を数えます。</td><td>根拠は5条2項ただし書1号と61条です。</td></tr>
+      <tr><th scope="row">審査請求側の放置</th><td>16条の標準審理期間は目安であり、これを過ぎても棄却とみなされません。審査請求前置の場面では、審査請求があった日から3か月を経過しても裁決がないときに、裁決を経ないで取消訴訟を提起できます。</td><td>根拠は16条と行政事件訴訟法8条2項1号です。</td></tr>
+      <tr><th scope="row">執行停止の準用</th><td>再調査の請求には25条が準用されますが、25条3項は除かれます。</td><td>根拠は61条と25条です。</td></tr>
+      <tr><th scope="row">再審査請求での事情裁決型</th><td>再審査請求では、原裁決等が違法または不当でも公共の福祉に適合しないと認めるときに、主文で違法または不当を宣言したうえで棄却できる場合があります。</td><td>根拠は64条4項です。</td></tr>
+    </tbody>
+  </table></div>
   <p>再調査は処分庁自身による簡易な手続なので、<b>審理員も諮問もありません</b>。ただし簡易でも、申立てがあれば口頭意見陳述の機会は与えなければなりません。61条は25条を準用しますが、<b>25条3項は除かれます</b>。第三者的な審査庁が処分庁の意見を聴いて止めるルートを、処分庁自身が見直す再調査にそのまま持ち込む構造ではありません。<b>不作為に再調査はありません</b>——調べ直す「処分」がまだ無いからです。</p>
 
   <h3>再審査請求 ── 裁決の後に続ける手続</h3>
@@ -5137,7 +6402,7 @@ body{display:flex; align-items:flex-start; margin:0}
     <thead><tr><th>比べる点</th><th>処分についての審査請求</th><th>不作為についての審査請求</th></tr></thead>
     <tbody>
       <tr><th scope="row">誰ができるか</th><td>その処分に不服がある者ができます（2条）。処分の名あて人に限られません。</td><td><b>法令に基づき申請をした者だけ</b>ができます（3条）。申請をしていない者は、いくら利害関係があってもできません。</td></tr>
-      <tr><th scope="row">いつまでにするか</th><td>処分があったことを知った日の翌日から3か月、処分があった日の翌日から1年です（18条）。</td><td><b>期間の制限がありません。</b>不作為が続いている限り、いつでもできます。待たされている側を締め切る理由がないからです。</td></tr>
+      <tr><th scope="row">いつまでにするか</th><td>処分があったことを知った日の翌日から3か月以内、処分があった日の翌日から1年以内です。再調査の請求を経た場合は、再調査の請求についての決定があったことを知った日の翌日から1か月以内で、1年の起算点もその決定があった日です（18条）。</td><td><b>期間の制限がありません。</b>不作為が続いている限り、いつでもできます。待たされている側を締め切る理由がないからです。</td></tr>
       <tr><th scope="row">いつからできるか</th><td>処分がされた時からです。</td><td>申請から<b>相当の期間</b>が経過した後です（3条）。相当の期間とは、個別の申請について処分をするのに通常必要な期間をいい、法律で一律の日数が定められている期間ではありません。経過する前にした審査請求は不適法として却下されます（49条1項）。</td></tr>
       <tr><th scope="row">審査請求書に何を書くか</th><td>審査請求人、処分の内容、処分または再調査の請求についての決定があったことを知った年月日、趣旨および理由、教示の有無、年月日を書きます（19条2項）。代表者・総代・代理人がいる場合や、再調査の請求についての決定を経ない場合などは、追加の記載事項もあります（19条4項・5項）。</td><td>19条3項の基本事項は、審査請求人、<b>申請の内容と年月日</b>、審査請求の年月日の三つです。ただし、代表者・総代・代理人がいる場合は、19条4項の追加記載も必要です。</td></tr>
       <tr><th scope="row">審理員を指名するか</th><td>指名します（9条1項）。</td><td><b>同じく指名します。</b>不作為だからといって審理手続を省く定めはありません。</td></tr>
@@ -5248,30 +6513,30 @@ body{display:flex; align-items:flex-start; margin:0}
 <figcaption>審査請求先の決定図。一号から三号は、上級行政庁がないため処分庁等自身に戻す場面と、内閣を審査庁にしない場面を分けている。処分庁等とは、処分庁と不作為庁をまとめた呼び名である。下段の赤帯が、この分岐を覚える本当の理由。</figcaption>
 </figure>
 
-  <h3>どこへ出すか ── 処分庁を経由してもよい</h3>
+  <h3>どこへ出すか ── 処分庁等を経由してもよい</h3>
 
-  <p>審査請求先が処分庁と違う場合、審査請求書を審査庁に直接持ち込むしかないとすると、遠方の役所まで出向かなければならないことがあります。そこで、<span class="key">身近な処分庁を経由して出す道</span>が用意されています。</p>
+  <p>審査請求先が処分庁等と違う場合、審査請求書を審査庁に直接持ち込むしかないとすると、遠方の役所まで出向かなければならないことがあります。処分庁等とは、処分庁と不作為庁をまとめた呼び名です。そこで、<span class="key">身近な処分庁等を経由して出す道</span>が用意されています。</p>
 
 <div class="art"><h4>行政不服審査法21条（処分庁等を経由する審査請求）</h4><div class="ain"><p class="atext" data-law="行政不服審査法21条">審査請求をすべき行政庁が処分庁等と異なる場合における審査請求は、処分庁等を経由してすることができる。この場合において、審査請求人は、処分庁等に審査請求書を提出し、又は処分庁等に対し第十九条第二項から第五項までに規定する事項を陳述するものとする。
 2 前項の場合には、処分庁等は、直ちに、審査請求書又は審査請求録取書（前条後段の規定により陳述の内容を録取した書面をいう。第二十九条第一項及び第五十五条において同じ。）を審査庁となるべき行政庁に送付しなければならない。
-3 第一項の場合における審査請求期間の計算については、処分庁に審査請求書を提出し、又は処分庁に対し当該事項を陳述した時に、処分についての審査請求があったものとみなす。</p><p class="an">三つの点が要である。第一に、経由は<b>「することができる」</b>であって義務ではない。審査庁に直接出してもよい。第二に、処分庁は受け取った書面を<b>直ちに</b>審査庁となるべき行政庁に送付しなければならない。ここは義務である。第三に、期間の計算は<b>処分庁に提出した時</b>を基準にする。処分庁が送付を怠って審査庁への到達が遅れても、請求人が期間を過ぎたことにはならない。</p><p class="al">この法律の全文は条文の索引から引けます</p></div></div>
+3 第一項の場合における審査請求期間の計算については、処分庁に審査請求書を提出し、又は処分庁に対し当該事項を陳述した時に、処分についての審査請求があったものとみなす。</p><p class="an">21条は三つの点が要である。第一に、経由は<b>「することができる」</b>であって義務ではない。審査庁に直接出してもよい。第二に、処分庁等は受け取った書面を<b>直ちに</b>審査庁となるべき行政庁に送付しなければならない。ここは義務である。第三に、期間の計算は<b>経由先に提出した時</b>を基準にする。処分庁等の内部の送付が遅れても、請求人が期間を過ぎたことにはならない。</p><p class="al">この法律の全文は条文の索引から引けます</p></div></div>
 
-  <p><span class="warn">処分庁を経由しなければならない、というものではありません。</span>21条1項は「することができる」と書いており、審査庁に直接提出することもできます。他方、<span class="key">経由を選んだ場合に処分庁が負う送付の義務は「直ちに」という強いもの</span>です。役所の内部の遅れを請求人に負担させない、という考え方が、3項の期間計算の特則にも表れています。</p>
+  <p><span class="warn">処分庁等を経由しなければならない、というものではありません。</span>21条1項は「することができる」と書いており、審査庁に直接提出することもできます。他方、<span class="key">経由を選んだ場合に処分庁等が負う送付の義務は「直ちに」という強いもの</span>です。役所の内部の遅れを請求人に負担させない、という考え方が、3項の期間計算の特則にも表れています。</p>
 
   <h3>いつまでに ── 主観と客観の二本立て</h3>
 
 <div class="art"><h4>行政不服審査法18条（審査請求期間）</h4><div class="ain"><p class="atext" data-law="行政不服審査法18条">処分についての審査請求は、処分があったことを知った日の翌日から起算して三月（当該処分について再調査の請求をしたときは、当該再調査の請求についての決定があったことを知った日の翌日から起算して一月）を経過したときは、することができない。ただし、正当な理由があるときは、この限りでない。
 2 処分についての審査請求は、処分（当該処分について再調査の請求をしたときは、当該再調査の請求についての決定）があった日の翌日から起算して一年を経過したときは、することができない。ただし、正当な理由があるときは、この限りでない。
-3 次条に規定する審査請求書を郵便又は民間事業者による信書の送達に関する法律（平成十四年法律第九十九号）第二条第六項に規定する一般信書便事業者若しくは同条第九項に規定する特定信書便事業者による同条第二項に規定する信書便で提出した場合における前二項に規定する期間（以下「審査請求期間」という。）の計算については、送付に要した日数は、算入しない。</p><p class="an">1項が主観的期間、2項が客観的期間である。どちらも<b>「翌日から起算して」</b>と書かれており、初日を数えない。行政事件訴訟法14条の出訴期間には「翌日から」という文言がなく、初日不算入は民法140条の一般原則によることになる。<b>行政不服審査法だけが条文の中に翌日起算を書き込んでいる</b>点が、両者を並べたときの違いである。3項は、郵送に要した日数を期間から除く定めで、遠方に住む者が不利にならないようにするものである。</p><p class="al">この法律の全文は条文の索引から引けます</p></div></div>
+3 次条に規定する審査請求書を郵便又は民間事業者による信書の送達に関する法律（平成十四年法律第九十九号）第二条第六項に規定する一般信書便事業者若しくは同条第九項に規定する特定信書便事業者による同条第二項に規定する信書便で提出した場合における前二項に規定する期間（以下「審査請求期間」という。）の計算については、送付に要した日数は、算入しない。</p><p class="an">1項が主観的期間、2項が客観的期間である。主観的期間とは、請求人が知った時を基準にする期間をいう。客観的期間とは、請求人が知ったかどうかにかかわらず事実の発生日を基準にする期間をいう。通常は、処分があったことを知った日の翌日から3か月、処分があった日の翌日から1年である。ただし、再調査の請求をしたときは、1項の主観的期間は再調査の請求についての決定があったことを知った日の翌日から1か月となり、2項の1年も再調査の請求についての決定があった日の翌日から数える。どちらも<b>「翌日から起算して」</b>と書かれており、初日を数えない。行政事件訴訟法14条の出訴期間には「翌日から」という文言がなく、初日不算入は民法140条の一般原則によることになる。3項は、郵送に要した日数を期間から除く定めで、遠方に住む者が不利にならないようにするものである。</p><p class="al">この法律の全文は条文の索引から引けます</p></div></div>
 
   <div class="scroll"><table>
     <caption>いずれも「正当な理由があるとき」を除く</caption>
     <thead><tr><th>手続</th><th>主観(知った日の翌日から)</th><th>客観(あった日の翌日から)</th><th>条文</th></tr></thead>
     <tbody>
-      <tr><th scope="row">審査請求</th><td><b>3か月</b></td><td>1年</td><td>18条</td></tr>
-      <tr><th scope="row">再調査の請求</th><td><b>3か月</b></td><td>1年</td><td>54条</td></tr>
-      <tr><th scope="row">再審査請求</th><td><b>1か月</b>(裁決を知った日)</td><td>1年(裁決の日)</td><td>62条</td></tr>
-      <tr><th scope="row">不作為</th><td colspan="2">期間制限なし。不作為が続く限りいつでも(待たされている人を締め切る理由がない)</td><td>─</td></tr>
+      <tr><th scope="row">審査請求</th><td>処分があったことを知った日の翌日から<b>3か月</b>以内です。再調査の請求を経た場合は、再調査の請求についての決定があったことを知った日の翌日から<b>1か月</b>以内です。</td><td>処分があった日の翌日から1年以内です。再調査の請求を経た場合は、再調査の請求についての決定があった日の翌日から1年以内です。</td><td>根拠は18条です。</td></tr>
+      <tr><th scope="row">再調査の請求</th><td>処分があったことを知った日の翌日から<b>3か月</b>以内です。</td><td>処分があった日の翌日から1年以内です。</td><td>根拠は54条です。</td></tr>
+      <tr><th scope="row">再審査請求</th><td>原裁決があったことを知った日の翌日から<b>1か月</b>以内です。</td><td>原裁決があった日の翌日から1年以内です。</td><td>根拠は62条です。</td></tr>
+      <tr><th scope="row">不作為</th><td colspan="2">不作為についての審査請求には期間制限がありません。不作為が続く限りいつでもできます。</td><td>3条の不作為の審査請求です。</td></tr>
     </tbody>
   </table></div>
   <p>18条1項の条文は「知った日の<b>翌日</b>から起算して」。初日は数えません。なお、期間を過ぎた後の受け皿として「無効確認の審査請求」という制度は<b>ありません</b>。無効を主張したければ訴訟(無効等確認訴訟)へ行きます。</p>
@@ -5309,13 +6574,13 @@ body{display:flex; align-items:flex-start; margin:0}
 
   <h3>弁明書から反論書へ ── まず争点を書面でそろえる</h3>
 
-  <p>審理員が指名されると、いきなり口頭で話すのではなく、まず書面で争点をそろえます。審理員は、直ちに審査請求書または審査請求録取書の写しを処分庁等に送付し、処分庁等に<b>弁明書</b>の提出を求めます（29条）。審査請求録取書とは、口頭で審査請求ができる場合に、行政庁が陳述内容を記録した書面です。弁明書とは、処分庁等が「なぜその処分をしたのか、またはなぜまだ処分していないのか」を説明する書面をいいます。29条の起点は、<span class="key">審理員が弁明書の提出を求めること</span>です。</p>
+  <p>審理員が指名されると、いきなり口頭で話すのではなく、まず書面で争点をそろえます。審理員は、処分庁等が審査庁である場合を除き、直ちに審査請求書または審査請求録取書の写しを処分庁等に送付し、処分庁等に<b>弁明書</b>の提出を求めます（29条）。審査請求録取書とは、口頭で審査請求ができる場合に、行政庁が陳述内容を記録した書面です。弁明書とは、処分庁等が「なぜその処分をしたのか、またはなぜまだ処分していないのか」を説明する書面をいいます。29条の起点は、<span class="key">審理員が弁明書の提出を求めること</span>です。</p>
   <p>処分についての弁明書には、処分の内容と理由を書きます。不作為についての弁明書には、処分をしていない理由に加えて、予定される処分の時期、内容、理由を書きます。さらに、処分庁が行政手続法上の<b>聴聞の調書・報告書</b>または<b>弁明書</b>を保有する場合は、これを処分についての弁明書に添付するものとされています。聴聞とは、不利益処分をする前に相手方の言い分を聴く手続です。審理員は、処分庁等から弁明書が出たら、これを審査請求人と参加人に送付しなければなりません。参加人とは、審査請求の結論について法律上の利害を持ち、審理員の許可を得て手続に加わる者です。</p>
   <p>弁明書が届いた後、審査請求人は<b>反論書</b>を提出できます（30条1項）。反論書とは、弁明書に書かれた説明に対する反論を書いた書面です。参加人は<b>意見書</b>を提出できます（30条2項）。意見書とは、参加人が事件について自分の意見を書いた書面です。どちらも提出できる規定ですが、審理員が相当の期間を定めたときは、その期間内に提出しなければなりません。提出があったときは、審理員が他の審理関係人へ送付します。</p>
 
 <div class="art"><h4>行政不服審査法29条（弁明書の提出）</h4>
 <div class="ain"><p class="atext" data-law="行政不服審査法29条">（弁明書の提出）審理員は、審査庁から指名されたときは、直ちに、審査請求書又は審査請求録取書の写しを処分庁等に送付しなければならない。ただし、処分庁等が審査庁である場合には、この限りでない。２審理員は、相当の期間を定めて、処分庁等に対し、弁明書の提出を求めるものとする。３処分庁等は、前項の弁明書に、次の各号の区分に応じ、当該各号に定める事項を記載しなければならない。一処分についての審査請求に対する弁明書処分の内容及び理由二不作為についての審査請求に対する弁明書処分をしていない理由並びに予定される処分の時期、内容及び理由４処分庁が次に掲げる書面を保有する場合には、前項第一号に掲げる弁明書にこれを添付するものとする。一行政手続法（平成五年法律第八十八号）第二十四条第一項の調書及び同条第三項の報告書二行政手続法第二十九条第一項に規定する弁明書５審理員は、処分庁等から弁明書の提出があったときは、これを審査請求人及び参加人に送付しなければならない。</p>
-<p class="an">弁明書の提出を求める主体は<b>審理員</b>である。審理員は、指名されたときは直ちに審査請求書等の写しを処分庁等へ送付しなければならず、相当の期間を定めて処分庁等に弁明書の提出を求めるものとされる。3項は、その求めに応じて提出される弁明書に、処分についての審査請求なら処分の内容と理由を、不作為についての審査請求なら処分をしていない理由ならびに予定される処分の時期、内容、理由を記載しなければならないと定める。4項により、処分庁が行政手続法24条1項の聴聞の調書と同条3項の報告書、または行政手続法29条1項の弁明書を保有する場合は、これを処分についての弁明書に添付するものとされる。弁明書の提出があったときは、審理員はこれを審査請求人と参加人に送付しなければならない。</p>
+<p class="an">弁明書の提出を求める主体は<b>審理員</b>である。審理員は、指名されたときは直ちに審査請求書等の写しを処分庁等へ送付しなければならない。ただし、処分庁等が審査庁である場合は、この送付義務はかからない。そのうえで、審理員は相当の期間を定めて処分庁等に弁明書の提出を求めるものとされる。3項は、その求めに応じて提出される弁明書に、処分についての審査請求なら処分の内容と理由を、不作為についての審査請求なら処分をしていない理由ならびに予定される処分の時期、内容、理由を記載しなければならないと定める。4項により、処分庁が行政手続法24条1項の聴聞の調書と同条3項の報告書、または行政手続法29条1項の弁明書を保有する場合は、これを処分についての弁明書に添付するものとされる。弁明書の提出があったときは、審理員はこれを審査請求人と参加人に送付しなければならない。</p>
 <p class="al">この法律の全文は条文の索引から引けます</p></div></div>
 
 <div class="art"><h4>行政不服審査法30条（反論書等の提出）</h4>
@@ -5357,7 +6622,16 @@ body{display:flex; align-items:flex-start; margin:0}
 
 <div class="art"><h4>行政不服審査法36条（審理関係人への質問）</h4><div class="ain"><p class="atext" data-law="行政不服審査法36条">審理員は、審査請求人若しくは参加人の申立てにより又は職権で、審査請求に係る事件に関し、審理関係人に質問することができる。</p><p class="an">36条は、審理員が審理関係人に質問できることを定める。審理関係人とは、28条でいう審査請求人、参加人、処分庁等をまとめた呼び名である。質問は、審査請求人若しくは参加人の申立てにより、または職権でできる。口頭意見陳述の中で申立人が処分庁等に質問する31条5項とは別に、審理員自身が審理関係人へ質問できる規定である。</p><p class="al">この法律の全文は条文の索引から引けます</p></div></div>
 
-  <p>逆に、<b>申立てがあれば原則として機会を与えなければならない</b>ものもあります。口頭意見陳述（31条）は、申立てがあれば意見を述べる機会を与えなければなりません。ただし、申立人の所在その他の事情により機会を与えることが困難である場合は例外です。提出書類等の閲覧・写しの交付（38条）は、<span class="key">審査請求人または参加人が、審理手続の終結までの間に、審理員に対して請求する手続</span>です。審理員は、第三者の利益を害するおそれその他正当な理由がある場合でなければ、閲覧または交付を拒むことができません。閲覧させ、または写しを交付しようとするときは、原則として提出人の意見を聴かなければなりません。写しの交付には手数料がかかりますが、経済的困難その他特別の理由があると認めるときは、手数料を減額または免除できます。職権調査と防御の機会は、義務か裁量かを分けて読む必要があります。</p>
+  <p>逆に、<b>申立てがあれば原則として機会を与えなければならない</b>ものもあります。口頭意見陳述（31条）は、申立てがあれば意見を述べる機会を与えなければなりません。ただし、申立人の所在その他の事情により機会を与えることが困難である場合は例外です。提出書類等の閲覧・写しの交付（38条）は、<span class="key">審査請求人または参加人が、審理手続の終結までの間に、審理員に対して請求する手続</span>です。提出書類等とは、29条4項各号の聴聞調書・報告書や行政手続法上の弁明書、32条1項・2項により提出された証拠書類・証拠物・書類その他の物件、33条により提出された書類その他の物件をいいます。審理員は、第三者の利益を害するおそれその他正当な理由がある場合でなければ、閲覧または交付を拒むことができません。閲覧させ、または写しを交付しようとするときは、原則として提出人の意見を聴かなければなりません。写しの交付には手数料がかかりますが、経済的困難その他特別の理由があると認めるときは、手数料を減額または免除できます。職権調査と防御の機会は、義務か裁量かを分けて読む必要があります。</p>
+  <div class="scroll"><table>
+    <caption>38条の閲覧・交付請求で見る対象</caption>
+    <thead><tr><th>対象</th><th>中身</th><th>条文</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">29条4項各号に掲げる書面</th><td>処分庁が保有する行政手続法24条1項の聴聞調書、同条3項の報告書、行政手続法29条1項の弁明書が対象になります。</td><td>38条1項で対象に含まれます。</td></tr>
+      <tr><th scope="row">32条1項・2項により提出されたもの</th><td>審査請求人または参加人が提出した証拠書類・証拠物と、処分庁等が提出した書類その他の物件が対象になります。</td><td>38条1項で対象に含まれます。</td></tr>
+      <tr><th scope="row">33条により提出されたもの</th><td>審理員の要求に応じて提出された書類その他の物件が対象になります。</td><td>38条1項で対象に含まれます。</td></tr>
+    </tbody>
+  </table></div>
 
   <h3>計画的進行・併合分離・終結 ── 審理を閉じて意見書へ進む</h3>
   <p>審理関係人と審理員は、簡易迅速かつ公正な審理の実現のため、相互に協力し、審理手続の計画的な進行を図らなければなりません（28条）。さらに37条は、事件が複雑で、31条から36条までの手続を計画的に遂行する必要がある場合に、審理員が期日と場所を指定して審理関係人を招集し、あらかじめ各手続の申立てに関する意見を聴取できると定めています。37条2項により、審理関係人が遠隔地にいる場合など相当と認める場合は、政令で定める方法により、音声通話の方法でその意見聴取を行うこともできます。</p>
@@ -5450,6 +6724,15 @@ body{display:flex; align-items:flex-start; margin:0}
 <figcaption>裁決の分岐。事情裁決は「理由はあるが、取り消すと公共の福祉に著しい障害」のときの棄却で、違法・不当の宣言が主文に残る点が値打ち。再調査の請求の決定には無いが、再審査請求には64条4項がある。</figcaption>
 </figure>
   <p>再調査の決定も<b>却下・棄却・認容の3類型</b>です(58・59条)。「期間の定めがないから2類型」は二重に誤り——期間はあるし(54条)、却下もあります。ただし<b>再調査の請求の決定には、事情裁決に相当する制度はありません</b>。処分庁自身の簡易な手続に、公共の福祉を理由とする例外まで持たせない趣旨です。他方で、<b>再審査請求には64条4項の事情裁決型の棄却があります</b>。再審査請求に係る原裁決等が違法または不当でも、公共の福祉に適合しないと認めるときは、主文で違法または不当を宣言したうえで棄却できます。</p>
+  <div class="scroll"><table>
+    <caption>再調査の決定と再審査請求の違い</caption>
+    <thead><tr><th>場面</th><th>中身</th><th>条文</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">再調査の請求の期間</th><td>再調査の請求には期間があり、期間を過ぎた請求は却下の問題になります。</td><td>根拠は54条です。</td></tr>
+      <tr><th scope="row">再調査の請求の決定</th><td>再調査の請求の決定は、却下・棄却・認容に分かれますが、事情裁決に相当する制度はありません。</td><td>根拠は58条・59条です。</td></tr>
+      <tr><th scope="row">再審査請求の事情裁決型</th><td>再審査請求には、原裁決等が違法または不当でも公共の福祉に適合しないと認めるときに、主文で違法または不当を宣言したうえで棄却できる制度があります。</td><td>根拠は64条4項です。</td></tr>
+    </tbody>
+  </table></div>
 
   <h3>認容で何ができるかは、また立場で変わる</h3>
   <div class="scroll"><table>
@@ -5462,14 +6745,24 @@ body{display:flex; align-items:flex-start; margin:0}
     </tbody>
   </table></div>
 
-  <h3>裁決の力 ── 3つ持っている</h3>
-  <p><b>① 形成力。</b>取消裁決が出ると、処分は<b>裁決の効果として直ちに消えます</b>。処分庁が改めて取り消す行為は要りません。<span class="warn">処分庁が裁決の趣旨に従って改めて当該処分を取り消さなければならない、というものではありません。</span>裁決そのものが処分を消すからです。</p>
-  <p><b>② 拘束力(52条)。</b>裁決は<b>関係行政庁を拘束します</b>。だから処分庁は、<b>同じ事情のもとで同じ理由により同じ処分をやり直すことはできません</b>。ただし拒否処分が取り消されても<b>申請が認められたことにはならない</b>——処分庁が裁決の趣旨に従って<b>改めて</b>申請に応答します(52条2項)。取消しは白紙に戻すだけで、白紙の埋め方までは裁決が書かない、と整理してください。拘束力の規定は再審査請求に準用されますが、<b>再調査の決定には準用されません</b>(処分庁が自分を拘束しても意味がないため)。</p>
+  <h3>裁決の効力 ── 送達で効力が生じ、関係行政庁を拘束する</h3>
+  <p><b>① 送達による効力発生(51条)。</b>裁決は、審査請求人に送達された時に効力を生じます。送達とは、裁決書の謄本を相手に届ける手続をいいます。取消裁決が審査請求人に送達され、効力を生じると、処分は<b>裁決の効果として消えます</b>。処分庁が改めて取り消す行為は要りません。<span class="warn">処分庁が裁決の趣旨に従って改めて当該処分を取り消さなければならない、というものではありません。</span>裁決そのものが処分を消すからです。</p>
+  <p><b>② 関係人への送達・送付(51条)。</b>処分の相手方以外の者がした審査請求について、46条1項または47条の裁決をするときは、審査請求人だけでなく処分の相手方にも送達された時に効力を生じます。審査庁は、参加人と、審査庁以外の処分庁等にも裁決書の謄本を送付しなければなりません。</p>
+  <p><b>③ 拘束力(52条)。</b>裁決は<b>関係行政庁を拘束します</b>。だから処分庁は、<b>同じ事情のもとで同じ理由により同じ処分をやり直すことはできません</b>。ただし拒否処分が取り消されても<b>申請が認められたことにはならない</b>——処分庁が裁決の趣旨に従って<b>改めて</b>申請に応答します(52条2項)。取消しは白紙に戻すだけで、白紙の埋め方までは裁決が書かない、と整理してください。拘束力の規定は再審査請求に準用されますが、<b>再調査の決定には準用されません</b>(処分庁が自分を拘束しても意味がないため)。</p>
+  <div class="scroll"><table>
+    <caption>裁決の効力で分けて読む条文</caption>
+    <thead><tr><th>効力</th><th>中身</th><th>条文</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">効力発生</th><td>裁決は、審査請求人に送達された時に効力を生じます。処分の相手方以外の者がした審査請求で46条1項または47条の裁決をするときは、処分の相手方にも送達された時に効力を生じます。</td><td>根拠は51条1項です。</td></tr>
+      <tr><th scope="row">裁決書の謄本の送付</th><td>審査庁は、参加人と、審査庁以外の処分庁等に裁決書の謄本を送付しなければなりません。</td><td>根拠は51条4項です。</td></tr>
+      <tr><th scope="row">拘束力</th><td>裁決は関係行政庁を拘束し、処分庁は裁決の趣旨に従って改めて申請に対する処分をしなければならない場合があります。</td><td>根拠は52条です。</td></tr>
+    </tbody>
+  </table></div>
 <div class="art"><h4>行政不服審査法50条（裁決の方式）</h4><div class="ain"><p class="atext" data-law="行政不服審査法50条">（裁決の方式）裁決は、次に掲げる事項を記載し、審査庁が記名押印した裁決書によりしなければならない。一主文二事案の概要三審理関係人の主張の要旨四理由（第一号の主文が審理員意見書又は行政不服審査会等若しくは審議会等の答申書と異なる内容である場合には、異なることとなった理由を含む。）２第四十三条第一項の規定による行政不服審査会等への諮問を要しない場合には、前項の裁決書には、審理員意見書を添付しなければならない。３審査庁は、再審査請求をすることができる裁決をする場合には、裁決書に再審査請求をすることができる旨並びに再審査請求をすべき行政庁及び再審査請求期間（第六十二条に規定する期間をいう。）を記載して、これらを教示しなければならない。</p><p class="an">裁決は裁決書でしなければならない。裁決書には、主文、事案の概要、審理関係人の主張の要旨、理由を書く。理由には、主文が審理員意見書または行政不服審査会等若しくは審議会等の答申書と異なる内容である場合の理由も含まれる。2項は、43条1項の諮問を要しない場合には、裁決書に審理員意見書を添付しなければならないと定める。諮問が省かれても、審理員意見書を裁決書から切り離してよいわけではない。</p><p class="al">この法律の全文は条文の索引から引けます</p></div></div>
 
 <div class="art"><h4>行政不服審査法60条（決定の方式）</h4><div class="ain"><p class="atext" data-law="行政不服審査法60条">（決定の方式）前二条の決定は、主文及び理由を記載し、処分庁が記名押印した決定書によりしなければならない。２処分庁は、前項の決定書（再調査の請求に係る処分の全部を取り消し、又は撤廃する決定に係るものを除く。）に、再調査の請求に係る処分につき審査請求をすることができる旨（却下の決定である場合にあっては、当該却下の決定が違法な場合に限り審査請求をすることができる旨）並びに審査請求をすべき行政庁及び審査請求期間を記載して、これらを教示しなければならない。</p><p class="an">60条は、再調査の請求についての決定の方式を定める。決定とは、再調査の請求に対して処分庁がする結論である。前二条の決定、つまり58条の却下・棄却の決定と59条の認容の決定は、主文および理由を記載し、処分庁が記名押印した決定書によりしなければならない。再調査の請求については、61条の準用列挙に50条1項・2項が入っていない。したがって、裁決書の記載事項である事案の概要、審理関係人の主張の要旨、審理員意見書の添付は、60条の決定書には当然には入らない。60条自身が、決定書の記載事項を主文と理由に絞って定めている。処分庁は、処分の全部を取り消し、または撤廃する決定を除き、決定書に、審査請求ができる旨、審査請求をすべき行政庁、審査請求期間を記載して教示しなければならない。却下の決定については、その却下の決定が違法な場合に限って審査請求ができる旨を教示する。</p><p class="al">この法律の全文は条文の索引から引けます</p></div></div>
 
-  <p><b>③ 理由付記(50条)。</b>裁決書には理由を記載し、主文が<b>審理員意見書または行政不服審査会等・審議会等の答申書と異なる場合には、異なることとなった理由</b>まで書かなければなりません。行政不服審査会等とは43条の諮問先をいい、審議会等とは43条1項1号・2号で個別法令により議を経ることとされる機関をいいます。さらに、<b>43条1項の諮問を要しない場合には、裁決書に審理員意見書を添付しなければなりません</b>（50条2項）。三段構えを飾りにしないための仕組みです。</p>
+  <p><b>裁決書の理由付記(50条)。</b>理由付記とは、結論だけでなく理由も書面に示すことをいいます。裁決書には理由を記載し、主文が<b>審理員意見書または行政不服審査会等・審議会等の答申書と異なる場合には、異なることとなった理由</b>まで書かなければなりません。行政不服審査会等とは43条の諮問先をいい、審議会等とは43条1項1号・2号で個別法令により議を経ることとされる機関をいいます。さらに、<b>43条1項の諮問を要しない場合には、裁決書に審理員意見書を添付しなければなりません</b>（50条2項）。理由付記は裁決の効力ではなく、裁決書の方式です。</p>
   <div class="refs"><h4>関連問題</h4><span class="rid">R5-15-1</span><span class="rid">R5-15-2</span><span class="rid">R5-15-5</span><span class="rid">R3-16-エ</span><span class="rid">R5-14-2</span></div></section>
 
 <section id="ch04-c8">
@@ -5534,7 +6827,7 @@ body{display:flex; align-items:flex-start; margin:0}
     <thead><tr><th>項目</th><th>行審法(審査請求)</th><th>行訴法(取消訴訟)</th></tr></thead>
     <tbody>
       <tr><th scope="row">争える中身</th><td class="ok">違法+<b>不当</b>まで</td><td>違法のみ</td></tr>
-      <tr><th scope="row">期間</th><td>3か月/1年。<b>正当な理由</b>のただし書あり</td><td>6か月/1年。<b>同じくただし書あり</b>(「行訴だけ」は誤り)</td></tr>
+      <tr><th scope="row">期間</th><td>審査請求は、処分があったことを知った日の翌日から3か月以内、処分があった日の翌日から1年以内にします。再調査の請求を経た場合は、決定があったことを知った日の翌日から1か月以内で、1年の起算点も決定があった日です。18条1項・2項には、<b>正当な理由</b>があるときのただし書があります。</td><td>取消訴訟は、処分または裁決があったことを知った日から6か月以内、処分または裁決の日から1年以内に提起します。行政事件訴訟法14条1項・2項にも、<b>正当な理由</b>があるときのただし書があります。</td></tr>
       <tr><th scope="row">期間の但書</th><td>18条1項・2項のいずれにも「ただし、正当な理由があるときは、この限りでない」という但書が置かれている</td><td class="ok">行政事件訴訟法14条1項・2項にも同じ但書が置かれている。<b>但書があるのは行訴法だけではない</b></td></tr>
 <tr><th scope="row">教示</th><td>行政不服審査法82条に規定されている</td><td class="ok">行政事件訴訟法46条にも教示の規定が置かれている。<b>教示の制度は行政不服審査法にしかない、というわけではない</b></td></tr>
       <tr><th scope="row">拘束力</th><td>「裁決は、関係行政庁を拘束する」(52条)</td><td>「その事件について…関係行政庁を拘束する」(33条)</td></tr>
@@ -5546,7 +6839,216 @@ body{display:flex; align-items:flex-start; margin:0}
   <div class="refs"><h4>関連問題</h4><span class="rid">R4-16-1</span><span class="rid">R4-16-4</span><span class="rid">R7-16-4</span><span class="rid">R6-16-オ</span></div></section>
 
 
+</div>
+<!-- reader v1 -->
+<style id="reader-css">
+/* ── 読むための仕掛け ── */
+#rd-bar{position:fixed; top:0; left:0; height:3px; background:var(--shu,#c0392b);
+  width:0; z-index:200; transition:width .15s}
+#rd-tools{position:fixed; right:1rem; bottom:1rem; z-index:190;
+  display:flex; flex-direction:column; gap:.4rem; align-items:flex-end}
+#rd-tools button{font:inherit; font-size:.78rem; padding:.42rem .7rem; cursor:pointer;
+  background:var(--card,#fff); color:var(--ink,#222); border:1px solid var(--line2,#ccc);
+  border-radius:5px; box-shadow:0 1px 4px rgba(0,0,0,.12); white-space:nowrap}
+#rd-tools button:hover{background:var(--fill,#f4f4f4)}
+#rd-resume{background:var(--shu,#c0392b) !important; color:#fff !important; border-color:transparent !important}
+#rd-find{position:fixed; top:0; left:0; right:0; z-index:210; background:var(--card,#fff);
+  border-bottom:1px solid var(--line2,#ccc); padding:.55rem .8rem; display:none;
+  box-shadow:0 2px 10px rgba(0,0,0,.12)}
+#rd-find input{font:inherit; font-size:1rem; width:min(28rem,60vw); padding:.35rem .55rem;
+  border:1px solid var(--line2,#ccc); border-radius:4px; background:var(--paper,#fff); color:var(--ink,#222)}
+#rd-find .n{font-size:.8rem; color:var(--hai,#888); margin-left:.6rem}
+#rd-find button{font:inherit; font-size:.8rem; margin-left:.35rem; padding:.32rem .6rem;
+  cursor:pointer; background:var(--fill,#f4f4f4); color:var(--ink,#222);
+  border:1px solid var(--line2,#ccc); border-radius:4px}
+mark.rd-hit{background:#ffe08a; color:#000}
+mark.rd-cur{background:var(--shu,#c0392b); color:#fff}
+/* 既読の印 */
+h2.rd-done::after{content:"読了"; font-size:.62rem; letter-spacing:.1em; margin-left:.7rem;
+  padding:.12rem .45rem; border-radius:3px; background:var(--fill,#eee);
+  color:var(--hai,#888); vertical-align:middle; font-weight:400}
+a.rd-done::before{content:"✓ "; color:var(--shu,#c0392b); font-weight:700}
+/* 条文カードの畳み込み */
+body.rd-fold .art .ain, body.rd-fold .case .cin{display:none}
+body.rd-fold .art h4, body.rd-fold .case h4{cursor:pointer}
+body.rd-fold .art h4::after, body.rd-fold .case h4::after{content:" ▸"; opacity:.6}
+body.rd-fold .art.rd-open .ain, body.rd-fold .case.rd-open .cin{display:block}
+body.rd-fold .art.rd-open h4::after, body.rd-fold .case.rd-open h4::after{content:" ▾"}
+@media(max-width:640px){
+  #rd-tools{right:.5rem; bottom:.5rem}
+  #rd-tools button{font-size:.72rem; padding:.36rem .55rem}
+}
+@media print{#rd-bar,#rd-tools,#rd-find{display:none}}
+</style>
 
+<script id="reader-js">
+(function(){
+  var KEY = 'gyosei:' + location.pathname.replace(/^.*\//,'');
+  var st = {};
+  try { st = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e) {}
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(st)); } catch(e) {} }
+
+  // ── 部品を置く ────────────────────────────────
+  var bar = document.createElement('div'); bar.id = 'rd-bar';
+  var tools = document.createElement('div'); tools.id = 'rd-tools';
+  var find = document.createElement('div'); find.id = 'rd-find';
+  find.innerHTML = '<input type="search" placeholder="このページの中を探す" ' +
+    'aria-label="このページの中を探す"><span class="n"></span>' +
+    '<button data-a="prev">前へ</button><button data-a="next">次へ</button>' +
+    '<button data-a="close">閉じる</button>';
+  document.body.appendChild(bar); document.body.appendChild(tools); document.body.appendChild(find);
+
+  function btn(id, label, title){
+    var b = document.createElement('button');
+    b.id = id; b.textContent = label; if (title) b.title = title;
+    tools.appendChild(b); return b;
+  }
+  var bResume = btn('rd-resume', '続きから', '前に閉じた場所へ戻ります');
+  var bFold   = btn('rd-fold', '条文をたたむ', '条文カードと判例カードを閉じて、本文の筋だけを追います');
+  var bFind   = btn('rd-findbtn', 'ページ内を探す', 'このページの中を語で探します');
+  var bReset  = btn('rd-reset', '読んだ印を消す');
+
+  var secs = Array.prototype.slice.call(document.querySelectorAll('section[id]'));
+  var h2s  = secs.map(function(s){ return s.querySelector('h2'); });
+
+  // ── 既読の印 ─────────────────────────────────
+  st.done = st.done || {};
+  function paintDone(){
+    secs.forEach(function(s, i){
+      if (!st.done[s.id]) return;
+      if (h2s[i]) h2s[i].classList.add('rd-done');
+      // 既読の印は、章内の目次（nav.toc2 の href="#ch04-t1" 形式）に出す。
+      // 左の #nav は章へのリンクで、節のアンカーを持たない。
+      document.querySelectorAll('a[href="#' + s.id + '"]').forEach(function(a){
+        a.classList.add('rd-done');
+      });
+    });
+    var n = Object.keys(st.done).length;
+    if (secs.length) bReset.textContent = '読んだ印を消す（' + n + '/' + secs.length + '）';
+  }
+  paintDone();
+
+  // ── 進み具合と読書位置 ──────────────────────────
+  var tick;
+  function onScroll(){
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    var p = max > 0 ? h.scrollTop / max : 0;
+    bar.style.width = (p * 100).toFixed(1) + '%';
+    clearTimeout(tick);
+    tick = setTimeout(function(){
+      st.y = h.scrollTop; st.at = Date.now();
+      // 画面の上端を通り過ぎた節を既読にする
+      secs.forEach(function(s){
+        if (s.getBoundingClientRect().bottom < h.clientHeight * 0.5) st.done[s.id] = 1;
+      });
+      save(); paintDone();
+    }, 400);
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  if (!st.y || st.y < 200 || location.hash) {
+    bResume.style.display = 'none';
+  } else {
+    var d = Math.round((Date.now() - (st.at || 0)) / 86400000);
+    bResume.title = d > 0 ? d + '日前に閉じた場所へ戻ります' : '前に閉じた場所へ戻ります';
+  }
+  bResume.onclick = function(){
+    window.scrollTo({top: st.y, behavior: 'smooth'});
+    bResume.style.display = 'none';
+  };
+
+  bReset.onclick = function(){
+    st.done = {}; st.y = 0; save();
+    document.querySelectorAll('.rd-done').forEach(function(e){ e.classList.remove('rd-done'); });
+    paintDone();
+  };
+
+  // ── 条文カードの畳み込み ────────────────────────
+  function applyFold(){
+    document.body.classList.toggle('rd-fold', !!st.fold);
+    bFold.textContent = st.fold ? '条文をひらく' : '条文をたたむ';
+  }
+  if (st.fold) applyFold();
+  bFold.onclick = function(){ st.fold = !st.fold; save(); applyFold(); };
+  document.addEventListener('click', function(e){
+    if (!st.fold) return;
+    var h = e.target.closest('.art > h4, .case > h4');
+    if (h) h.parentNode.classList.toggle('rd-open');
+  });
+
+  // ── ページ内を探す ──────────────────────────────
+  var hits = [], cur = -1, input = find.querySelector('input'), cnt = find.querySelector('.n');
+  function clearHits(){
+    document.querySelectorAll('mark.rd-hit').forEach(function(m){
+      var t = document.createTextNode(m.textContent);
+      m.parentNode.replaceChild(t, m); t.parentNode.normalize();
+    });
+    hits = []; cur = -1;
+  }
+  function doFind(q){
+    clearHits();
+    if (!q || q.length < 2) { cnt.textContent = ''; return; }
+    var root = document.querySelector('.wrap') || document.body;
+    var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function(n){
+        if (!n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        var p = n.parentNode;
+        while (p && p !== root) {
+          var t = p.tagName;
+          if (t === 'SCRIPT' || t === 'STYLE' || t === 'NAV' || p.id === 'rd-find')
+            return NodeFilter.FILTER_REJECT;
+          p = p.parentNode;
+        }
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    var nodes = [], n;
+    while ((n = w.nextNode())) nodes.push(n);
+    nodes.forEach(function(node){
+      var i = node.nodeValue.indexOf(q);
+      if (i < 0) return;
+      var rest = node.splitText(i);
+      rest.splitText(q.length);
+      var m = document.createElement('mark');
+      m.className = 'rd-hit'; m.textContent = rest.nodeValue;
+      rest.parentNode.replaceChild(m, rest);
+      hits.push(m);
+    });
+    cnt.textContent = hits.length ? '1 / ' + hits.length : '見つかりません';
+    if (hits.length) go(0);
+  }
+  function go(i){
+    if (!hits.length) return;
+    if (cur >= 0 && hits[cur]) hits[cur].classList.remove('rd-cur');
+    cur = (i + hits.length) % hits.length;
+    hits[cur].classList.add('rd-cur');
+    hits[cur].scrollIntoView({block:'center', behavior:'smooth'});
+    cnt.textContent = (cur + 1) + ' / ' + hits.length;
+  }
+  var ft;
+  input.addEventListener('input', function(){
+    clearTimeout(ft); ft = setTimeout(function(){ doFind(input.value.trim()); }, 250);
+  });
+  input.addEventListener('keydown', function(e){
+    if (e.key === 'Enter') { e.preventDefault(); go(cur + (e.shiftKey ? -1 : 1)); }
+    if (e.key === 'Escape') closeFind();
+  });
+  find.addEventListener('click', function(e){
+    var a = e.target.dataset && e.target.dataset.a;
+    if (a === 'next') go(cur + 1);
+    if (a === 'prev') go(cur - 1);
+    if (a === 'close') closeFind();
+  });
+  function openFind(){ find.style.display = 'block'; input.focus(); input.select(); }
+  function closeFind(){ find.style.display = 'none'; clearHits(); cnt.textContent = ''; }
+  bFind.onclick = openFind;
+  document.addEventListener('keydown', function(e){
+    if ((e.metaKey || e.ctrlKey) && e.key === 'f') { e.preventDefault(); openFind(); }
+  });
+})();
+</script>
 </section>
 
 <section class="chap" id="ch05">
@@ -5564,7 +7066,7 @@ body{display:flex; align-items:flex-start; margin:0}
 
 <p>このうち中心になるのが抗告訴訟で、その中心にあるのが<a class="cite" href="#torikeshi">取消訴訟</a>です。</p>
 
-<div class="art"><h4>行政事件訴訟法2条（行政事件訴訟）</h4><div class="ain"><p class="atext" data-law="行政事件訴訟法2条">（行政事件訴訟）この法律において「行政事件訴訟」とは、抗告訴訟、当事者訴訟、民衆訴訟及び機関訴訟をいう。</p><p class="an">4つの型のうち、抗告訴訟だけが「公権力の行使」を正面から攻める型である。当事者訴訟は対等な当事者の間の公法上の法律関係を扱うので、公権力の行使を前提としない。この違いが、処分性を欠いた行為の争い方（5-12）に直結する。</p></div></div>
+<div class="art"><h4>行政事件訴訟法2条（行政事件訴訟）</h4><div class="ain"><p class="atext" data-law="行政事件訴訟法2条">（行政事件訴訟）この法律において「行政事件訴訟」とは、抗告訴訟、当事者訴訟、民衆訴訟及び機関訴訟をいう。</p><p class="an">4つの型のうち、抗告訴訟だけが「公権力の行使」を正面から攻める型である。当事者訴訟には、処分または裁決に関する訴訟でありながら法令により法律関係の当事者の一方を被告とする形式的当事者訴訟と、公法上の法律関係を扱う実質的当事者訴訟がある。したがって、当事者訴訟を一律に「対等な当事者」の訴訟と見ると、4条前段の構造を落としてしまう。この違いが、処分性を欠いた行為の争い方（5-12）に直結する。</p></div></div>
 
 <div class="art"><h4>行政事件訴訟法3条（抗告訴訟）</h4><div class="ain"><p class="atext" data-law="行政事件訴訟法3条">（抗告訴訟）この法律において「抗告訴訟」とは、行政庁の公権力の行使に関する不服の訴訟をいう。２この法律において「処分の取消しの訴え」とは、行政庁の処分その他公権力の行使に当たる行為（次項に規定する裁決、決定その他の行為を除く。以下単に「処分」という。）の取消しを求める訴訟をいう。３この法律において「裁決の取消しの訴え」とは、審査請求その他の不服申立て（以下単に「審査請求」という。）に対する行政庁の裁決、決定その他の行為（以下単に「裁決」という。）の取消しを求める訴訟をいう。４この法律において「無効等確認の訴え」とは、処分若しくは裁決の存否又はその効力の有無の確認を求める訴訟をいう。５この法律において「不作為の違法確認の訴え」とは、行政庁が法令に基づく申請に対し、相当の期間内に何らかの処分又は裁決をすべきであるにかかわらず、これをしないことについての違法の確認を求める訴訟をいう。６この法律において「義務付けの訴え」とは、次に掲げる場合において、行政庁がその処分又は裁決をすべき旨を命ずることを求める訴訟をいう。一行政庁が一定の処分をすべきであるにかかわらずこれがされないとき（次号に掲げる場合を除く。）。二行政庁に対し一定の処分又は裁決を求める旨の法令に基づく申請又は審査請求がされた場合において、当該行政庁がその処分又は裁決をすべきであるにかかわらずこれがされないとき。７この法律において「差止めの訴え」とは、行政庁が一定の処分又は裁決をすべきでないにかかわらずこれがされようとしている場合において、行政庁がその処分又は裁決をしてはならない旨を命ずることを求める訴訟をいう。</p><p class="an">2項の「<b>行政庁の処分その他公権力の行使に当たる行為</b>」が、取消訴訟の対象を画する文言である。この文言だけを読んでも、どこまでが入りどこからが外れるのかは決まらない。そこを埋めてきたのが判例であり、その埋め方を問うのが処分性の問題である。なお処分性は取消訴訟だけの問題ではなく、無効等確認の訴え（4項）・不作為の違法確認の訴え（5項）・義務付けの訴え（6項）・差止めの訴え（7項）にも共通する。抗告訴訟はすべて「公権力の行使」を対象とする型だからである。</p></div></div>
 
@@ -5635,8 +7137,8 @@ body{display:flex; align-items:flex-start; margin:0}
       <td>その行為自体から効果が生じることを求めます。他の行為を待って初めて効果が生じるのであれば、この要素を欠きます。</td>
       <td>間接的・事実上の影響まで拾うと、後続の行為との間で「どちらを争えばよいのか」が定まらなくなり、出訴期間を区切ることもできなくなります。</td></tr>
     <tr><th scope="row">具体性</th>
-      <td>効果の及ぶ相手方が特定され、限られていることを求めます。地域内の不特定多数に一律に及ぶだけでは足りません。</td>
-      <td>相手が定まっていない段階では、誰にどれだけの不利益が生じるかがまだ決まっていません。争わせるには早すぎるのであり、これを争訟の成熟性の問題といいます。</td></tr>
+      <td>法的効果が、一般的・抽象的な規律にとどまらず、個別の権利義務や法律上の地位に直接具体的に及ぶかを見ます。相手方が名簿上特定されているかだけで決まるものではありません。</td>
+      <td>その段階で権利義務や法律上の地位への影響が具体化していなければ、取消訴訟で争わせるには早すぎます。この時機の問題を争訟の成熟性といいます。</td></tr>
     <tr><th scope="row">法的効果</th>
       <td>権利義務を作り出すか、その範囲を確定することを求めます。事実上の不利益が生じるだけでは足りません。</td>
       <td>取消判決は、生じている法的効果を取り除く判決です。取り除くべき法的効果がなければ、判決を得ても法律関係は何も変わりません。</td></tr>
@@ -5669,7 +7171,7 @@ body{display:flex; align-items:flex-start; margin:0}
 <dt>定式</dt><dd>公権力の主体たる国または公共団体が行う行為のうち、その行為によって<b>直接国民の権利義務を形成し、またはその範囲を確定することが法律上認められているもの</b>をいいます。</dd>
 <dt>公権力性</dt><dd>優越的な立場からの一方的な行為であることです。対等な立場の契約は含みません。</dd>
 <dt>直接性</dt><dd>その行為自体から効果が生じることです。他の行為を待つ場合は含みません。</dd>
-<dt>具体性</dt><dd>効果の及ぶ相手が特定され限られていることです。不特定多数への一律の効果では足りません。</dd>
+<dt>具体性</dt><dd>法的効果が、個別の権利義務や法律上の地位に直接具体的に及ぶことです。相手方の名簿上の特定だけで判断する要件ではありません。</dd>
 <dt>法的効果</dt><dd>権利義務を作り出すか、その範囲を確定することです。事実上の不利益では足りません。</dd>
 <dt>視点一</dt><dd><b>争訟の成熟性</b>。早すぎる訴えを退ける方向に働きます。</dd>
 <dt>視点二</dt><dd><b>実効的な権利救済</b>。遅すぎる救済を避ける方向に働きます。</dd>
@@ -5794,7 +7296,7 @@ body{display:flex; align-items:flex-start; margin:0}
 <div class="scroll"><table><tbody>
 <tr><th scope="row">原則と例外を逆にしない</th><td>条例の制定行為は議会の立法行為であり、一般的・抽象的な定めを置くにとどまるので、処分性が<b>否定されるのが原則</b>です。保育所廃止条例はあくまで例外であって、<b>条例の制定行為が一般的に行政処分に当たるのではありません。</b></td></tr>
 <tr><th scope="row">処分性を認めても訴えの利益は別</th><td>横浜市保育所廃止条例事件は、処分性を認めたうえで、保育の実施期間の満了により<b>訴えの利益は消滅した</b>としています。</td></tr>
-<tr><th scope="row">似た事案でも法的地位の有無で結論が変わる</th><td>市立小学校の廃止条例には処分性が認められていません。保護者に特定の小学校で子に教育を受けさせる権利ないし法律上保護される利益が認められないからです（R3-26-ウ）。</td></tr>
+<tr><th scope="row">似た事案でも法的地位の有無で結論が変わる</th><td>市立小学校の廃止条例には処分性が認められていません。保護者に特定の小学校で子に教育を受けさせる権利ないし法律上保護される利益が認められないからです。</td></tr>
 <tr><th scope="row">処分性の否定と条例の適法性は別問題</th><td>高根町簡易水道条例事件は、条例の制定行為の処分性を否定しながら、別荘の給水契約者との著しい料金格差については水道法に反して無効としています。</td></tr>
 </tbody></table></div>
 </div></div>
@@ -5821,7 +7323,7 @@ body{display:flex; align-items:flex-start; margin:0}
 
 <p>通達は法令の解釈を示すことが多く、その解釈が変われば、現場の取扱いが一斉に変わります。国民の側から見れば、通達が変わったせいで不利益を受けることが現に起こります。それでも判例は処分性を否定しました。<span class="key">短い判旨の中に、それぞれ独立して意味を持つ四つの命題が詰まっています。</span>一文ずつ細かく読みます。</p>
 
-<div class="art"><h4>墓地、埋葬等に関する法律13条（R3-25 の問題文が引用した条文）</h4><div class="ain"><p class="atext" data-law="墓地、埋葬等に関する法律13条">墓地、納骨堂又は火葬場の管理者は、埋葬、埋蔵、収蔵又は火葬の求めを受けたときは、正当の理由がなければこれを拒んではならない。</p><p class="an">本件通達が解釈を示したのは、この条文の「<b>正当の理由</b>」という文言である。通達は法律の文言をどう読むかを現場に指示しただけであって、通達が新しい義務を作ったわけではない。判旨の「通達を直接の根拠として受忍義務を課すものではない」という部分は、この条文を見ると理解しやすい。この法律は本テキストの資料ページには収録していないので、条文はここに掲げた全文で足りる。</p></div></div>
+<div class="art"><h4>墓地、埋葬等に関する法律13条</h4><div class="ain"><p class="atext" data-law="墓地、埋葬等に関する法律13条">墓地、納骨堂又は火葬場の管理者は、埋葬、埋蔵、収蔵又は火葬の求めを受けたときは、正当の理由がなければこれを拒んではならない。</p><p class="an">本件通達が解釈を示したのは、この条文の「<b>正当の理由</b>」という文言である。通達は法律の文言をどう読むかを現場に指示しただけであって、通達が新しい義務を作ったわけではない。判旨の「通達を直接の根拠として受忍義務を課すものではない」という部分は、この条文を見ると理解しやすい。この法律は本テキストの資料ページには収録していないので、条文はここに掲げた全文で足りる。</p></div></div>
 
 <div class="case" data-case="最判昭和43年12月24日"><h4>通達に処分性はない　最判昭和43年12月24日　『墓地埋葬通達事件』</h4><div class="cin"><p class="cf" data-case="最判昭和43年12月24日"><b>事案</b>厚生省が、他の宗教団体の信者であることを理由に埋葬を拒むのは墓地埋葬法13条にいう「正当の理由」に当たらないとする通達を出した。これにより不利益を受けるとした墓地の経営者が、通達の取消しを求めた事案である。</p><p class="ch" data-case="最判昭和43年12月24日"><b>判旨</b>通達は原則として法規の性質をもつものではなく、行政組織内部における命令にすぎないから、国民は直接これに拘束されるものではない。その内容が法令の解釈や取扱いに関するもので、国民の権利義務に重大なかかわりをもつようなものであっても、この理は別段異なるところはない。したがって通達それ自体は抗告訴訟の対象となる処分に当たらない。</p><p class="cp"><b>意義</b>通達は上級行政機関が下級行政機関に対して発する内部的な命令であり、国民を直接拘束する法規ではない。したがって、その内容が国民の権利義務に事実上重大なかかわりを持つものであっても、通達それ自体には処分性が認められない。また、裁判所は法令の解釈について通達に拘束されないので、<b>処分が適法かどうかは、通達に適合するかどうかではなく、法令に適合するかどうかで決まる</b>。通達に従った処分が違法とされることも、通達に反する処分が適法とされることもありうる。</p><p class="cl">この判例の全文の要約は判例の索引から引けます</p></div></div>
 
@@ -5829,11 +7331,11 @@ body{display:flex; align-items:flex-start; margin:0}
 
 <p>この判旨は、次の四つの命題からできています。</p>
 
-<p><span class="key">第一に、通達は原則として法規の性質をもたない</span>。法規とは、国民の権利義務を直接に規律する定めをいいます。通達は組織の内部で上から下へ向けられた命令にすぎませんから、国民を直接に拘束しません。R3-25-1 は、この前段だけを「原則として、法規の性質をもつものであり」と裏返しました。<span class="warn">後段の「上級行政機関が下級行政機関を指揮する」という説明部分は判決に沿っている</span>ので、通して読むともっともらしく見えます。前段と後段を切り分けて読む必要があります。</p>
+<p><span class="key">第一に、通達は原則として法規の性質をもたない</span>。法規とは、国民の権利義務を直接に規律する定めをいいます。通達は組織の内部で上から下へ向けられた命令にすぎませんから、国民を直接に拘束しません。<span class="warn">「上級行政機関が下級行政機関を指揮する」という説明は正しくても、そこから「法規の性質をもつ」とは言えません。</span>前段と後段を切り分けて読む必要があります。</p>
 
 <p><span class="key">第二に、内容が国民の権利義務に重大なかかわりをもつ場合でも、結論は変わらない</span>。判旨は「この理は別段異なるところはない」と述べています。<span class="warn">国民の権利義務に重大なかかわりをもつ通達であれば法規の性質を持つ、あるいは取消訴訟を提起できる、ということはありません。</span>通達が国民を拘束しないという性質は、その内容がどれほど重大であっても変わらないからです。<span class="key">内容の重大性は、処分性を認める理由になりません。</span></p>
 
-<p><span class="key">第三に、受忍義務は通達からではなく法律から生じる</span>。本件通達は、墓地埋葬法13条にいう「正当の理由」の解釈を示したにとどまります。仮に墓地の経営者が埋葬を受け入れる義務を負うとしても、それは法律そのものから生じているのであって、通達が新たに課したものではありません。R3-25-4 は、通達を直接の根拠として新たに受忍義務を課すものだと書いて誤りにしています。</p>
+<p><span class="key">第三に、受忍義務は通達からではなく法律から生じる</span>。本件通達は、墓地埋葬法13条にいう「正当の理由」の解釈を示したにとどまります。仮に墓地の経営者が埋葬を受け入れる義務を負うとしても、それは法律そのものから生じているのであって、通達が新たに課したものではありません。</p>
 
 <p><span class="key">第四に、通達に反する処分がされても、そのことを理由に処分の効力が左右されるわけではない</span>。通達は国民および裁判所を拘束しないからです。<span class="warn">処分が適法か違法かは、法令に適合するかどうかだけで決まります。</span>したがって、通達に従った処分が法令に反していれば違法になりますし、通達に反する処分が法令に適合していれば適法です。<span class="key">通達は、適法違法を測るものさしにならない</span>ということです。</p>
 
@@ -5847,7 +7349,7 @@ body{display:flex; align-items:flex-start; margin:0}
 
 <p>通達そのものを攻められないなら、<span class="key">通達に従ってされた具体的な処分を取消訴訟で争えばよい</span>のです。その訴訟の中で、「その通達の解釈は法令に反しており、それに従ってされた処分は違法だ」と主張できます。<span class="warn">裁判所は通達の解釈に拘束されず、自ら法令を解釈します</span>から、通達が正しいかどうかは訴訟の中で正面から審理されます。</p>
 
-<p>R3-25-5 が「棄却されるべき」と書いて誤りになった点も、ここで結び直しておきます。<span class="key">通達に処分性がない→訴えは訴訟要件を欠く→却下</span>。この3段が判例の筋です。なお、通達が実質的に国民の法的地位を左右する場合には争訟の対象とすべきだという学説上の批判も有力に主張されていますが、<span class="warn">試験で問われるのは判例の立場</span>です。</p>
+<p>結末もここで結び直しておきます。<span class="key">通達に処分性がない→訴えは訴訟要件を欠く→却下</span>。この3段が判例の筋です。なお、通達が実質的に国民の法的地位を左右する場合には争訟の対象とすべきだという学説上の批判も有力に主張されていますが、ここでは判例の立場を基準に整理します。</p>
 
 <div class="exc"><h4>この節の例外・限界</h4><div class="in">
 <div class="scroll"><table><tbody>
@@ -5881,23 +7383,23 @@ body{display:flex; align-items:flex-start; margin:0}
 
 <h3>公共施設管理者の同意 ── 不利益はあるが法的効果がない</h3>
 
-<div class="case" data-case="最判平成7年3月23日"><h4>公共施設管理者の同意拒否に処分性はない　最判平成7年3月23日</h4><div class="cin"><p class="cf" data-case="最判平成7年3月23日"><b>事案</b>開発行為を計画した者が、都市計画法32条に基づき、開発区域内の公共施設の管理者である地方公共団体に対して同意を求めたところ、同意を拒否された。同意が得られなければ開発許可の申請ができないため、同意拒否行為の取消しを求めて出訴した事案である。</p><p class="ch" data-case="最判平成7年3月23日"><b>判旨</b>争点は公共施設管理者による同意拒否行為の処分性である。最高裁は、同意が得られなければ開発行為を適法に行うことができなくなるとしても、それは法律自体が定めた効果であり、同意を拒否する行為自体が開発行為を禁止・制限する法的効果を持つわけではないとした。したがって、同意の拒否によって開発行為を行おうとする者の権利ないし法的地位が侵害されたとはいえないとして、抗告訴訟の対象となる行政処分には当たらないと判断し、処分性を否定した。</p><p class="cp"><b>意義</b>行政機関どうしの間で行われる同意や協議は、国民に対して直接に法的効果を及ぼすものではないから、処分に当たらない。許可を出すかどうかの判断に至る過程で行われる準備的・中間的な行為も同様である。<b>国民が最終的に受け取る処分の段階で争えばよい</b>、という考え方であり、用途地域の指定に処分性を認めなかったのと同じ発想が働いている。</p><p class="cl">この判例の全文の要約は判例の索引から引けます</p></div></div>
+<div class="case" data-case="最判平成7年3月23日"><h4>公共施設管理者の同意拒否に処分性はない　最判平成7年3月23日</h4><div class="cin"><p class="cf" data-case="最判平成7年3月23日"><b>事案</b>開発行為を計画した者が、都市計画法32条に基づき、開発区域内の公共施設の管理者である地方公共団体に対して同意を求めたところ、同意を拒否された。同意が得られなければ開発許可の申請ができないため、同意拒否行為の取消しを求めて出訴した事案である。</p><p class="ch" data-case="最判平成7年3月23日"><b>判旨</b>争点は公共施設管理者による同意拒否行為の処分性である。最高裁は、同意が得られなければ開発行為を適法に行うことができなくなるとしても、それは法律自体が定めた効果であり、同意を拒否する行為自体が開発行為を禁止・制限する法的効果を持つわけではないとした。したがって、同意の拒否によって開発行為を行おうとする者の権利ないし法的地位が侵害されたとはいえないとして、抗告訴訟の対象となる行政処分には当たらないと判断し、処分性を否定した。</p><p class="cp"><b>意義</b>行政機関どうしの間で行われる同意や協議は、国民に対して直接に法的効果を及ぼすものではないから、処分に当たらない。許可を出すかどうかの判断に至る過程で行われる準備的・中間的な行為も同様である。ただし、同意がないため申請自体が進まない構造では、後続の拒否処分を当然に争えると単純化してはいけない。ここで押さえるべきなのは、同意拒否それ自体が国民の権利義務を直接動かす法的効果を持たないという点である。</p><p class="cl">この判例の全文の要約は判例の索引から引けます</p></div></div>
 
 <p>この判旨の急所は、<span class="key">「それは法律自体が定めた効果である」という一句</span>です。同意がなければ開発できないという結果は、法律がそう定めているから生じています。<span class="warn">拒否という行為が、新たに禁止や制限を作り出したのではありません。</span>不利益は現に生じているが、その不利益を作ったのは拒否行為ではなく法律だ、という論法です。</p>
 
-<p>4要素でいえば<span class="key">直接性と法的効果の両方を欠いています</span>。効果は開発許可という後続の処分の場面で現れるのですから、その拒否処分を争えばよい、ということになります。</p>
+<p>4要素でいえば<span class="key">直接性と法的効果の両方を欠いています</span>。同意拒否があると開発許可の申請手続に進めないという重大な不利益は生じますが、その不利益は同意拒否という行為が直接作り出した権利制限ではなく、法律が置いた申請要件から生じています。したがって、後続の拒否処分で当然に救済されると単純化するのではなく、<span class="key">この行為自体が取消訴訟の対象となる法的効果を持つか</span>を見ます。</p>
 
 <p>ここで注意が要ります。<span class="warn">同意が拒否されれば、開発許可の申請そのものができなくなるという不利益は、本当に生じます。</span>事業者にとっては計画が止まる重大な結果です。それでも処分性が否定されるのは、<span class="key">この同意が行政機関どうしの間の行為であって、国民に対して直接に法的効果を及ぼすものではないから</span>です。用途地域の指定のときと同じで、<span class="key">不利益が生じることと、その行為に法的効果があることを分けて考える</span>必要があります。</p>
 
 <h3>上級機関が下級機関に与える承認 ── 外部に対する効力がない</h3>
 
-<p>もう一つ、行政機関相互の行為の典型が、<span class="key">上級行政機関が下級行政機関に対する監督手段として与える承認</span>です。成田新幹線訴訟（最判昭和53年12月8日）では、新幹線の建設について運輸大臣がした工事実施計画の認可が問題になりました。判例は、この認可を<span class="key">上級行政機関が下級行政機関に対する監督手段として与える承認と同視すべきもの</span>であり、<span class="key">行政行為として外部に対する効力を有しない</span>として、処分性を否定しています。直接国民の権利義務を形成し、またはその範囲を確定するものではないからです。</p>
+<p>もう一つ、行政機関相互の行為の典型として挙げられるのが、成田新幹線訴訟（最判昭和53年12月8日）です。新幹線の建設について運輸大臣がした工事実施計画の認可が問題になりました。ただし、この教材の判例データベースにはまだ判旨を収録していないため、ここでは<span class="key">工事実施計画の認可について処分性が問題になった事件であり、争点は原告適格ではなく処分性である</span>という範囲にとどめます。</p>
 
 <p>「認可」という名前がついていても、それが役所の中だけで完結する承認であれば処分ではありません。<span class="warn">行為に付けられた名前は結論を決めない</span>という5-2の留保が、ここでも効いています。なお、この事案で問題になったのは<span class="key">原告適格ではなく処分性</span>です。訴訟要件の名前どうしも取り違えないでください。</p>
 
 <h3>職員に向けられた職務命令 ── 身分や勤務条件を動かさない</h3>
 
-<p>R1-26-ウ では、公立学校の校長が教職員に対して発した職務命令が問題になりました。判例は、<span class="key">この命令によって教職員の身分や勤務条件についての権利義務が直接動くわけではない</span>として、抗告訴訟の対象となる行政処分には当たらないとしています。組織の内部で職員に向けられた命令は、国民に対する処分ではないということです。</p>
+<p>公立学校の校長が教職員に対して発した職務命令については、<span class="key">その命令によって教職員の身分や勤務条件についての権利義務が直接動くわけではない</span>と整理されます。組織の内部で職員に向けられた命令は、国民に対する処分とは性質が違うということです。</p>
 
 <p>ここでも<span class="warn">争う方法は残されています</span>。職務命令に基づく義務が存在しないことの確認を、<span class="key">公法上の当事者訴訟としての確認の訴え</span>で求めることは適法とされています。また、職務命令に違反したことを理由とする懲戒処分のほうは処分に当たりますから、<span class="key">その差止めの訴え</span>によることもできます。<span class="warn">処分性が否定された行為でも、隣に処分性のある行為があればそちらを攻められる</span>という、この論点に共通する構図です。</p>
 
@@ -5913,9 +7415,9 @@ body{display:flex; align-items:flex-start; margin:0}
 <h4>覚える ── 機関相互の行為と準備的な行為</h4>
 <div class="in"><dl>
 <dt>同意の拒否</dt><dd>公共施設管理者の同意の拒否には処分性が<b>ありません</b>（最判平成7年3月23日）。開発できなくなるのは法律自体が定めた効果だからです。</dd>
-<dt>争い方</dt><dd>開発許可の拒否処分がされた段階で、その処分を取消訴訟で争います。</dd>
-<dt>監督上の承認</dt><dd>成田新幹線訴訟（最判昭和53年12月8日）の工事実施計画の認可のように、上級行政機関が下級行政機関に与える監督手段としての承認と同視すべきものは、<b>外部に対する効力がなく</b>処分に当たりません。争点は原告適格ではなく処分性です。</dd>
-<dt>職務命令</dt><dd>教職員の身分や勤務条件についての権利義務を直接動かすものではないため、処分に当たりません（R1-26-ウ）。</dd>
+<dt>争い方</dt><dd>後に開発許可に関する処分がされた場合には、その処分を争う余地があります。ただし、同意がないため申請自体が進まない構造では、後続の拒否処分で当然に救済されるとはいえません。</dd>
+<dt>監督上の承認</dt><dd>成田新幹線訴訟（最判昭和53年12月8日）は、工事実施計画の認可について処分性が問題になった事件です。この教材では判旨をまだ判例データベースに持たないため、詳細な理由づけはカード化していません。争点は原告適格ではなく処分性です。</dd>
+<dt>職務命令</dt><dd>教職員の身分や勤務条件についての権利義務を直接動かすものではないため、処分に当たりません。</dd>
 <dt>混同しやすい点</dt><dd>公共施設管理者の同意が拒否されると、開発許可の申請ができなくなるという不利益が現に生じる。しかしこの同意は行政機関相互の行為であって、国民に対して直接に法的効果を及ぼすものではない。<b>事実上の不利益が生じることと、その行為に法的効果があることは別である</b></dd>
 </dl></div>
 </div>
@@ -5930,11 +7432,11 @@ body{display:flex; align-items:flex-start; margin:0}
 
 <h3>交通反則金の納付の通告 ── 納付義務は生じない</h3>
 
-<p>道路交通法の違反行為のうち軽微なものについては、反則金を納めれば公訴を提起されないという仕組みが置かれています。違反したとされた人には反則金の納付を求める通告がされます。この通告に処分性はあるか。<span class="warn">判例は否定しています。</span></p>
+<p>道路交通法の違反行為のうち軽微なものについては、反則金を納めれば公訴を提起されないという仕組みが置かれています。違反したとされた人には反則金の納付を求める通告がされます。この通告については、この教材の判例データベースに判旨をまだ収録していないため、ここでは<span class="key">通告自体から納付義務が生じるか</span>という制度上確実にいえる範囲に限って説明します。</p>
 
 <p>理由は、<span class="key">この通告によって、反則金を納めなければならないという法律上の義務が生じるわけではない</span>ことにあります。反則金を納めるかどうかは、通告を受けた人が選べます。納めれば公訴を提起されないという利益を受けられる。納めなければ、通常の刑事手続に進みます。<span class="warn">通告は、納付という選べる道を示したにすぎず、納付を強制していない</span>のです。</p>
 
-<p>そして、<span class="key">不服がある人の争い方も判例が示しています</span>。反則金を納付せずに、<span class="key">刑事手続の中で無罪を争う</span>ほかありません。<span class="warn">取消訴訟と刑事手続のいずれかを選ぶことはできません。</span>また、<span class="warn">通告が納付義務を生じさせるということもありません。</span>納付するかどうかは相手方の任意に委ねられており、納付しなければ通常の刑事手続に移行する、という仕組みだからです。義務がないからこそ、通告に処分性がないのです。</p>
+<p>不服がある人は、反則金を納付しなければ、通常の刑事手続に移ります。そこで違反の有無を争うことになります。<span class="warn">取消訴訟と刑事手続のいずれかを選ぶ制度ではありません。</span>また、<span class="warn">通告が納付義務を生じさせるということもありません。</span>納付するかどうかは相手方の任意に委ねられており、納付しなければ通常の刑事手続に移行する、という仕組みだからです。義務がないからこそ、通告に処分性がないと整理されます。</p>
 
 <p>なぜ刑事手続に送るのか。<span class="key">反則金の制度は、刑事罰の手前に置かれた簡易な処理の仕組み</span>だからです。納付を拒めば本来の刑事手続に戻る。そこには無罪を争う完全な手続が用意されています。<span class="key">別に十分な争いの場が用意されているのだから、取消訴訟を重ねて用意する必要がない</span>という考え方です。</p>
 
@@ -5944,9 +7446,9 @@ body{display:flex; align-items:flex-start; margin:0}
 
 <div class="art"><h4>住民基本台帳法7条（住民票の記載事項）（抜粋）</h4><div class="ain"><p class="atext" data-law="住民基本台帳法7条">（住民票の記載事項）住民票には、次に掲げる事項について記載（前条第三項の規定により磁気ディスクをもつて調製する住民票にあつては、記録。以下同じ。）をする。一氏名一の二氏名の振り仮名（戸籍法（昭和二十二年法律第二百二十四号）第十三条第一項第二号に規定する氏名の振り仮名をいう。以下同じ。）二出生の年月日三男女の別四世帯主についてはその旨、世帯主でない者については世帯主の氏名及び世帯主との続柄五戸籍の表示。ただし、本籍のない者及び本籍の明らかでない者については、その旨六住民となつた年月日七住所及び一の市町村の区域内において新たに住所を変更した者については、その住所を定めた年月日八新たに市町村の区域内に住所を定めた者については、その住所を定めた旨の届出の年月日（職権で住民票の記載をした者については、その年月日）及び従前の住所八の二個人番号（行政手続における特定の個人を識別するための番号の利用等に関する法律（平成二十五年法律第二十七号。以下「番号利用法」という。）第二条第五項に規定する個人番号をいう。以下同じ。）九選挙人名簿に登録された者については、その旨十国民健康保険の被保険者（国民健康保険法（昭和三十三年法律第百九十二号）第五条及び第六条の規定による国民健康保険の被保険者をいう。第二十八条及び第三十一条第三項において同じ。）である者については、その資格に関する事項で政令で定めるもの十の二後期高齢者医療の被保険者（高齢者の医療の確保に関する法律（昭和五十七年法律第八十号）第五十条及び第五十一条の規定による後期高齢者医療の被保険者をいう。第二十八条の二及び第三十一条第三項において同じ。）である者については、その資格に関する事項で政令で定めるもの十の三介護保険の被保険者（介護保険法（平成九年法律第百二十三号）第九条の規定による介護保険の被保険者（同条第二号に規定する第二号被保険者を除く。）をいう。第二十八条の三及び第三十一条第三項において同じ。）である者については、その資格に関する事項で政令で定めるもの十一国民年金の被保険者（国民年金法（昭和三十四年法律第百四十一号）第七条その他政令で定める法令の規定による国民年金の被保険者（同条第一項第二号に規定する第二号被保険者及び同項第三号に規定する第三号被保険者を除く。）をいう。第二十九条及び第三十一条第三項において同じ。）である者については、その資格に関する事項で政令で定めるもの十一の二児童手当の支給を受けている者（児童手当法（昭和四十六年法律第七十三号）第七条の規定により認定を受けた受給資格者（同条第二項に規定する施設等受給資格者にあつては、同項第二号に掲げる里親に限る。）をいう。第二十九条の二及び第三十一条第三項において同じ。）については、その受給資格に関する事項で政令で定めるもの十二米穀の配給を受ける者（主要食糧の需給及び価格の安定に関する法律（平成六年法律第百十三号）第四十条第一項の規定に基づく政令の規定により米穀の配給が実施される場合におけるその配給に基づき米穀の配給を受ける者で政令で定めるものをいう。第三十条及び第三十一条第三項において同じ。）については、その米穀の配給に関する事項で政令で定めるもの十三住民票コード（番号、記号その他の符号であつて総務省令で定めるものをいう。以下同じ。）十四前各号に掲げる事項のほか、政令で定める事項</p><p class="an">問題になったのは<b>四号の「世帯主との続柄」</b>である。条文は「記載をする」と定めるだけで、記載によって身分関係が生じるとは定めていない。<b>記載は、既にある関係を書き写す作業にすぎない</b>という理解が、処分性を否定する判断の土台になっている。</p></div></div>
 
-<p>公証行為であることは判例も認めています。<span class="warn">それでも処分性は否定されました。</span>理由は、<span class="key">その記載自体によって新たに国民の権利義務を形成したり、その範囲を確定したりする法的効果を持つものではない</span>ことにあります。住民票の記載は、既に存在している居住関係や身分関係を写し取って証明するだけであって、記載によって身分が変わるわけではありません。</p>
+<p>住民票への続柄の記載は、公証行為と整理されます。<span class="warn">それでも処分性は否定されます。</span>理由は、<span class="key">その記載自体によって新たに国民の権利義務を形成したり、その範囲を確定したりする法的効果を持つものではない</span>ことにあります。住民票の記載は、既に存在している居住関係や身分関係を写し取って証明するだけであって、記載によって身分が変わるわけではありません。</p>
 
-<p>ここで気をつけたいのが、公証行為という性質づけの使い方です。<span class="warn">公証行為に当たることを、そのまま法的効果があることの理由に使うことはできません。</span>公証行為の定義そのものが「既にあるものを証明する」ですから、<span class="key">公証行為だという事実は、むしろ新たな法的効果がないことを示している</span>。公証行為であることは、処分性を肯定する理由ではなく、否定する方向に働く事情なのです。</p>
+<p>ここで気をつけたいのが、公証行為という性質づけの使い方です。<span class="warn">この住民票の続柄記載については、公証行為に当たることを、そのまま法的効果があることの理由に使うことはできません。</span>この記載は、既にある関係を証明するものにとどまり、記載自体で身分関係を作り出しません。もっとも、公証・登録・確認系の行為一般がつねに処分性を否定されるわけではありません。<span class="key">法令がその行為にどのような効果を結び付けているか</span>によって、処分性が認められる場合もあります。</p>
 
 <h3>この節の二つに共通する読み方</h3>
 
@@ -5968,7 +7470,7 @@ body{display:flex; align-items:flex-start; margin:0}
 <div class="scroll"><table><tbody>
 <tr><th scope="row">通知だから処分ではない、ではない</th><td>通知という形式は結論を決めません。同じ通知でも、それによって法律上の効果が生じるものには処分性が認められます（5-8の輸入禁制品該当通知、登録免許税の還付通知の拒否）。</td></tr>
 <tr><th scope="row">争う方法がなくなるわけではない</th><td>反則金の通告に不服がある人は、納付せずに刑事手続の中で無罪を争えます。取消訴訟が使えないだけで、争いの場そのものは用意されています。</td></tr>
-<tr><th scope="row">公証行為は法的効果の根拠にならない</th><td>公証行為は、既にある事実や法律関係を証明する行為です。したがって公証行為であることは、<b>むしろ新たな法的効果がないことを示します</b>。これを法的効果があることの理由に使うと、論理が逆になります。</td></tr>
+<tr><th scope="row">続柄記載では公証行為という性質が法的効果の根拠にならない</th><td>この住民票の続柄記載は、既にある身分関係を証明する行為にとどまります。したがって、この事案では公証行為であることを法的効果があることの理由に使うと、論理が逆になります。ただし、公証・登録・確認系の行為でも、法令上の効果次第で処分性が認められることがあります。</td></tr>
 </tbody></table></div>
 </div></div>
 
@@ -5979,7 +7481,7 @@ body{display:flex; align-items:flex-start; margin:0}
 <dt>その争い方</dt><dd>反則金を<b>納付せずに、刑事手続の中で無罪を争う</b>ほかありません。取消訴訟との選択はできません。</dd>
 <dt>続柄の記載</dt><dd>処分性は<b>否定</b>されます。公証行為ではありますが、新たに権利義務を形成し、またはその範囲を確定する法的効果がないからです。</dd>
 <dt>公証行為</dt><dd>既にある事実や法律関係の存在を、公の権威をもって証明し、公の証明力を与える行為をいいます。</dd>
-<dt>混同しやすい点</dt><dd>交通反則金の納付の通告は、納付するかどうかを相手方の任意に委ねるものであって、納付義務を生じさせない。したがって処分性がなく、不服がある者は反則金を納付せずに刑事手続の中で争うほかない。取消訴訟と刑事手続を選べるわけではない。また公証行為は既にある事実や法律関係を証明する行為なので、<b>公証行為であることは、むしろ新たな法的効果がないことを示す</b></dd>
+<dt>混同しやすい点</dt><dd>交通反則金の納付の通告は、納付するかどうかを相手方の任意に委ねるものであって、納付義務を生じさせない。したがって処分性がなく、不服がある者は反則金を納付せずに刑事手続の中で争うことになる。取消訴訟と刑事手続を選べるわけではない。また、この住民票の続柄記載は既にある身分関係を証明する行為にとどまり、記載自体で新たな法的効果を生じさせない。ただし、公証・登録・確認系の行為でも、法令上の効果次第で処分性が認められることがある</dd>
 </dl></div>
 </div>
 
@@ -6003,7 +7505,7 @@ body{display:flex; align-items:flex-start; margin:0}
 
 <h3>登録免許税の還付通知をすべき旨の請求に対する拒否通知</h3>
 
-<p>登記を受けるときには登録免許税を納めます。納めすぎた場合、登記機関に対し、税務署長へ還付通知をすべき旨を請求できる仕組みが置かれています。<span class="key">この請求を登記機関が拒否する通知に処分性があるか</span>が、R5-19-1 と R7-17-4 で、<span class="warn">2年の間隔で2回</span>問われました。</p>
+<p>登記を受けるときには登録免許税を納めます。納めすぎた場合、登記機関に対し、税務署長へ還付通知をすべき旨を請求できる仕組みが置かれています。<span class="key">この請求を登記機関が拒否する通知に処分性があるか</span>が問題になります。</p>
 
 <p>結論は<span class="key">処分性を肯定</span>です。理由は、この仕組みが納税者に対し<span class="key">過大に納付した登録免許税について簡易迅速に還付を受けることができる手続上の地位</span>を与えたものであり、拒否通知は<span class="key">その手続上の地位を否定する法的効果</span>を持つ、という点にあります。</p>
 
@@ -6040,7 +7542,7 @@ body{display:flex; align-items:flex-start; margin:0}
 <h4>覚える ── 法的効果があれば処分になる型</h4>
 <div class="in"><dl>
 <dt>輸入禁制品</dt><dd>税関長の該当通知は<b>適法に輸入する道を閉ざす</b>法律上の効果を生じるので処分に当たります（最大判昭和54年12月25日）。</dd>
-<dt>登録免許税</dt><dd>還付通知をすべき旨の請求に対する拒否通知は、<b>簡易迅速に還付を受ける手続上の地位</b>を否定する法的効果があるので処分に当たります（R5-19-1、R7-17-4）。</dd>
+<dt>登録免許税</dt><dd>還付通知をすべき旨の請求に対する拒否通知は、<b>簡易迅速に還付を受ける手続上の地位</b>を否定する法的効果があるので処分に当たります。</dd>
 <dt>労災就学援護費</dt><dd>支給・不支給の決定は受給権者の<b>法的地位に直接影響</b>し、支給決定によって初めて具体的な支給請求権が生じるので処分に当たります（最判平成15年9月4日）。</dd>
 <dt>通達との関係</dt><dd>通達それ自体に処分性はありませんが、<b>通達に基づく個別の決定</b>には処分性が認められます。矛盾ではありません。</dd>
 <dt>混同しやすい点</dt><dd>行為の名称が「通知」であっても、それによって法律上の効果が生じるのであれば処分性が認められる。判例が法的効果を認めた対象を正確に押さえる必要があり、輸入禁制品該当の通知については適法に輸入する道が閉ざされるという効果、還付通知をすべき旨の請求に対する拒否については還付を受けるための手続上の地位に対する効果が、それぞれ認められている</dd>
@@ -6086,7 +7588,7 @@ body{display:flex; align-items:flex-start; margin:0}
 
 <p>この判決の要点は、<span class="key">まとめて指定するという方法をとった場合でも、それぞれの土地について本来の働きとして私権の制限が現に発生する</span>という点にあります。指定の方法が一括であることと、個々の土地に生じる効果が具体的であることは、両立するのです。</p>
 
-<p>R5-19-2 は、これを裏返しました。<span class="warn">一括指定を、一般的な基準を定めることを目的とした行為にすぎないと評価し直したうえで、建築の制限が発生することそれ自体を認められないと述べて、処分性を否定</span>しています。<span class="key">判旨が認めた事実（私権の制限が生じること）を先に消してから結論を出す</span>という、二段構えの改変です。</p>
+<p>ここを逆に読むと誤ります。<span class="warn">一括指定を、一般的な基準を定めることを目的とした行為にすぎないと評価し、建築の制限が発生することそれ自体を否定してはいけません。</span><span class="key">判旨が認めた事実、つまり私権の制限が生じることを先に押さえたうえで結論を出す</span>必要があります。</p>
 
 <p>用途地域の指定と比べると、違いがはっきりします。用途地域の指定では、地域内のすべての土地に等しく基準が及ぶだけで、個々の土地について「この部分が道路になる」という線引きまではされません。これに対し二項道路の指定では、<span class="key">個々の土地のどの部分が道路とみなされるかが具体的に定まり、その部分には建築できなくなります</span>。<span class="warn">効果が及ぶ相手も範囲も、指定の時点で決まっている</span>という点が、分かれ目です。</p>
 
@@ -6259,7 +7761,7 @@ body{display:flex; align-items:flex-start; margin:0}
   <thead><tr><th>争い方</th><th>どういう場面で使うか</th><th>根拠</th></tr></thead>
   <tbody>
     <tr><th scope="row">後の段階の処分を争う</th>
-      <td>処分性のない行為の後に、処分性のある行為が予定されている場面で使います。用途地域の指定なら建築確認の拒否を、公共施設管理者の同意の拒否なら開発許可の拒否を、通達ならそれに従ってされた個別の処分を争います。</td>
+      <td>処分性のない行為の後に、処分性のある行為が予定されている場面で使います。用途地域の指定なら建築確認の拒否を、通達ならそれに従ってされた個別の処分を争います。公共施設管理者の同意の拒否では、同意がないため申請自体が進まない構造があるため、後続の開発許可の拒否を当然に争えるとは限りません。</td>
       <td>行政事件訴訟法3条2項が、取消訴訟の対象を「行政庁の処分その他公権力の行使に当たる行為」と定めています。抗告訴訟一般を定めるのは同条1項です。</td></tr>
     <tr><th scope="row">民事訴訟</th>
       <td>私法上の権利義務として争える場面で使います。水道料金を改定する条例なら、増額分の支払義務がないことを民事訴訟で主張できます。</td>
@@ -6273,7 +7775,7 @@ body{display:flex; align-items:flex-start; margin:0}
   </tbody>
 </table></div>
 
-<div class="art"><h4>行政事件訴訟法4条（当事者訴訟）</h4><div class="ain"><p class="atext" data-law="行政事件訴訟法4条">（当事者訴訟）この法律において「当事者訴訟」とは、当事者間の法律関係を確認し又は形成する処分又は裁決に関する訴訟で法令の規定によりその法律関係の当事者の一方を被告とするもの及び公法上の法律関係に関する確認の訴えその他の公法上の法律関係に関する訴訟をいう。</p><p class="an">前半が<b>形式的当事者訴訟</b>（土地収用の補償額をめぐる訴訟など）、後半が<b>実質的当事者訴訟</b>（公法上の法律関係に関する確認の訴えなど）である。抗告訴訟が「公権力の行使」を攻めるのに対し、当事者訴訟は対等な当事者の間の法律関係を扱う。処分性がないために抗告訴訟に乗らない争いの受け皿になる。</p></div></div>
+<div class="art"><h4>行政事件訴訟法4条（当事者訴訟）</h4><div class="ain"><p class="atext" data-law="行政事件訴訟法4条">（当事者訴訟）この法律において「当事者訴訟」とは、当事者間の法律関係を確認し又は形成する処分又は裁決に関する訴訟で法令の規定によりその法律関係の当事者の一方を被告とするもの及び公法上の法律関係に関する確認の訴えその他の公法上の法律関係に関する訴訟をいう。</p><p class="an">前半が<b>形式的当事者訴訟</b>（土地収用の補償額をめぐる訴訟など）、後半が<b>実質的当事者訴訟</b>（公法上の法律関係に関する確認の訴えなど）である。形式的当事者訴訟は、処分または裁決に関する訴訟でありながら、法令により法律関係の当事者の一方を被告とする点に特色がある。他方、実質的当事者訴訟は、公法上の法律関係そのものを確認し、または争う訴訟であり、処分性がないために抗告訴訟に乗らない争いの受け皿になる。</p></div></div>
 
 <div class="art"><h4>行政事件訴訟法45条（処分の効力等を争点とする訴訟）</h4><div class="ain"><p class="atext" data-law="行政事件訴訟法45条">私法上の法律関係に関する訴訟において、処分若しくは裁決の存否又はその効力の有無が争われている場合には、第二十三条第一項及び第二項並びに第三十九条の規定を準用する。
 2 前項の規定により行政庁が訴訟に参加した場合には、民事訴訟法第四十五条第一項及び第二項の規定を準用する。ただし、攻撃又は防御の方法は、当該処分若しくは裁決の存否又はその効力の有無に関するものに限り、提出することができる。
@@ -6313,7 +7815,7 @@ body{display:flex; align-items:flex-start; margin:0}
 
 <p><span class="term-b">住民監査請求</span>とは、住民が、地方公共団体の違法または不当な財務会計上の行為について監査委員に監査を求める制度をいいます。<span class="term-b">住民訴訟</span>とは、住民監査請求をした住民が、その結果に不服があるときなどに提起できる訴訟をいいます。<span class="term-b">直接請求</span>とは、一定数の選挙人の連署によって、条例の制定改廃や議会の解散などを求める制度をいいます。</p>
 
-<p>保育所の廃止条例を扱った H30-26 は、条例の制定を阻止する方法として、抗告訴訟以外の制度も並べました。<span class="warn">どれも、それらしく見えて目的が違う制度</span>です。</p>
+<p>条例の制定を阻止したい場面では、抗告訴訟以外の制度も候補に見えます。<span class="warn">しかし、それぞれ目的が違う制度</span>です。</p>
 
 <div class="art"><h4>地方自治法242条の2（住民訴訟）（第1項の抜粋）</h4><div class="ain"><p class="atext" data-law="地方自治法242条の2">（住民訴訟）普通地方公共団体の住民は、前条第一項の規定による請求をした場合において、同条第五項の規定による監査委員の監査の結果若しくは勧告若しくは同条第九項の規定による普通地方公共団体の議会、長その他の執行機関若しくは職員の措置に不服があるとき、又は監査委員が同条第五項の規定による監査若しくは勧告を同条第六項の期間内に行わないとき、若しくは議会、長その他の執行機関若しくは職員が同条第九項の規定による措置を講じないときは、裁判所に対し、同条第一項の請求に係る違法な行為又は怠る事実につき、訴えをもつて次に掲げる請求をすることができる。一当該執行機関又は職員に対する当該行為の全部又は一部の差止めの請求二行政処分たる当該行為の取消し又は無効確認の請求三当該執行機関又は職員に対する当該怠る事実の違法確認の請求四当該職員又は当該行為若しくは怠る事実に係る相手方に損害賠償又は不当利得返還の請求をすることを当該普通地方公共団体の執行機関又は職員に対して求める請求。ただし、当該職員又は当該行為若しくは怠る事実に係る相手方が第二百四十三条の二の八第三項の規定による賠償の命令の対象となる者である場合には、当該賠償の命令をすることを求める請求２前項の規定による訴訟は、次の各号に掲げる場合の区分に応じ、当該各号に定める期間内に提起しなければならない。一監査委員の監査の結果又は勧告に不服がある場合当該監査の結果又は当該勧告の内容の通知があつた日から三十日以内二監査委員の勧告を受けた議会、長その他の執行機関又は職員の措置に不服がある場合当該措置に係る監査委員の通知があつた日から三十日以内三監査委員が請求をした日から六十日を経過しても監査又は勧告を行わない場合当該六十日を経過した日から三十日以内四監査委員の勧告を受けた議会、長その他の執行機関又は職員が措置を講じない場合当該勧告に示された期間を経過した日から三十日以内３前項の期間は、不変期間とする。４第一項の規定による訴訟が係属しているときは、当該普通地方公共団体の他の住民は、別訴をもつて同一の請求をすることができない。５第一項の規定による訴訟は、当該普通地方公共団体の事務所の所在地を管轄する地方裁判所の管轄に専属する。６第一項第一号の規定による請求に基づく差止めは、当該行為を差し止めることによつて人の生命又は身体に対する重大な危害の発生の防止その他公共の福祉を著しく阻害するおそれがあるときは、することができない。７第一項第四号の規定による訴訟が提起された場合には、当該職員又は当該行為若しくは怠る事実の相手方に対して、当該普通地方公共団体の執行機関又は職員は、遅滞なく、その訴訟の告知をしなければならない。８前項の訴訟告知があつたときは、第一項第四号の規定による訴訟が終了した日から六月を経過するまでの間は、当該訴訟に係る損害賠償又は不当利得返還の請求権の時効は、完成しない。９民法第百五十三条第二項の規定は、前項の規定による時効の完成猶予について準用する。１０第一項に規定する違法な行為又は怠る事実については、民事保全法（平成元年法律第九十一号）に規定する仮処分をすることができない。１１第二項から前項までに定めるもののほか、第一項の規定による訴訟については、行政事件訴訟法第四十三条の規定の適用があるものとする。１２第一項の規定による訴訟を提起した者が勝訴（一部勝訴を含む。）した場合において、弁護士、弁護士法人又は弁護士・外国法事務弁護士共同法人に報酬を支払うべきときは、当該普通地方公共団体に対し、その報酬額の範囲内で相当と認められる額の支払を請求することができる。</p><p class="an">条文の柱書が「<b>前条第一項の規定による請求をした場合において</b>」と始まっている。前条は住民監査請求であり、その対象は違法な公金の支出、財産の取得・管理・処分といった<b>財務会計上の行為</b>である。したがって住民訴訟の対象も財務会計上の行為に限られる。<b>条例の制定行為そのものの差止めを求める手段ではない。</b></p></div></div>
 
@@ -6323,8 +7825,8 @@ body{display:flex; align-items:flex-start; margin:0}
 <div class="scroll"><table><tbody>
 <tr><th scope="row">執行停止は本案の係属が前提</th><td>執行停止の申立てだけを、抗告訴訟の提起の前に行うことはできません（行政事件訴訟法25条2項）。仮の義務付け・仮の差止めも、それぞれ本案の訴えの提起が前提です。</td></tr>
 <tr><th scope="row">仮処分は処分には使えないが、処分でない行為には使える</th><td>行政事件訴訟法44条が仮処分を排除しているのは「処分その他公権力の行使に当たる行為」についてです。処分性がない行為には、この排除規定が働きません。</td></tr>
-<tr><th scope="row">住民訴訟の対象は財務会計上の行為</th><td>違法な公金の支出などの財務会計上の行為が対象であり、条例の制定行為そのものの差止めを求める手段ではありません（H30-26-2）。</td></tr>
-<tr><th scope="row">直接請求は議決を止める手続ではない</th><td>条例の制定改廃の直接請求は、住民が制定や改廃を求める制度です。既に進行中の議決を阻止する手続としては用意されていません（H30-26-4）。</td></tr>
+<tr><th scope="row">住民訴訟の対象は財務会計上の行為</th><td>違法な公金の支出などの財務会計上の行為が対象であり、条例の制定行為そのものの差止めを求める手段ではありません。</td></tr>
+<tr><th scope="row">直接請求は議決を止める手続ではない</th><td>条例の制定改廃の直接請求は、住民が制定や改廃を求める制度です。既に進行中の議決を阻止する手続としては用意されていません。</td></tr>
 <tr><th scope="row">国家賠償は処分の効力を消さない</th><td>賠償が認められても処分は有効なままです。公定力が弱まるのではなく、争う訴訟の型が違うということです。処分性がない行為についても国家賠償は使えます。</td></tr>
 </tbody></table></div>
 </div></div>
@@ -6354,7 +7856,7 @@ body{display:flex; align-items:flex-start; margin:0}
 
 <p><span class="key">第一の問い。誰が、どういう立場でした行為か。</span>国または公共団体が優越的な立場から一方的にした行為であれば公権力性があります。対等な当事者として結んだ契約であれば、ここで外れます。</p>
 
-<p><span class="key">第二の問い。効果は誰に向いているか。</span>特定され限られた者に向いているなら具体性があります。地域内の不特定多数に一律に及ぶだけなら、用途地域の指定と同じ扱いになります。<span class="warn">ただし、対象が限られていて、他に処分を待たずに効果が生じるなら、条例でも処分になります。</span></p>
+<p><span class="key">第二の問い。効果は誰のどの法的地位に及ぶか。</span>個別の権利義務や法律上の地位に直接具体的に及ぶなら、具体性があります。地域内の不特定多数に一般的・抽象的に及ぶだけなら、用途地域の指定と同じ扱いになります。<span class="warn">ただし、対象が限られていて、他に処分を待たずに効果が生じるなら、条例でも処分になります。</span></p>
 
 <p><span class="key">第三の問い。その行為自体から効果が生じるか。</span>後続の行為を待って初めて効果が現れるのなら直接性を欠きます。公共施設管理者の同意の拒否がこの型でした。<span class="warn">不利益が現に生じることと、その行為に効果があることは別です。</span></p>
 
@@ -6369,16 +7871,16 @@ body{display:flex; align-items:flex-start; margin:0}
   <tbody>
     <tr><th scope="row">用途地域の指定</th><td>処分性は否定されます。</td><td>効果が地域内の不特定多数に一般的・抽象的に及ぶにとどまります。</td></tr>
     <tr><th scope="row">水道料金を一般的に改定する条例</th><td>処分性は否定されます。</td><td>限られた特定の者にのみ適用されるものではありません。</td></tr>
-    <tr><th scope="row">市立小学校を廃止する条例</th><td>処分性は否定されます。</td><td>保護者に特定の小学校で子に教育を受けさせる権利が認められません。</td></tr>
+    <tr><th scope="row">市立小学校を廃止する条例</th><td>処分性は否定されます。</td><td>保護者に特定の小学校で子に教育を受けさせる権利ないし法律上保護される利益が認められません。</td></tr>
     <tr><th scope="row">通達</th><td>処分性は否定されます。</td><td>行政組織内部の命令にすぎず、国民を直接拘束しません。</td></tr>
     <tr><th scope="row">公共施設管理者の同意の拒否</th><td>処分性は否定されます。</td><td>開発できなくなるのは法律自体が定めた効果であり、拒否行為の効果ではありません。</td></tr>
-    <tr><th scope="row">工事実施計画の認可（監督上の承認と同視されるもの）</th><td>処分性は否定されます。</td><td>行政機関相互の行為であって、外部に対する効力を有せず、直接国民の権利義務を形成しまたはその範囲を確定するものではありません。</td></tr>
+    <tr><th scope="row">工事実施計画の認可（成田新幹線訴訟で問題となったもの）</th><td>この教材では、原告適格ではなく処分性の論点として扱います。</td><td>判旨をまだ判例データベースに持たないため、詳細な理由づけはカード化していません。</td></tr>
     <tr><th scope="row">校長が教職員に発した職務命令</th><td>処分性は否定されます。</td><td>教職員の身分や勤務条件についての権利義務を直接動かすものではありません。</td></tr>
     <tr><th scope="row">交通反則金の納付の通告</th><td>処分性は否定されます。</td><td>納付すべき法律上の義務を生じさせません。</td></tr>
-    <tr><th scope="row">住民票への続柄の記載</th><td>処分性は否定されます。</td><td>公証行為であって、新たに権利義務を形成し、またはその範囲を確定しません。</td></tr>
+    <tr><th scope="row">住民票への続柄の記載</th><td>処分性は否定されます。</td><td>この記載は既にある身分関係を証明するにとどまり、新たに権利義務を形成し、またはその範囲を確定しません。</td></tr>
     <tr><th scope="row">特定の保育所の廃止のみを内容とする条例</th><td>処分性は肯定されます。</td><td>他に処分を待たず、限られた特定の者から法的地位を奪います。</td></tr>
     <tr><th scope="row">二項道路の一括指定</th><td>処分性は肯定されます。</td><td>個別の土地に本来的な効果として具体的な私権制限が生じます。</td></tr>
-    <tr><th scope="row">土地区画整理事業計画の決定</th><td>処分性は肯定されます。</td><td>換地処分を受けるべき地位に立たされ、後で争っても実効的な救済にならないからです。</td></tr>
+    <tr><th scope="row">土地区画整理事業計画の決定</th><td>処分性は肯定されます。</td><td>施行地区内の宅地所有者等は、建築行為等の制限を受ける法的地位に立たされ、さらに換地処分を受けるべき地位に立たされます。後で争っても実効的な救済になりにくいことも理由になります。</td></tr>
     <tr><th scope="row">輸入禁制品該当の通知</th><td>処分性は肯定されます。</td><td>適法に輸入する道が閉ざされるという法律上の効果が生じます。</td></tr>
     <tr><th scope="row">登録免許税の還付通知の拒否</th><td>処分性は肯定されます。</td><td>簡易迅速に還付を受ける手続上の地位を否定する法的効果があります。</td></tr>
     <tr><th scope="row">労災就学援護費の支給・不支給の決定</th><td>処分性は肯定されます。</td><td>支給決定によって初めて具体的な支給請求権が生じます。</td></tr>
@@ -6393,10 +7895,10 @@ body{display:flex; align-items:flex-start; margin:0}
 <div class="scroll"><table>
   <thead><tr><th>つまずく場所</th><th>どういう筋道か</th><th>正しくはどう考えるか</th></tr></thead>
   <tbody>
-    <tr><th scope="row">不利益が生じることから処分性を導く</th><td>用途地域の指定で建築が制限される、公共施設管理者の同意が拒否されて開発許可を申請できなくなる、といった不利益に着目して、そこから処分性を認めてしまう筋道です。</td><td>不利益が現に生じることは、判例も否定していません。確かめるべきはもう一段先で、<b>その効果が特定の者に向けられた具体的なものか</b>どうかです。一般的・抽象的にとどまるなら処分性は認められません。</td></tr>
+    <tr><th scope="row">不利益が生じることから処分性を導く</th><td>用途地域の指定で建築が制限される、公共施設管理者の同意が拒否されて開発許可を申請できなくなる、といった不利益に着目して、そこから処分性を認めてしまう筋道です。</td><td>不利益が現に生じることは、判例も否定していません。確かめるべきはもう一段先で、<b>その行為自体から、個別の権利義務や法律上の地位に直接具体的な法的効果が生じるか</b>どうかです。一般的・抽象的な効果にとどまる場合や、法律自体が不利益を定めている場合には処分性は認められません。</td></tr>
     <tr><th scope="row">原則と例外を入れ替える</th><td>保育所廃止条例に処分性が認められたことから、条例の制定行為には一般に処分性があると考えてしまう筋道です。</td><td>条例の制定行為は<b>処分性が否定されるのが原則</b>です。特定の者の法的地位を条例の施行だけで直接奪う場合に、例外として認められます。</td></tr>
     <tr><th scope="row">行為の名前で決める</th><td>「通知」「観念の通知」「公証行為」「認可」といった名前から、処分性の有無を決めてしまう筋道です。</td><td>処分性は<b>その行為が法律上どのような効果を持つか</b>で決まります。通知という名前でも法的効果があれば処分になり、認可という名前でも役所の中で完結する承認なら処分ではありません。</td></tr>
-    <tr><th scope="row">否定する事情を肯定の根拠に使う</th><td>公証行為に当たることを、法的効果があることの理由に使ってしまう筋道です。</td><td>公証行為は<b>既にあるものを証明する</b>行為ですから、公証行為であることは、むしろ新たな法的効果がないことを示します。理由の向きが逆になっています。</td></tr>
+    <tr><th scope="row">続柄記載の理由を一般化しすぎる</th><td>この住民票の続柄記載が公証行為であることを、法的効果があることの理由に使ってしまう筋道です。</td><td>この記載は<b>既にある身分関係を証明する</b>行為にとどまるため、記載自体から新たな法的効果は生じません。ただし、公証・登録・確認系の行為でも、法令上の効果次第で処分性が認められる場合があります。</td></tr>
     <tr><th scope="row">結末や争点の名前を取り違える</th><td>処分性がないという判断は正しいのに、そこから「棄却されるべき」と結んだり、争点を原告適格と呼んだりする筋道です。</td><td>訴訟要件を欠く訴えは<b>却下</b>されます。棄却は本案を審理したうえで請求に理由がないとするものです。処分性・原告適格・訴えの利益は、それぞれ別の訴訟要件です。</td></tr>
   </tbody>
 </table></div>
@@ -6407,11 +7909,13 @@ body{display:flex; align-items:flex-start; margin:0}
 
 <p>出発点は条文です。<span class="warn">行政指導は、その定義の中に「処分に該当しないもの」という限定を抱えています。</span></p>
 
-<div class="art"><h4>行政手続法2条6号（定義）</h4><div class="ain"><p class="atext" data-law="行政手続法2条">（定義）この法律において、次の各号に掲げる用語の意義は、当該各号に定めるところによる。一法令法律、法律に基づく命令（告示を含む。）、条例及び地方公共団体の執行機関の規則（規程を含む。以下「規則」という。）をいう。二処分行政庁の処分その他公権力の行使に当たる行為をいう。三申請法令に基づき、行政庁の許可、認可、免許その他の自己に対し何らかの利益を付与する処分（以下「許認可等」という。）を求める行為であって、当該行為に対して行政庁が諾否の応答をすべきこととされているものをいう。四不利益処分行政庁が、法令に基づき、特定の者を名あて人として、直接に、これに義務を課し、又はその権利を制限する処分をいう。ただし、次のいずれかに該当するものを除く。イ事実上の行為及び事実上の行為をするに当たりその範囲、時期等を明らかにするために法令上必要とされている手続としての処分ロ申請により求められた許認可等を拒否する処分その他申請に基づき当該申請をした者を名あて人としてされる処分ハ名あて人となるべき者の同意の下にすることとされている処分ニ許認可等の効力を失わせる処分であって、当該許認可等の基礎となった事実が消滅した旨の届出があったことを理由としてされるもの五行政機関次に掲げる機関をいう。イ法律の規定に基づき内閣に置かれる機関若しくは内閣の所轄の下に置かれる機関、宮内庁、内閣府設置法（平成十一年法律第八十九号）第四十九条第一項若しくは第二項に規定する機関、国家行政組織法（昭和二十三年法律第百二十号）第三条第二項に規定する機関、会計検査院若しくはこれらに置かれる機関又はこれらの機関の職員であって法律上独立に権限を行使することを認められた職員ロ地方公共団体の機関（議会を除く。）六行政指導行政機関がその任務又は所掌事務の範囲内において一定の行政目的を実現するため特定の者に一定の作為又は不作為を求める指導、勧告、助言その他の行為であって処分に該当しないものをいう。七届出行政庁に対し一定の事項の通知をする行為（申請に該当するものを除く。）であって、法令により直接に当該通知が義務付けられているもの（自己の期待する一定の法律上の効果を発生させるためには当該通知をすべきこととされているものを含む。）をいう。八命令等内閣又は行政機関が定める次に掲げるものをいう。イ法律に基づく命令（処分の要件を定める告示を含む。次条第二項において単に「命令」という。）又は規則ロ審査基準（申請により求められた許認可等をするかどうかをその法令の定めに従って判断するために必要とされる基準をいう。以下同じ。）ハ処分基準（不利益処分をするかどうか又はどのような不利益処分とするかについてその法令の定めに従って判断するために必要とされる基準をいう。以下同じ。）ニ行政指導指針（同一の行政目的を実現するため一定の条件に該当する複数の者に対し行政指導をしようとするときにこれらの行政指導に共通してその内容となるべき事項をいう。以下同じ。）</p><p class="an">末尾の「<b>処分に該当しないものをいう</b>」に注目する。行政指導かどうかと処分かどうかは、定義の上で最初から排他的な関係に置かれている。したがって<b>行政指導に当たると認定された時点で、その行為に処分性はない</b>。5-2の4要素でいえば、相手方を法的に拘束せず任意の協力に委ねる行為なので、<b>公権力性と法的効果の両方を欠く</b>。</p></div></div>
+<div class="art"><h4>行政手続法2条6号（定義）</h4><div class="ain"><p class="atext" data-law="行政手続法2条">（定義）この法律において、次の各号に掲げる用語の意義は、当該各号に定めるところによる。一法令法律、法律に基づく命令（告示を含む。）、条例及び地方公共団体の執行機関の規則（規程を含む。以下「規則」という。）をいう。二処分行政庁の処分その他公権力の行使に当たる行為をいう。三申請法令に基づき、行政庁の許可、認可、免許その他の自己に対し何らかの利益を付与する処分（以下「許認可等」という。）を求める行為であって、当該行為に対して行政庁が諾否の応答をすべきこととされているものをいう。四不利益処分行政庁が、法令に基づき、特定の者を名あて人として、直接に、これに義務を課し、又はその権利を制限する処分をいう。ただし、次のいずれかに該当するものを除く。イ事実上の行為及び事実上の行為をするに当たりその範囲、時期等を明らかにするために法令上必要とされている手続としての処分ロ申請により求められた許認可等を拒否する処分その他申請に基づき当該申請をした者を名あて人としてされる処分ハ名あて人となるべき者の同意の下にすることとされている処分ニ許認可等の効力を失わせる処分であって、当該許認可等の基礎となった事実が消滅した旨の届出があったことを理由としてされるもの五行政機関次に掲げる機関をいう。イ法律の規定に基づき内閣に置かれる機関若しくは内閣の所轄の下に置かれる機関、宮内庁、内閣府設置法（平成十一年法律第八十九号）第四十九条第一項若しくは第二項に規定する機関、国家行政組織法（昭和二十三年法律第百二十号）第三条第二項に規定する機関、会計検査院若しくはこれらに置かれる機関又はこれらの機関の職員であって法律上独立に権限を行使することを認められた職員ロ地方公共団体の機関（議会を除く。）六行政指導行政機関がその任務又は所掌事務の範囲内において一定の行政目的を実現するため特定の者に一定の作為又は不作為を求める指導、勧告、助言その他の行為であって処分に該当しないものをいう。七届出行政庁に対し一定の事項の通知をする行為（申請に該当するものを除く。）であって、法令により直接に当該通知が義務付けられているもの（自己の期待する一定の法律上の効果を発生させるためには当該通知をすべきこととされているものを含む。）をいう。八命令等内閣又は行政機関が定める次に掲げるものをいう。イ法律に基づく命令（処分の要件を定める告示を含む。次条第二項において単に「命令」という。）又は規則ロ審査基準（申請により求められた許認可等をするかどうかをその法令の定めに従って判断するために必要とされる基準をいう。以下同じ。）ハ処分基準（不利益処分をするかどうか又はどのような不利益処分とするかについてその法令の定めに従って判断するために必要とされる基準をいう。以下同じ。）ニ行政指導指針（同一の行政目的を実現するため一定の条件に該当する複数の者に対し行政指導をしようとするときにこれらの行政指導に共通してその内容となるべき事項をいう。以下同じ。）</p><p class="an">末尾の「<b>処分に該当しないものをいう</b>」に注目する。行政手続法上の行政指導として扱われる行為は、同法の定義上、処分とは排他的な関係に置かれている。もっとも、行為の名称が「指導」や「勧告」であることと、行政事件訴訟法上の処分に当たるかどうかは別問題である。<b>名称ではなく、法令上の仕組みと効果によって相手方の法的地位が直接具体的に動くかを見る</b>必要がある。</p></div></div>
 
 <p>もっとも、<span class="key">「指導」「勧告」という名前が付いていれば当然に行政指導だ、ということにはなりません</span>。5-2で確かめたとおり、<span class="warn">形式の名前は結論を決めません</span>。名前が勧告であっても、その行為によって相手方の法的地位が現に動く仕組みが法律に組まれていれば、それは定義にいう行政指導ではなく処分だと評価される余地があります。<span class="key">名前ではなく、法律がその行為にどんな効果を結び付けているかを見る</span>という、この章を通じて繰り返してきた見方がここでも働きます。</p>
 
-<p>なお、勧告に処分性を認めた最高裁の判例として市販テキストが挙げるものがありますが、<span class="warn">本テキストが根拠として使える収録判例データに含まれていないため、事案も判旨もここには書きません。</span>確かめられないものを書けば、その一行だけが記憶の中で独り歩きします。</p>
+<div class="case" data-case="最判平成17年7月15日"><h4>病院開設中止勧告は処分に当たる　最判平成17年7月15日　『病院開設中止勧告事件』</h4><div class="cin"><p class="cf" data-case="最判平成17年7月15日"><b>事案</b>病院を開設しようとする者が、都道府県知事に病院開設許可の申請をしたところ、当該二次医療圏の病床数が地域医療計画の必要病床数に達していることを理由に、医療法（平成9年法律125号による改正前のもの）30条の7に基づく病院開設中止の勧告を受けた。開設者がこの勧告の取消しを求め、同勧告が抗告訴訟の対象となる行政処分に当たるかが争われた。</p><p class="ch" data-case="最判平成17年7月15日"><b>判旨</b>医療法（平成9年法律125号による改正前のもの）30条の7に基づく都道府県知事の病院開設中止の勧告は、医療法上は相手方が任意に従うことを期待してされる行政指導として定められている。しかし、医療法および健康保険法の規定の内容や運用の実情に照らすと、勧告を受けた者がこれに従わない場合には、相当程度の確実さをもって、病院を開設しても保険医療機関の指定を受けることができなくなるという結果をもたらす。国民皆保険制度の下では、保険医療機関の指定を受けられなければ実際上病院の開設自体を断念せざるを得ない。したがって、同勧告の保険医療機関の指定に及ぼす効果および病院経営における保険医療機関の指定の意義を併せ考えると、同勧告は行政事件訴訟法3条2項にいう行政庁の処分その他公権力の行使に当たる行為に当たる。</p><p class="cp"><b>意義</b>行政指導や勧告という形式であっても、法令上の仕組みによって相手方の法的地位に実質的な変動が生じる場合には、処分性が認められうることを示した判決である。病院開設中止の勧告は、医療法上は任意の協力を期待する行政指導として置かれていたが、勧告に従わない場合には相当程度の確実さをもって保険医療機関の指定を受けられなくなる仕組みがあった。国民皆保険制度の下では、保険医療機関の指定を受けられなければ病院経営は実際上成り立ちにくい。<b>「勧告」という名称ではなく、法令上の仕組みと後続の効果によって判断された</b>点が重要である。</p><p class="cl">この判例の全文の要約は判例の索引から引けます</p></div></div>
+
+<p>この判例から分かるのは、<span class="key">行政手続法上の行政指導の定義</span>と、<span class="key">「勧告」「指導」という名称の行為に処分性が認められるか</span>という問題を分ける必要がある、ということです。定義上、行政指導は処分に該当しないものです。しかし、ある行為に「勧告」という名前が付いていても、法令上の仕組みと効果によって相手方の法的地位が直接具体的に動くなら、行政事件訴訟法上の処分に当たる場合があります。</p>
 
 <p>行政指導そのものを争う手段としては、<span class="key">行政手続法36条の2の行政指導の中止等の求め</span>があります。これは訴訟ではなく行政機関への申出の制度です。</p>
 
@@ -6425,7 +7929,7 @@ body{display:flex; align-items:flex-start; margin:0}
 <h4>覚える ── 判断の順路</h4>
 <div class="in"><dl>
 <dt>問い一</dt><dd>誰が、どういう立場でした行為かを見ます（<b>公権力性</b>）。</dd>
-<dt>問い二</dt><dd>効果が特定され限られた者に向いているかを見ます（<b>具体性</b>）。</dd>
+<dt>問い二</dt><dd>効果が個別の権利義務や法律上の地位に直接具体的に及ぶかを見ます（<b>具体性</b>）。相手方が名簿上特定されているかだけで決めるものではありません。</dd>
 <dt>問い三</dt><dd>その行為自体から効果が生じるかを見ます（<b>直接性</b>）。</dd>
 <dt>問い四</dt><dd>生じているのが権利義務を動かす効果かを見ます（<b>法的効果</b>）。</dd>
 <dt>最後に</dt><dd>争いが熟しているか、後まで待たせて救えるかという<b>時機</b>を確かめ、事案全体を総合して判断します。</dd>
@@ -6435,7 +7939,216 @@ body{display:flex; align-items:flex-start; margin:0}
 </section>
 
 
+</div>
+<!-- reader v1 -->
+<style id="reader-css">
+/* ── 読むための仕掛け ── */
+#rd-bar{position:fixed; top:0; left:0; height:3px; background:var(--shu,#c0392b);
+  width:0; z-index:200; transition:width .15s}
+#rd-tools{position:fixed; right:1rem; bottom:1rem; z-index:190;
+  display:flex; flex-direction:column; gap:.4rem; align-items:flex-end}
+#rd-tools button{font:inherit; font-size:.78rem; padding:.42rem .7rem; cursor:pointer;
+  background:var(--card,#fff); color:var(--ink,#222); border:1px solid var(--line2,#ccc);
+  border-radius:5px; box-shadow:0 1px 4px rgba(0,0,0,.12); white-space:nowrap}
+#rd-tools button:hover{background:var(--fill,#f4f4f4)}
+#rd-resume{background:var(--shu,#c0392b) !important; color:#fff !important; border-color:transparent !important}
+#rd-find{position:fixed; top:0; left:0; right:0; z-index:210; background:var(--card,#fff);
+  border-bottom:1px solid var(--line2,#ccc); padding:.55rem .8rem; display:none;
+  box-shadow:0 2px 10px rgba(0,0,0,.12)}
+#rd-find input{font:inherit; font-size:1rem; width:min(28rem,60vw); padding:.35rem .55rem;
+  border:1px solid var(--line2,#ccc); border-radius:4px; background:var(--paper,#fff); color:var(--ink,#222)}
+#rd-find .n{font-size:.8rem; color:var(--hai,#888); margin-left:.6rem}
+#rd-find button{font:inherit; font-size:.8rem; margin-left:.35rem; padding:.32rem .6rem;
+  cursor:pointer; background:var(--fill,#f4f4f4); color:var(--ink,#222);
+  border:1px solid var(--line2,#ccc); border-radius:4px}
+mark.rd-hit{background:#ffe08a; color:#000}
+mark.rd-cur{background:var(--shu,#c0392b); color:#fff}
+/* 既読の印 */
+h2.rd-done::after{content:"読了"; font-size:.62rem; letter-spacing:.1em; margin-left:.7rem;
+  padding:.12rem .45rem; border-radius:3px; background:var(--fill,#eee);
+  color:var(--hai,#888); vertical-align:middle; font-weight:400}
+a.rd-done::before{content:"✓ "; color:var(--shu,#c0392b); font-weight:700}
+/* 条文カードの畳み込み */
+body.rd-fold .art .ain, body.rd-fold .case .cin{display:none}
+body.rd-fold .art h4, body.rd-fold .case h4{cursor:pointer}
+body.rd-fold .art h4::after, body.rd-fold .case h4::after{content:" ▸"; opacity:.6}
+body.rd-fold .art.rd-open .ain, body.rd-fold .case.rd-open .cin{display:block}
+body.rd-fold .art.rd-open h4::after, body.rd-fold .case.rd-open h4::after{content:" ▾"}
+@media(max-width:640px){
+  #rd-tools{right:.5rem; bottom:.5rem}
+  #rd-tools button{font-size:.72rem; padding:.36rem .55rem}
+}
+@media print{#rd-bar,#rd-tools,#rd-find{display:none}}
+</style>
 
+<script id="reader-js">
+(function(){
+  var KEY = 'gyosei:' + location.pathname.replace(/^.*\//,'');
+  var st = {};
+  try { st = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e) {}
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(st)); } catch(e) {} }
+
+  // ── 部品を置く ────────────────────────────────
+  var bar = document.createElement('div'); bar.id = 'rd-bar';
+  var tools = document.createElement('div'); tools.id = 'rd-tools';
+  var find = document.createElement('div'); find.id = 'rd-find';
+  find.innerHTML = '<input type="search" placeholder="このページの中を探す" ' +
+    'aria-label="このページの中を探す"><span class="n"></span>' +
+    '<button data-a="prev">前へ</button><button data-a="next">次へ</button>' +
+    '<button data-a="close">閉じる</button>';
+  document.body.appendChild(bar); document.body.appendChild(tools); document.body.appendChild(find);
+
+  function btn(id, label, title){
+    var b = document.createElement('button');
+    b.id = id; b.textContent = label; if (title) b.title = title;
+    tools.appendChild(b); return b;
+  }
+  var bResume = btn('rd-resume', '続きから', '前に閉じた場所へ戻ります');
+  var bFold   = btn('rd-fold', '条文をたたむ', '条文カードと判例カードを閉じて、本文の筋だけを追います');
+  var bFind   = btn('rd-findbtn', 'ページ内を探す', 'このページの中を語で探します');
+  var bReset  = btn('rd-reset', '読んだ印を消す');
+
+  var secs = Array.prototype.slice.call(document.querySelectorAll('section[id]'));
+  var h2s  = secs.map(function(s){ return s.querySelector('h2'); });
+
+  // ── 既読の印 ─────────────────────────────────
+  st.done = st.done || {};
+  function paintDone(){
+    secs.forEach(function(s, i){
+      if (!st.done[s.id]) return;
+      if (h2s[i]) h2s[i].classList.add('rd-done');
+      // 既読の印は、章内の目次（nav.toc2 の href="#ch05-t1" 形式）に出す。
+      // 左の #nav は章へのリンクで、節のアンカーを持たない。
+      document.querySelectorAll('a[href="#' + s.id + '"]').forEach(function(a){
+        a.classList.add('rd-done');
+      });
+    });
+    var n = Object.keys(st.done).length;
+    if (secs.length) bReset.textContent = '読んだ印を消す（' + n + '/' + secs.length + '）';
+  }
+  paintDone();
+
+  // ── 進み具合と読書位置 ──────────────────────────
+  var tick;
+  function onScroll(){
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    var p = max > 0 ? h.scrollTop / max : 0;
+    bar.style.width = (p * 100).toFixed(1) + '%';
+    clearTimeout(tick);
+    tick = setTimeout(function(){
+      st.y = h.scrollTop; st.at = Date.now();
+      // 画面の上端を通り過ぎた節を既読にする
+      secs.forEach(function(s){
+        if (s.getBoundingClientRect().bottom < h.clientHeight * 0.5) st.done[s.id] = 1;
+      });
+      save(); paintDone();
+    }, 400);
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  if (!st.y || st.y < 200 || location.hash) {
+    bResume.style.display = 'none';
+  } else {
+    var d = Math.round((Date.now() - (st.at || 0)) / 86400000);
+    bResume.title = d > 0 ? d + '日前に閉じた場所へ戻ります' : '前に閉じた場所へ戻ります';
+  }
+  bResume.onclick = function(){
+    window.scrollTo({top: st.y, behavior: 'smooth'});
+    bResume.style.display = 'none';
+  };
+
+  bReset.onclick = function(){
+    st.done = {}; st.y = 0; save();
+    document.querySelectorAll('.rd-done').forEach(function(e){ e.classList.remove('rd-done'); });
+    paintDone();
+  };
+
+  // ── 条文カードの畳み込み ────────────────────────
+  function applyFold(){
+    document.body.classList.toggle('rd-fold', !!st.fold);
+    bFold.textContent = st.fold ? '条文をひらく' : '条文をたたむ';
+  }
+  if (st.fold) applyFold();
+  bFold.onclick = function(){ st.fold = !st.fold; save(); applyFold(); };
+  document.addEventListener('click', function(e){
+    if (!st.fold) return;
+    var h = e.target.closest('.art > h4, .case > h4');
+    if (h) h.parentNode.classList.toggle('rd-open');
+  });
+
+  // ── ページ内を探す ──────────────────────────────
+  var hits = [], cur = -1, input = find.querySelector('input'), cnt = find.querySelector('.n');
+  function clearHits(){
+    document.querySelectorAll('mark.rd-hit').forEach(function(m){
+      var t = document.createTextNode(m.textContent);
+      m.parentNode.replaceChild(t, m); t.parentNode.normalize();
+    });
+    hits = []; cur = -1;
+  }
+  function doFind(q){
+    clearHits();
+    if (!q || q.length < 2) { cnt.textContent = ''; return; }
+    var root = document.querySelector('.wrap') || document.body;
+    var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function(n){
+        if (!n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        var p = n.parentNode;
+        while (p && p !== root) {
+          var t = p.tagName;
+          if (t === 'SCRIPT' || t === 'STYLE' || t === 'NAV' || p.id === 'rd-find')
+            return NodeFilter.FILTER_REJECT;
+          p = p.parentNode;
+        }
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    var nodes = [], n;
+    while ((n = w.nextNode())) nodes.push(n);
+    nodes.forEach(function(node){
+      var i = node.nodeValue.indexOf(q);
+      if (i < 0) return;
+      var rest = node.splitText(i);
+      rest.splitText(q.length);
+      var m = document.createElement('mark');
+      m.className = 'rd-hit'; m.textContent = rest.nodeValue;
+      rest.parentNode.replaceChild(m, rest);
+      hits.push(m);
+    });
+    cnt.textContent = hits.length ? '1 / ' + hits.length : '見つかりません';
+    if (hits.length) go(0);
+  }
+  function go(i){
+    if (!hits.length) return;
+    if (cur >= 0 && hits[cur]) hits[cur].classList.remove('rd-cur');
+    cur = (i + hits.length) % hits.length;
+    hits[cur].classList.add('rd-cur');
+    hits[cur].scrollIntoView({block:'center', behavior:'smooth'});
+    cnt.textContent = (cur + 1) + ' / ' + hits.length;
+  }
+  var ft;
+  input.addEventListener('input', function(){
+    clearTimeout(ft); ft = setTimeout(function(){ doFind(input.value.trim()); }, 250);
+  });
+  input.addEventListener('keydown', function(e){
+    if (e.key === 'Enter') { e.preventDefault(); go(cur + (e.shiftKey ? -1 : 1)); }
+    if (e.key === 'Escape') closeFind();
+  });
+  find.addEventListener('click', function(e){
+    var a = e.target.dataset && e.target.dataset.a;
+    if (a === 'next') go(cur + 1);
+    if (a === 'prev') go(cur - 1);
+    if (a === 'close') closeFind();
+  });
+  function openFind(){ find.style.display = 'block'; input.focus(); input.select(); }
+  function closeFind(){ find.style.display = 'none'; clearHits(); cnt.textContent = ''; }
+  bFind.onclick = openFind;
+  document.addEventListener('keydown', function(e){
+    if ((e.metaKey || e.ctrlKey) && e.key === 'f') { e.preventDefault(); openFind(); }
+  });
+})();
+</script>
 </section>
 
 <section class="chap" id="ch05b">
@@ -7184,7 +8897,216 @@ body{display:flex; align-items:flex-start; margin:0}
 </section>
 
 
+</div>
+<!-- reader v1 -->
+<style id="reader-css">
+/* ── 読むための仕掛け ── */
+#rd-bar{position:fixed; top:0; left:0; height:3px; background:var(--shu,#c0392b);
+  width:0; z-index:200; transition:width .15s}
+#rd-tools{position:fixed; right:1rem; bottom:1rem; z-index:190;
+  display:flex; flex-direction:column; gap:.4rem; align-items:flex-end}
+#rd-tools button{font:inherit; font-size:.78rem; padding:.42rem .7rem; cursor:pointer;
+  background:var(--card,#fff); color:var(--ink,#222); border:1px solid var(--line2,#ccc);
+  border-radius:5px; box-shadow:0 1px 4px rgba(0,0,0,.12); white-space:nowrap}
+#rd-tools button:hover{background:var(--fill,#f4f4f4)}
+#rd-resume{background:var(--shu,#c0392b) !important; color:#fff !important; border-color:transparent !important}
+#rd-find{position:fixed; top:0; left:0; right:0; z-index:210; background:var(--card,#fff);
+  border-bottom:1px solid var(--line2,#ccc); padding:.55rem .8rem; display:none;
+  box-shadow:0 2px 10px rgba(0,0,0,.12)}
+#rd-find input{font:inherit; font-size:1rem; width:min(28rem,60vw); padding:.35rem .55rem;
+  border:1px solid var(--line2,#ccc); border-radius:4px; background:var(--paper,#fff); color:var(--ink,#222)}
+#rd-find .n{font-size:.8rem; color:var(--hai,#888); margin-left:.6rem}
+#rd-find button{font:inherit; font-size:.8rem; margin-left:.35rem; padding:.32rem .6rem;
+  cursor:pointer; background:var(--fill,#f4f4f4); color:var(--ink,#222);
+  border:1px solid var(--line2,#ccc); border-radius:4px}
+mark.rd-hit{background:#ffe08a; color:#000}
+mark.rd-cur{background:var(--shu,#c0392b); color:#fff}
+/* 既読の印 */
+h2.rd-done::after{content:"読了"; font-size:.62rem; letter-spacing:.1em; margin-left:.7rem;
+  padding:.12rem .45rem; border-radius:3px; background:var(--fill,#eee);
+  color:var(--hai,#888); vertical-align:middle; font-weight:400}
+a.rd-done::before{content:"✓ "; color:var(--shu,#c0392b); font-weight:700}
+/* 条文カードの畳み込み */
+body.rd-fold .art .ain, body.rd-fold .case .cin{display:none}
+body.rd-fold .art h4, body.rd-fold .case h4{cursor:pointer}
+body.rd-fold .art h4::after, body.rd-fold .case h4::after{content:" ▸"; opacity:.6}
+body.rd-fold .art.rd-open .ain, body.rd-fold .case.rd-open .cin{display:block}
+body.rd-fold .art.rd-open h4::after, body.rd-fold .case.rd-open h4::after{content:" ▾"}
+@media(max-width:640px){
+  #rd-tools{right:.5rem; bottom:.5rem}
+  #rd-tools button{font-size:.72rem; padding:.36rem .55rem}
+}
+@media print{#rd-bar,#rd-tools,#rd-find{display:none}}
+</style>
 
+<script id="reader-js">
+(function(){
+  var KEY = 'gyosei:' + location.pathname.replace(/^.*\//,'');
+  var st = {};
+  try { st = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e) {}
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(st)); } catch(e) {} }
+
+  // ── 部品を置く ────────────────────────────────
+  var bar = document.createElement('div'); bar.id = 'rd-bar';
+  var tools = document.createElement('div'); tools.id = 'rd-tools';
+  var find = document.createElement('div'); find.id = 'rd-find';
+  find.innerHTML = '<input type="search" placeholder="このページの中を探す" ' +
+    'aria-label="このページの中を探す"><span class="n"></span>' +
+    '<button data-a="prev">前へ</button><button data-a="next">次へ</button>' +
+    '<button data-a="close">閉じる</button>';
+  document.body.appendChild(bar); document.body.appendChild(tools); document.body.appendChild(find);
+
+  function btn(id, label, title){
+    var b = document.createElement('button');
+    b.id = id; b.textContent = label; if (title) b.title = title;
+    tools.appendChild(b); return b;
+  }
+  var bResume = btn('rd-resume', '続きから', '前に閉じた場所へ戻ります');
+  var bFold   = btn('rd-fold', '条文をたたむ', '条文カードと判例カードを閉じて、本文の筋だけを追います');
+  var bFind   = btn('rd-findbtn', 'ページ内を探す', 'このページの中を語で探します');
+  var bReset  = btn('rd-reset', '読んだ印を消す');
+
+  var secs = Array.prototype.slice.call(document.querySelectorAll('section[id]'));
+  var h2s  = secs.map(function(s){ return s.querySelector('h2'); });
+
+  // ── 既読の印 ─────────────────────────────────
+  st.done = st.done || {};
+  function paintDone(){
+    secs.forEach(function(s, i){
+      if (!st.done[s.id]) return;
+      if (h2s[i]) h2s[i].classList.add('rd-done');
+      // 既読の印は、章内の目次（nav.toc2 の href="#ch05b-t1" 形式）に出す。
+      // 左の #nav は章へのリンクで、節のアンカーを持たない。
+      document.querySelectorAll('a[href="#' + s.id + '"]').forEach(function(a){
+        a.classList.add('rd-done');
+      });
+    });
+    var n = Object.keys(st.done).length;
+    if (secs.length) bReset.textContent = '読んだ印を消す（' + n + '/' + secs.length + '）';
+  }
+  paintDone();
+
+  // ── 進み具合と読書位置 ──────────────────────────
+  var tick;
+  function onScroll(){
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    var p = max > 0 ? h.scrollTop / max : 0;
+    bar.style.width = (p * 100).toFixed(1) + '%';
+    clearTimeout(tick);
+    tick = setTimeout(function(){
+      st.y = h.scrollTop; st.at = Date.now();
+      // 画面の上端を通り過ぎた節を既読にする
+      secs.forEach(function(s){
+        if (s.getBoundingClientRect().bottom < h.clientHeight * 0.5) st.done[s.id] = 1;
+      });
+      save(); paintDone();
+    }, 400);
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  if (!st.y || st.y < 200 || location.hash) {
+    bResume.style.display = 'none';
+  } else {
+    var d = Math.round((Date.now() - (st.at || 0)) / 86400000);
+    bResume.title = d > 0 ? d + '日前に閉じた場所へ戻ります' : '前に閉じた場所へ戻ります';
+  }
+  bResume.onclick = function(){
+    window.scrollTo({top: st.y, behavior: 'smooth'});
+    bResume.style.display = 'none';
+  };
+
+  bReset.onclick = function(){
+    st.done = {}; st.y = 0; save();
+    document.querySelectorAll('.rd-done').forEach(function(e){ e.classList.remove('rd-done'); });
+    paintDone();
+  };
+
+  // ── 条文カードの畳み込み ────────────────────────
+  function applyFold(){
+    document.body.classList.toggle('rd-fold', !!st.fold);
+    bFold.textContent = st.fold ? '条文をひらく' : '条文をたたむ';
+  }
+  if (st.fold) applyFold();
+  bFold.onclick = function(){ st.fold = !st.fold; save(); applyFold(); };
+  document.addEventListener('click', function(e){
+    if (!st.fold) return;
+    var h = e.target.closest('.art > h4, .case > h4');
+    if (h) h.parentNode.classList.toggle('rd-open');
+  });
+
+  // ── ページ内を探す ──────────────────────────────
+  var hits = [], cur = -1, input = find.querySelector('input'), cnt = find.querySelector('.n');
+  function clearHits(){
+    document.querySelectorAll('mark.rd-hit').forEach(function(m){
+      var t = document.createTextNode(m.textContent);
+      m.parentNode.replaceChild(t, m); t.parentNode.normalize();
+    });
+    hits = []; cur = -1;
+  }
+  function doFind(q){
+    clearHits();
+    if (!q || q.length < 2) { cnt.textContent = ''; return; }
+    var root = document.querySelector('.wrap') || document.body;
+    var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function(n){
+        if (!n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        var p = n.parentNode;
+        while (p && p !== root) {
+          var t = p.tagName;
+          if (t === 'SCRIPT' || t === 'STYLE' || t === 'NAV' || p.id === 'rd-find')
+            return NodeFilter.FILTER_REJECT;
+          p = p.parentNode;
+        }
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    var nodes = [], n;
+    while ((n = w.nextNode())) nodes.push(n);
+    nodes.forEach(function(node){
+      var i = node.nodeValue.indexOf(q);
+      if (i < 0) return;
+      var rest = node.splitText(i);
+      rest.splitText(q.length);
+      var m = document.createElement('mark');
+      m.className = 'rd-hit'; m.textContent = rest.nodeValue;
+      rest.parentNode.replaceChild(m, rest);
+      hits.push(m);
+    });
+    cnt.textContent = hits.length ? '1 / ' + hits.length : '見つかりません';
+    if (hits.length) go(0);
+  }
+  function go(i){
+    if (!hits.length) return;
+    if (cur >= 0 && hits[cur]) hits[cur].classList.remove('rd-cur');
+    cur = (i + hits.length) % hits.length;
+    hits[cur].classList.add('rd-cur');
+    hits[cur].scrollIntoView({block:'center', behavior:'smooth'});
+    cnt.textContent = (cur + 1) + ' / ' + hits.length;
+  }
+  var ft;
+  input.addEventListener('input', function(){
+    clearTimeout(ft); ft = setTimeout(function(){ doFind(input.value.trim()); }, 250);
+  });
+  input.addEventListener('keydown', function(e){
+    if (e.key === 'Enter') { e.preventDefault(); go(cur + (e.shiftKey ? -1 : 1)); }
+    if (e.key === 'Escape') closeFind();
+  });
+  find.addEventListener('click', function(e){
+    var a = e.target.dataset && e.target.dataset.a;
+    if (a === 'next') go(cur + 1);
+    if (a === 'prev') go(cur - 1);
+    if (a === 'close') closeFind();
+  });
+  function openFind(){ find.style.display = 'block'; input.focus(); input.select(); }
+  function closeFind(){ find.style.display = 'none'; clearHits(); cnt.textContent = ''; }
+  bFind.onclick = openFind;
+  document.addEventListener('keydown', function(e){
+    if ((e.metaKey || e.ctrlKey) && e.key === 'f') { e.preventDefault(); openFind(); }
+  });
+})();
+</script>
 </section>
 
 <section class="chap" id="ch05c">
@@ -8378,7 +10300,216 @@ body{display:flex; align-items:flex-start; margin:0}
 </section>
 
 
+</div>
+<!-- reader v1 -->
+<style id="reader-css">
+/* ── 読むための仕掛け ── */
+#rd-bar{position:fixed; top:0; left:0; height:3px; background:var(--shu,#c0392b);
+  width:0; z-index:200; transition:width .15s}
+#rd-tools{position:fixed; right:1rem; bottom:1rem; z-index:190;
+  display:flex; flex-direction:column; gap:.4rem; align-items:flex-end}
+#rd-tools button{font:inherit; font-size:.78rem; padding:.42rem .7rem; cursor:pointer;
+  background:var(--card,#fff); color:var(--ink,#222); border:1px solid var(--line2,#ccc);
+  border-radius:5px; box-shadow:0 1px 4px rgba(0,0,0,.12); white-space:nowrap}
+#rd-tools button:hover{background:var(--fill,#f4f4f4)}
+#rd-resume{background:var(--shu,#c0392b) !important; color:#fff !important; border-color:transparent !important}
+#rd-find{position:fixed; top:0; left:0; right:0; z-index:210; background:var(--card,#fff);
+  border-bottom:1px solid var(--line2,#ccc); padding:.55rem .8rem; display:none;
+  box-shadow:0 2px 10px rgba(0,0,0,.12)}
+#rd-find input{font:inherit; font-size:1rem; width:min(28rem,60vw); padding:.35rem .55rem;
+  border:1px solid var(--line2,#ccc); border-radius:4px; background:var(--paper,#fff); color:var(--ink,#222)}
+#rd-find .n{font-size:.8rem; color:var(--hai,#888); margin-left:.6rem}
+#rd-find button{font:inherit; font-size:.8rem; margin-left:.35rem; padding:.32rem .6rem;
+  cursor:pointer; background:var(--fill,#f4f4f4); color:var(--ink,#222);
+  border:1px solid var(--line2,#ccc); border-radius:4px}
+mark.rd-hit{background:#ffe08a; color:#000}
+mark.rd-cur{background:var(--shu,#c0392b); color:#fff}
+/* 既読の印 */
+h2.rd-done::after{content:"読了"; font-size:.62rem; letter-spacing:.1em; margin-left:.7rem;
+  padding:.12rem .45rem; border-radius:3px; background:var(--fill,#eee);
+  color:var(--hai,#888); vertical-align:middle; font-weight:400}
+a.rd-done::before{content:"✓ "; color:var(--shu,#c0392b); font-weight:700}
+/* 条文カードの畳み込み */
+body.rd-fold .art .ain, body.rd-fold .case .cin{display:none}
+body.rd-fold .art h4, body.rd-fold .case h4{cursor:pointer}
+body.rd-fold .art h4::after, body.rd-fold .case h4::after{content:" ▸"; opacity:.6}
+body.rd-fold .art.rd-open .ain, body.rd-fold .case.rd-open .cin{display:block}
+body.rd-fold .art.rd-open h4::after, body.rd-fold .case.rd-open h4::after{content:" ▾"}
+@media(max-width:640px){
+  #rd-tools{right:.5rem; bottom:.5rem}
+  #rd-tools button{font-size:.72rem; padding:.36rem .55rem}
+}
+@media print{#rd-bar,#rd-tools,#rd-find{display:none}}
+</style>
 
+<script id="reader-js">
+(function(){
+  var KEY = 'gyosei:' + location.pathname.replace(/^.*\//,'');
+  var st = {};
+  try { st = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e) {}
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(st)); } catch(e) {} }
+
+  // ── 部品を置く ────────────────────────────────
+  var bar = document.createElement('div'); bar.id = 'rd-bar';
+  var tools = document.createElement('div'); tools.id = 'rd-tools';
+  var find = document.createElement('div'); find.id = 'rd-find';
+  find.innerHTML = '<input type="search" placeholder="このページの中を探す" ' +
+    'aria-label="このページの中を探す"><span class="n"></span>' +
+    '<button data-a="prev">前へ</button><button data-a="next">次へ</button>' +
+    '<button data-a="close">閉じる</button>';
+  document.body.appendChild(bar); document.body.appendChild(tools); document.body.appendChild(find);
+
+  function btn(id, label, title){
+    var b = document.createElement('button');
+    b.id = id; b.textContent = label; if (title) b.title = title;
+    tools.appendChild(b); return b;
+  }
+  var bResume = btn('rd-resume', '続きから', '前に閉じた場所へ戻ります');
+  var bFold   = btn('rd-fold', '条文をたたむ', '条文カードと判例カードを閉じて、本文の筋だけを追います');
+  var bFind   = btn('rd-findbtn', 'ページ内を探す', 'このページの中を語で探します');
+  var bReset  = btn('rd-reset', '読んだ印を消す');
+
+  var secs = Array.prototype.slice.call(document.querySelectorAll('section[id]'));
+  var h2s  = secs.map(function(s){ return s.querySelector('h2'); });
+
+  // ── 既読の印 ─────────────────────────────────
+  st.done = st.done || {};
+  function paintDone(){
+    secs.forEach(function(s, i){
+      if (!st.done[s.id]) return;
+      if (h2s[i]) h2s[i].classList.add('rd-done');
+      // 既読の印は、章内の目次（nav.toc2 の href="#ch05c-t1" 形式）に出す。
+      // 左の #nav は章へのリンクで、節のアンカーを持たない。
+      document.querySelectorAll('a[href="#' + s.id + '"]').forEach(function(a){
+        a.classList.add('rd-done');
+      });
+    });
+    var n = Object.keys(st.done).length;
+    if (secs.length) bReset.textContent = '読んだ印を消す（' + n + '/' + secs.length + '）';
+  }
+  paintDone();
+
+  // ── 進み具合と読書位置 ──────────────────────────
+  var tick;
+  function onScroll(){
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    var p = max > 0 ? h.scrollTop / max : 0;
+    bar.style.width = (p * 100).toFixed(1) + '%';
+    clearTimeout(tick);
+    tick = setTimeout(function(){
+      st.y = h.scrollTop; st.at = Date.now();
+      // 画面の上端を通り過ぎた節を既読にする
+      secs.forEach(function(s){
+        if (s.getBoundingClientRect().bottom < h.clientHeight * 0.5) st.done[s.id] = 1;
+      });
+      save(); paintDone();
+    }, 400);
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  if (!st.y || st.y < 200 || location.hash) {
+    bResume.style.display = 'none';
+  } else {
+    var d = Math.round((Date.now() - (st.at || 0)) / 86400000);
+    bResume.title = d > 0 ? d + '日前に閉じた場所へ戻ります' : '前に閉じた場所へ戻ります';
+  }
+  bResume.onclick = function(){
+    window.scrollTo({top: st.y, behavior: 'smooth'});
+    bResume.style.display = 'none';
+  };
+
+  bReset.onclick = function(){
+    st.done = {}; st.y = 0; save();
+    document.querySelectorAll('.rd-done').forEach(function(e){ e.classList.remove('rd-done'); });
+    paintDone();
+  };
+
+  // ── 条文カードの畳み込み ────────────────────────
+  function applyFold(){
+    document.body.classList.toggle('rd-fold', !!st.fold);
+    bFold.textContent = st.fold ? '条文をひらく' : '条文をたたむ';
+  }
+  if (st.fold) applyFold();
+  bFold.onclick = function(){ st.fold = !st.fold; save(); applyFold(); };
+  document.addEventListener('click', function(e){
+    if (!st.fold) return;
+    var h = e.target.closest('.art > h4, .case > h4');
+    if (h) h.parentNode.classList.toggle('rd-open');
+  });
+
+  // ── ページ内を探す ──────────────────────────────
+  var hits = [], cur = -1, input = find.querySelector('input'), cnt = find.querySelector('.n');
+  function clearHits(){
+    document.querySelectorAll('mark.rd-hit').forEach(function(m){
+      var t = document.createTextNode(m.textContent);
+      m.parentNode.replaceChild(t, m); t.parentNode.normalize();
+    });
+    hits = []; cur = -1;
+  }
+  function doFind(q){
+    clearHits();
+    if (!q || q.length < 2) { cnt.textContent = ''; return; }
+    var root = document.querySelector('.wrap') || document.body;
+    var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function(n){
+        if (!n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        var p = n.parentNode;
+        while (p && p !== root) {
+          var t = p.tagName;
+          if (t === 'SCRIPT' || t === 'STYLE' || t === 'NAV' || p.id === 'rd-find')
+            return NodeFilter.FILTER_REJECT;
+          p = p.parentNode;
+        }
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    var nodes = [], n;
+    while ((n = w.nextNode())) nodes.push(n);
+    nodes.forEach(function(node){
+      var i = node.nodeValue.indexOf(q);
+      if (i < 0) return;
+      var rest = node.splitText(i);
+      rest.splitText(q.length);
+      var m = document.createElement('mark');
+      m.className = 'rd-hit'; m.textContent = rest.nodeValue;
+      rest.parentNode.replaceChild(m, rest);
+      hits.push(m);
+    });
+    cnt.textContent = hits.length ? '1 / ' + hits.length : '見つかりません';
+    if (hits.length) go(0);
+  }
+  function go(i){
+    if (!hits.length) return;
+    if (cur >= 0 && hits[cur]) hits[cur].classList.remove('rd-cur');
+    cur = (i + hits.length) % hits.length;
+    hits[cur].classList.add('rd-cur');
+    hits[cur].scrollIntoView({block:'center', behavior:'smooth'});
+    cnt.textContent = (cur + 1) + ' / ' + hits.length;
+  }
+  var ft;
+  input.addEventListener('input', function(){
+    clearTimeout(ft); ft = setTimeout(function(){ doFind(input.value.trim()); }, 250);
+  });
+  input.addEventListener('keydown', function(e){
+    if (e.key === 'Enter') { e.preventDefault(); go(cur + (e.shiftKey ? -1 : 1)); }
+    if (e.key === 'Escape') closeFind();
+  });
+  find.addEventListener('click', function(e){
+    var a = e.target.dataset && e.target.dataset.a;
+    if (a === 'next') go(cur + 1);
+    if (a === 'prev') go(cur - 1);
+    if (a === 'close') closeFind();
+  });
+  function openFind(){ find.style.display = 'block'; input.focus(); input.select(); }
+  function closeFind(){ find.style.display = 'none'; clearHits(); cnt.textContent = ''; }
+  bFind.onclick = openFind;
+  document.addEventListener('keydown', function(e){
+    if ((e.metaKey || e.ctrlKey) && e.key === 'f') { e.preventDefault(); openFind(); }
+  });
+})();
+</script>
 </section>
 
 <section class="chap" id="ch06">
@@ -9131,7 +11262,216 @@ body{display:flex; align-items:flex-start; margin:0}
 </section>
 
 
+</div>
+<!-- reader v1 -->
+<style id="reader-css">
+/* ── 読むための仕掛け ── */
+#rd-bar{position:fixed; top:0; left:0; height:3px; background:var(--shu,#c0392b);
+  width:0; z-index:200; transition:width .15s}
+#rd-tools{position:fixed; right:1rem; bottom:1rem; z-index:190;
+  display:flex; flex-direction:column; gap:.4rem; align-items:flex-end}
+#rd-tools button{font:inherit; font-size:.78rem; padding:.42rem .7rem; cursor:pointer;
+  background:var(--card,#fff); color:var(--ink,#222); border:1px solid var(--line2,#ccc);
+  border-radius:5px; box-shadow:0 1px 4px rgba(0,0,0,.12); white-space:nowrap}
+#rd-tools button:hover{background:var(--fill,#f4f4f4)}
+#rd-resume{background:var(--shu,#c0392b) !important; color:#fff !important; border-color:transparent !important}
+#rd-find{position:fixed; top:0; left:0; right:0; z-index:210; background:var(--card,#fff);
+  border-bottom:1px solid var(--line2,#ccc); padding:.55rem .8rem; display:none;
+  box-shadow:0 2px 10px rgba(0,0,0,.12)}
+#rd-find input{font:inherit; font-size:1rem; width:min(28rem,60vw); padding:.35rem .55rem;
+  border:1px solid var(--line2,#ccc); border-radius:4px; background:var(--paper,#fff); color:var(--ink,#222)}
+#rd-find .n{font-size:.8rem; color:var(--hai,#888); margin-left:.6rem}
+#rd-find button{font:inherit; font-size:.8rem; margin-left:.35rem; padding:.32rem .6rem;
+  cursor:pointer; background:var(--fill,#f4f4f4); color:var(--ink,#222);
+  border:1px solid var(--line2,#ccc); border-radius:4px}
+mark.rd-hit{background:#ffe08a; color:#000}
+mark.rd-cur{background:var(--shu,#c0392b); color:#fff}
+/* 既読の印 */
+h2.rd-done::after{content:"読了"; font-size:.62rem; letter-spacing:.1em; margin-left:.7rem;
+  padding:.12rem .45rem; border-radius:3px; background:var(--fill,#eee);
+  color:var(--hai,#888); vertical-align:middle; font-weight:400}
+a.rd-done::before{content:"✓ "; color:var(--shu,#c0392b); font-weight:700}
+/* 条文カードの畳み込み */
+body.rd-fold .art .ain, body.rd-fold .case .cin{display:none}
+body.rd-fold .art h4, body.rd-fold .case h4{cursor:pointer}
+body.rd-fold .art h4::after, body.rd-fold .case h4::after{content:" ▸"; opacity:.6}
+body.rd-fold .art.rd-open .ain, body.rd-fold .case.rd-open .cin{display:block}
+body.rd-fold .art.rd-open h4::after, body.rd-fold .case.rd-open h4::after{content:" ▾"}
+@media(max-width:640px){
+  #rd-tools{right:.5rem; bottom:.5rem}
+  #rd-tools button{font-size:.72rem; padding:.36rem .55rem}
+}
+@media print{#rd-bar,#rd-tools,#rd-find{display:none}}
+</style>
 
+<script id="reader-js">
+(function(){
+  var KEY = 'gyosei:' + location.pathname.replace(/^.*\//,'');
+  var st = {};
+  try { st = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e) {}
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(st)); } catch(e) {} }
+
+  // ── 部品を置く ────────────────────────────────
+  var bar = document.createElement('div'); bar.id = 'rd-bar';
+  var tools = document.createElement('div'); tools.id = 'rd-tools';
+  var find = document.createElement('div'); find.id = 'rd-find';
+  find.innerHTML = '<input type="search" placeholder="このページの中を探す" ' +
+    'aria-label="このページの中を探す"><span class="n"></span>' +
+    '<button data-a="prev">前へ</button><button data-a="next">次へ</button>' +
+    '<button data-a="close">閉じる</button>';
+  document.body.appendChild(bar); document.body.appendChild(tools); document.body.appendChild(find);
+
+  function btn(id, label, title){
+    var b = document.createElement('button');
+    b.id = id; b.textContent = label; if (title) b.title = title;
+    tools.appendChild(b); return b;
+  }
+  var bResume = btn('rd-resume', '続きから', '前に閉じた場所へ戻ります');
+  var bFold   = btn('rd-fold', '条文をたたむ', '条文カードと判例カードを閉じて、本文の筋だけを追います');
+  var bFind   = btn('rd-findbtn', 'ページ内を探す', 'このページの中を語で探します');
+  var bReset  = btn('rd-reset', '読んだ印を消す');
+
+  var secs = Array.prototype.slice.call(document.querySelectorAll('section[id]'));
+  var h2s  = secs.map(function(s){ return s.querySelector('h2'); });
+
+  // ── 既読の印 ─────────────────────────────────
+  st.done = st.done || {};
+  function paintDone(){
+    secs.forEach(function(s, i){
+      if (!st.done[s.id]) return;
+      if (h2s[i]) h2s[i].classList.add('rd-done');
+      // 既読の印は、章内の目次（nav.toc2 の href="#ch06-t1" 形式）に出す。
+      // 左の #nav は章へのリンクで、節のアンカーを持たない。
+      document.querySelectorAll('a[href="#' + s.id + '"]').forEach(function(a){
+        a.classList.add('rd-done');
+      });
+    });
+    var n = Object.keys(st.done).length;
+    if (secs.length) bReset.textContent = '読んだ印を消す（' + n + '/' + secs.length + '）';
+  }
+  paintDone();
+
+  // ── 進み具合と読書位置 ──────────────────────────
+  var tick;
+  function onScroll(){
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    var p = max > 0 ? h.scrollTop / max : 0;
+    bar.style.width = (p * 100).toFixed(1) + '%';
+    clearTimeout(tick);
+    tick = setTimeout(function(){
+      st.y = h.scrollTop; st.at = Date.now();
+      // 画面の上端を通り過ぎた節を既読にする
+      secs.forEach(function(s){
+        if (s.getBoundingClientRect().bottom < h.clientHeight * 0.5) st.done[s.id] = 1;
+      });
+      save(); paintDone();
+    }, 400);
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  if (!st.y || st.y < 200 || location.hash) {
+    bResume.style.display = 'none';
+  } else {
+    var d = Math.round((Date.now() - (st.at || 0)) / 86400000);
+    bResume.title = d > 0 ? d + '日前に閉じた場所へ戻ります' : '前に閉じた場所へ戻ります';
+  }
+  bResume.onclick = function(){
+    window.scrollTo({top: st.y, behavior: 'smooth'});
+    bResume.style.display = 'none';
+  };
+
+  bReset.onclick = function(){
+    st.done = {}; st.y = 0; save();
+    document.querySelectorAll('.rd-done').forEach(function(e){ e.classList.remove('rd-done'); });
+    paintDone();
+  };
+
+  // ── 条文カードの畳み込み ────────────────────────
+  function applyFold(){
+    document.body.classList.toggle('rd-fold', !!st.fold);
+    bFold.textContent = st.fold ? '条文をひらく' : '条文をたたむ';
+  }
+  if (st.fold) applyFold();
+  bFold.onclick = function(){ st.fold = !st.fold; save(); applyFold(); };
+  document.addEventListener('click', function(e){
+    if (!st.fold) return;
+    var h = e.target.closest('.art > h4, .case > h4');
+    if (h) h.parentNode.classList.toggle('rd-open');
+  });
+
+  // ── ページ内を探す ──────────────────────────────
+  var hits = [], cur = -1, input = find.querySelector('input'), cnt = find.querySelector('.n');
+  function clearHits(){
+    document.querySelectorAll('mark.rd-hit').forEach(function(m){
+      var t = document.createTextNode(m.textContent);
+      m.parentNode.replaceChild(t, m); t.parentNode.normalize();
+    });
+    hits = []; cur = -1;
+  }
+  function doFind(q){
+    clearHits();
+    if (!q || q.length < 2) { cnt.textContent = ''; return; }
+    var root = document.querySelector('.wrap') || document.body;
+    var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function(n){
+        if (!n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        var p = n.parentNode;
+        while (p && p !== root) {
+          var t = p.tagName;
+          if (t === 'SCRIPT' || t === 'STYLE' || t === 'NAV' || p.id === 'rd-find')
+            return NodeFilter.FILTER_REJECT;
+          p = p.parentNode;
+        }
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    var nodes = [], n;
+    while ((n = w.nextNode())) nodes.push(n);
+    nodes.forEach(function(node){
+      var i = node.nodeValue.indexOf(q);
+      if (i < 0) return;
+      var rest = node.splitText(i);
+      rest.splitText(q.length);
+      var m = document.createElement('mark');
+      m.className = 'rd-hit'; m.textContent = rest.nodeValue;
+      rest.parentNode.replaceChild(m, rest);
+      hits.push(m);
+    });
+    cnt.textContent = hits.length ? '1 / ' + hits.length : '見つかりません';
+    if (hits.length) go(0);
+  }
+  function go(i){
+    if (!hits.length) return;
+    if (cur >= 0 && hits[cur]) hits[cur].classList.remove('rd-cur');
+    cur = (i + hits.length) % hits.length;
+    hits[cur].classList.add('rd-cur');
+    hits[cur].scrollIntoView({block:'center', behavior:'smooth'});
+    cnt.textContent = (cur + 1) + ' / ' + hits.length;
+  }
+  var ft;
+  input.addEventListener('input', function(){
+    clearTimeout(ft); ft = setTimeout(function(){ doFind(input.value.trim()); }, 250);
+  });
+  input.addEventListener('keydown', function(e){
+    if (e.key === 'Enter') { e.preventDefault(); go(cur + (e.shiftKey ? -1 : 1)); }
+    if (e.key === 'Escape') closeFind();
+  });
+  find.addEventListener('click', function(e){
+    var a = e.target.dataset && e.target.dataset.a;
+    if (a === 'next') go(cur + 1);
+    if (a === 'prev') go(cur - 1);
+    if (a === 'close') closeFind();
+  });
+  function openFind(){ find.style.display = 'block'; input.focus(); input.select(); }
+  function closeFind(){ find.style.display = 'none'; clearHits(); cnt.textContent = ''; }
+  bFind.onclick = openFind;
+  document.addEventListener('keydown', function(e){
+    if ((e.metaKey || e.ctrlKey) && e.key === 'f') { e.preventDefault(); openFind(); }
+  });
+})();
+</script>
 </section>
 
 <section class="chap" id="ch07">
@@ -9831,7 +12171,216 @@ body{display:flex; align-items:flex-start; margin:0}
 </section>
 
 
+</div>
+<!-- reader v1 -->
+<style id="reader-css">
+/* ── 読むための仕掛け ── */
+#rd-bar{position:fixed; top:0; left:0; height:3px; background:var(--shu,#c0392b);
+  width:0; z-index:200; transition:width .15s}
+#rd-tools{position:fixed; right:1rem; bottom:1rem; z-index:190;
+  display:flex; flex-direction:column; gap:.4rem; align-items:flex-end}
+#rd-tools button{font:inherit; font-size:.78rem; padding:.42rem .7rem; cursor:pointer;
+  background:var(--card,#fff); color:var(--ink,#222); border:1px solid var(--line2,#ccc);
+  border-radius:5px; box-shadow:0 1px 4px rgba(0,0,0,.12); white-space:nowrap}
+#rd-tools button:hover{background:var(--fill,#f4f4f4)}
+#rd-resume{background:var(--shu,#c0392b) !important; color:#fff !important; border-color:transparent !important}
+#rd-find{position:fixed; top:0; left:0; right:0; z-index:210; background:var(--card,#fff);
+  border-bottom:1px solid var(--line2,#ccc); padding:.55rem .8rem; display:none;
+  box-shadow:0 2px 10px rgba(0,0,0,.12)}
+#rd-find input{font:inherit; font-size:1rem; width:min(28rem,60vw); padding:.35rem .55rem;
+  border:1px solid var(--line2,#ccc); border-radius:4px; background:var(--paper,#fff); color:var(--ink,#222)}
+#rd-find .n{font-size:.8rem; color:var(--hai,#888); margin-left:.6rem}
+#rd-find button{font:inherit; font-size:.8rem; margin-left:.35rem; padding:.32rem .6rem;
+  cursor:pointer; background:var(--fill,#f4f4f4); color:var(--ink,#222);
+  border:1px solid var(--line2,#ccc); border-radius:4px}
+mark.rd-hit{background:#ffe08a; color:#000}
+mark.rd-cur{background:var(--shu,#c0392b); color:#fff}
+/* 既読の印 */
+h2.rd-done::after{content:"読了"; font-size:.62rem; letter-spacing:.1em; margin-left:.7rem;
+  padding:.12rem .45rem; border-radius:3px; background:var(--fill,#eee);
+  color:var(--hai,#888); vertical-align:middle; font-weight:400}
+a.rd-done::before{content:"✓ "; color:var(--shu,#c0392b); font-weight:700}
+/* 条文カードの畳み込み */
+body.rd-fold .art .ain, body.rd-fold .case .cin{display:none}
+body.rd-fold .art h4, body.rd-fold .case h4{cursor:pointer}
+body.rd-fold .art h4::after, body.rd-fold .case h4::after{content:" ▸"; opacity:.6}
+body.rd-fold .art.rd-open .ain, body.rd-fold .case.rd-open .cin{display:block}
+body.rd-fold .art.rd-open h4::after, body.rd-fold .case.rd-open h4::after{content:" ▾"}
+@media(max-width:640px){
+  #rd-tools{right:.5rem; bottom:.5rem}
+  #rd-tools button{font-size:.72rem; padding:.36rem .55rem}
+}
+@media print{#rd-bar,#rd-tools,#rd-find{display:none}}
+</style>
 
+<script id="reader-js">
+(function(){
+  var KEY = 'gyosei:' + location.pathname.replace(/^.*\//,'');
+  var st = {};
+  try { st = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e) {}
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(st)); } catch(e) {} }
+
+  // ── 部品を置く ────────────────────────────────
+  var bar = document.createElement('div'); bar.id = 'rd-bar';
+  var tools = document.createElement('div'); tools.id = 'rd-tools';
+  var find = document.createElement('div'); find.id = 'rd-find';
+  find.innerHTML = '<input type="search" placeholder="このページの中を探す" ' +
+    'aria-label="このページの中を探す"><span class="n"></span>' +
+    '<button data-a="prev">前へ</button><button data-a="next">次へ</button>' +
+    '<button data-a="close">閉じる</button>';
+  document.body.appendChild(bar); document.body.appendChild(tools); document.body.appendChild(find);
+
+  function btn(id, label, title){
+    var b = document.createElement('button');
+    b.id = id; b.textContent = label; if (title) b.title = title;
+    tools.appendChild(b); return b;
+  }
+  var bResume = btn('rd-resume', '続きから', '前に閉じた場所へ戻ります');
+  var bFold   = btn('rd-fold', '条文をたたむ', '条文カードと判例カードを閉じて、本文の筋だけを追います');
+  var bFind   = btn('rd-findbtn', 'ページ内を探す', 'このページの中を語で探します');
+  var bReset  = btn('rd-reset', '読んだ印を消す');
+
+  var secs = Array.prototype.slice.call(document.querySelectorAll('section[id]'));
+  var h2s  = secs.map(function(s){ return s.querySelector('h2'); });
+
+  // ── 既読の印 ─────────────────────────────────
+  st.done = st.done || {};
+  function paintDone(){
+    secs.forEach(function(s, i){
+      if (!st.done[s.id]) return;
+      if (h2s[i]) h2s[i].classList.add('rd-done');
+      // 既読の印は、章内の目次（nav.toc2 の href="#ch07-t1" 形式）に出す。
+      // 左の #nav は章へのリンクで、節のアンカーを持たない。
+      document.querySelectorAll('a[href="#' + s.id + '"]').forEach(function(a){
+        a.classList.add('rd-done');
+      });
+    });
+    var n = Object.keys(st.done).length;
+    if (secs.length) bReset.textContent = '読んだ印を消す（' + n + '/' + secs.length + '）';
+  }
+  paintDone();
+
+  // ── 進み具合と読書位置 ──────────────────────────
+  var tick;
+  function onScroll(){
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    var p = max > 0 ? h.scrollTop / max : 0;
+    bar.style.width = (p * 100).toFixed(1) + '%';
+    clearTimeout(tick);
+    tick = setTimeout(function(){
+      st.y = h.scrollTop; st.at = Date.now();
+      // 画面の上端を通り過ぎた節を既読にする
+      secs.forEach(function(s){
+        if (s.getBoundingClientRect().bottom < h.clientHeight * 0.5) st.done[s.id] = 1;
+      });
+      save(); paintDone();
+    }, 400);
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  if (!st.y || st.y < 200 || location.hash) {
+    bResume.style.display = 'none';
+  } else {
+    var d = Math.round((Date.now() - (st.at || 0)) / 86400000);
+    bResume.title = d > 0 ? d + '日前に閉じた場所へ戻ります' : '前に閉じた場所へ戻ります';
+  }
+  bResume.onclick = function(){
+    window.scrollTo({top: st.y, behavior: 'smooth'});
+    bResume.style.display = 'none';
+  };
+
+  bReset.onclick = function(){
+    st.done = {}; st.y = 0; save();
+    document.querySelectorAll('.rd-done').forEach(function(e){ e.classList.remove('rd-done'); });
+    paintDone();
+  };
+
+  // ── 条文カードの畳み込み ────────────────────────
+  function applyFold(){
+    document.body.classList.toggle('rd-fold', !!st.fold);
+    bFold.textContent = st.fold ? '条文をひらく' : '条文をたたむ';
+  }
+  if (st.fold) applyFold();
+  bFold.onclick = function(){ st.fold = !st.fold; save(); applyFold(); };
+  document.addEventListener('click', function(e){
+    if (!st.fold) return;
+    var h = e.target.closest('.art > h4, .case > h4');
+    if (h) h.parentNode.classList.toggle('rd-open');
+  });
+
+  // ── ページ内を探す ──────────────────────────────
+  var hits = [], cur = -1, input = find.querySelector('input'), cnt = find.querySelector('.n');
+  function clearHits(){
+    document.querySelectorAll('mark.rd-hit').forEach(function(m){
+      var t = document.createTextNode(m.textContent);
+      m.parentNode.replaceChild(t, m); t.parentNode.normalize();
+    });
+    hits = []; cur = -1;
+  }
+  function doFind(q){
+    clearHits();
+    if (!q || q.length < 2) { cnt.textContent = ''; return; }
+    var root = document.querySelector('.wrap') || document.body;
+    var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function(n){
+        if (!n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        var p = n.parentNode;
+        while (p && p !== root) {
+          var t = p.tagName;
+          if (t === 'SCRIPT' || t === 'STYLE' || t === 'NAV' || p.id === 'rd-find')
+            return NodeFilter.FILTER_REJECT;
+          p = p.parentNode;
+        }
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    var nodes = [], n;
+    while ((n = w.nextNode())) nodes.push(n);
+    nodes.forEach(function(node){
+      var i = node.nodeValue.indexOf(q);
+      if (i < 0) return;
+      var rest = node.splitText(i);
+      rest.splitText(q.length);
+      var m = document.createElement('mark');
+      m.className = 'rd-hit'; m.textContent = rest.nodeValue;
+      rest.parentNode.replaceChild(m, rest);
+      hits.push(m);
+    });
+    cnt.textContent = hits.length ? '1 / ' + hits.length : '見つかりません';
+    if (hits.length) go(0);
+  }
+  function go(i){
+    if (!hits.length) return;
+    if (cur >= 0 && hits[cur]) hits[cur].classList.remove('rd-cur');
+    cur = (i + hits.length) % hits.length;
+    hits[cur].classList.add('rd-cur');
+    hits[cur].scrollIntoView({block:'center', behavior:'smooth'});
+    cnt.textContent = (cur + 1) + ' / ' + hits.length;
+  }
+  var ft;
+  input.addEventListener('input', function(){
+    clearTimeout(ft); ft = setTimeout(function(){ doFind(input.value.trim()); }, 250);
+  });
+  input.addEventListener('keydown', function(e){
+    if (e.key === 'Enter') { e.preventDefault(); go(cur + (e.shiftKey ? -1 : 1)); }
+    if (e.key === 'Escape') closeFind();
+  });
+  find.addEventListener('click', function(e){
+    var a = e.target.dataset && e.target.dataset.a;
+    if (a === 'next') go(cur + 1);
+    if (a === 'prev') go(cur - 1);
+    if (a === 'close') closeFind();
+  });
+  function openFind(){ find.style.display = 'block'; input.focus(); input.select(); }
+  function closeFind(){ find.style.display = 'none'; clearHits(); cnt.textContent = ''; }
+  bFind.onclick = openFind;
+  document.addEventListener('keydown', function(e){
+    if ((e.metaKey || e.ctrlKey) && e.key === 'f') { e.preventDefault(); openFind(); }
+  });
+})();
+</script>
 </section>
 
 <section class="chap" id="yougo">
@@ -9987,7 +12536,216 @@ body{display:flex; align-items:flex-start; margin:0}
 </div>
 </section>
 
+</div>
+<!-- reader v1 -->
+<style id="reader-css">
+/* ── 読むための仕掛け ── */
+#rd-bar{position:fixed; top:0; left:0; height:3px; background:var(--shu,#c0392b);
+  width:0; z-index:200; transition:width .15s}
+#rd-tools{position:fixed; right:1rem; bottom:1rem; z-index:190;
+  display:flex; flex-direction:column; gap:.4rem; align-items:flex-end}
+#rd-tools button{font:inherit; font-size:.78rem; padding:.42rem .7rem; cursor:pointer;
+  background:var(--card,#fff); color:var(--ink,#222); border:1px solid var(--line2,#ccc);
+  border-radius:5px; box-shadow:0 1px 4px rgba(0,0,0,.12); white-space:nowrap}
+#rd-tools button:hover{background:var(--fill,#f4f4f4)}
+#rd-resume{background:var(--shu,#c0392b) !important; color:#fff !important; border-color:transparent !important}
+#rd-find{position:fixed; top:0; left:0; right:0; z-index:210; background:var(--card,#fff);
+  border-bottom:1px solid var(--line2,#ccc); padding:.55rem .8rem; display:none;
+  box-shadow:0 2px 10px rgba(0,0,0,.12)}
+#rd-find input{font:inherit; font-size:1rem; width:min(28rem,60vw); padding:.35rem .55rem;
+  border:1px solid var(--line2,#ccc); border-radius:4px; background:var(--paper,#fff); color:var(--ink,#222)}
+#rd-find .n{font-size:.8rem; color:var(--hai,#888); margin-left:.6rem}
+#rd-find button{font:inherit; font-size:.8rem; margin-left:.35rem; padding:.32rem .6rem;
+  cursor:pointer; background:var(--fill,#f4f4f4); color:var(--ink,#222);
+  border:1px solid var(--line2,#ccc); border-radius:4px}
+mark.rd-hit{background:#ffe08a; color:#000}
+mark.rd-cur{background:var(--shu,#c0392b); color:#fff}
+/* 既読の印 */
+h2.rd-done::after{content:"読了"; font-size:.62rem; letter-spacing:.1em; margin-left:.7rem;
+  padding:.12rem .45rem; border-radius:3px; background:var(--fill,#eee);
+  color:var(--hai,#888); vertical-align:middle; font-weight:400}
+a.rd-done::before{content:"✓ "; color:var(--shu,#c0392b); font-weight:700}
+/* 条文カードの畳み込み */
+body.rd-fold .art .ain, body.rd-fold .case .cin{display:none}
+body.rd-fold .art h4, body.rd-fold .case h4{cursor:pointer}
+body.rd-fold .art h4::after, body.rd-fold .case h4::after{content:" ▸"; opacity:.6}
+body.rd-fold .art.rd-open .ain, body.rd-fold .case.rd-open .cin{display:block}
+body.rd-fold .art.rd-open h4::after, body.rd-fold .case.rd-open h4::after{content:" ▾"}
+@media(max-width:640px){
+  #rd-tools{right:.5rem; bottom:.5rem}
+  #rd-tools button{font-size:.72rem; padding:.36rem .55rem}
+}
+@media print{#rd-bar,#rd-tools,#rd-find{display:none}}
+</style>
 
+<script id="reader-js">
+(function(){
+  var KEY = 'gyosei:' + location.pathname.replace(/^.*\//,'');
+  var st = {};
+  try { st = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e) {}
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(st)); } catch(e) {} }
+
+  // ── 部品を置く ────────────────────────────────
+  var bar = document.createElement('div'); bar.id = 'rd-bar';
+  var tools = document.createElement('div'); tools.id = 'rd-tools';
+  var find = document.createElement('div'); find.id = 'rd-find';
+  find.innerHTML = '<input type="search" placeholder="このページの中を探す" ' +
+    'aria-label="このページの中を探す"><span class="n"></span>' +
+    '<button data-a="prev">前へ</button><button data-a="next">次へ</button>' +
+    '<button data-a="close">閉じる</button>';
+  document.body.appendChild(bar); document.body.appendChild(tools); document.body.appendChild(find);
+
+  function btn(id, label, title){
+    var b = document.createElement('button');
+    b.id = id; b.textContent = label; if (title) b.title = title;
+    tools.appendChild(b); return b;
+  }
+  var bResume = btn('rd-resume', '続きから', '前に閉じた場所へ戻ります');
+  var bFold   = btn('rd-fold', '条文をたたむ', '条文カードと判例カードを閉じて、本文の筋だけを追います');
+  var bFind   = btn('rd-findbtn', 'ページ内を探す', 'このページの中を語で探します');
+  var bReset  = btn('rd-reset', '読んだ印を消す');
+
+  var secs = Array.prototype.slice.call(document.querySelectorAll('section[id]'));
+  var h2s  = secs.map(function(s){ return s.querySelector('h2'); });
+
+  // ── 既読の印 ─────────────────────────────────
+  st.done = st.done || {};
+  function paintDone(){
+    secs.forEach(function(s, i){
+      if (!st.done[s.id]) return;
+      if (h2s[i]) h2s[i].classList.add('rd-done');
+      // 既読の印は、章内の目次（nav.toc2 の href="#yougo-t1" 形式）に出す。
+      // 左の #nav は章へのリンクで、節のアンカーを持たない。
+      document.querySelectorAll('a[href="#' + s.id + '"]').forEach(function(a){
+        a.classList.add('rd-done');
+      });
+    });
+    var n = Object.keys(st.done).length;
+    if (secs.length) bReset.textContent = '読んだ印を消す（' + n + '/' + secs.length + '）';
+  }
+  paintDone();
+
+  // ── 進み具合と読書位置 ──────────────────────────
+  var tick;
+  function onScroll(){
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    var p = max > 0 ? h.scrollTop / max : 0;
+    bar.style.width = (p * 100).toFixed(1) + '%';
+    clearTimeout(tick);
+    tick = setTimeout(function(){
+      st.y = h.scrollTop; st.at = Date.now();
+      // 画面の上端を通り過ぎた節を既読にする
+      secs.forEach(function(s){
+        if (s.getBoundingClientRect().bottom < h.clientHeight * 0.5) st.done[s.id] = 1;
+      });
+      save(); paintDone();
+    }, 400);
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  if (!st.y || st.y < 200 || location.hash) {
+    bResume.style.display = 'none';
+  } else {
+    var d = Math.round((Date.now() - (st.at || 0)) / 86400000);
+    bResume.title = d > 0 ? d + '日前に閉じた場所へ戻ります' : '前に閉じた場所へ戻ります';
+  }
+  bResume.onclick = function(){
+    window.scrollTo({top: st.y, behavior: 'smooth'});
+    bResume.style.display = 'none';
+  };
+
+  bReset.onclick = function(){
+    st.done = {}; st.y = 0; save();
+    document.querySelectorAll('.rd-done').forEach(function(e){ e.classList.remove('rd-done'); });
+    paintDone();
+  };
+
+  // ── 条文カードの畳み込み ────────────────────────
+  function applyFold(){
+    document.body.classList.toggle('rd-fold', !!st.fold);
+    bFold.textContent = st.fold ? '条文をひらく' : '条文をたたむ';
+  }
+  if (st.fold) applyFold();
+  bFold.onclick = function(){ st.fold = !st.fold; save(); applyFold(); };
+  document.addEventListener('click', function(e){
+    if (!st.fold) return;
+    var h = e.target.closest('.art > h4, .case > h4');
+    if (h) h.parentNode.classList.toggle('rd-open');
+  });
+
+  // ── ページ内を探す ──────────────────────────────
+  var hits = [], cur = -1, input = find.querySelector('input'), cnt = find.querySelector('.n');
+  function clearHits(){
+    document.querySelectorAll('mark.rd-hit').forEach(function(m){
+      var t = document.createTextNode(m.textContent);
+      m.parentNode.replaceChild(t, m); t.parentNode.normalize();
+    });
+    hits = []; cur = -1;
+  }
+  function doFind(q){
+    clearHits();
+    if (!q || q.length < 2) { cnt.textContent = ''; return; }
+    var root = document.querySelector('.wrap') || document.body;
+    var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function(n){
+        if (!n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        var p = n.parentNode;
+        while (p && p !== root) {
+          var t = p.tagName;
+          if (t === 'SCRIPT' || t === 'STYLE' || t === 'NAV' || p.id === 'rd-find')
+            return NodeFilter.FILTER_REJECT;
+          p = p.parentNode;
+        }
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    var nodes = [], n;
+    while ((n = w.nextNode())) nodes.push(n);
+    nodes.forEach(function(node){
+      var i = node.nodeValue.indexOf(q);
+      if (i < 0) return;
+      var rest = node.splitText(i);
+      rest.splitText(q.length);
+      var m = document.createElement('mark');
+      m.className = 'rd-hit'; m.textContent = rest.nodeValue;
+      rest.parentNode.replaceChild(m, rest);
+      hits.push(m);
+    });
+    cnt.textContent = hits.length ? '1 / ' + hits.length : '見つかりません';
+    if (hits.length) go(0);
+  }
+  function go(i){
+    if (!hits.length) return;
+    if (cur >= 0 && hits[cur]) hits[cur].classList.remove('rd-cur');
+    cur = (i + hits.length) % hits.length;
+    hits[cur].classList.add('rd-cur');
+    hits[cur].scrollIntoView({block:'center', behavior:'smooth'});
+    cnt.textContent = (cur + 1) + ' / ' + hits.length;
+  }
+  var ft;
+  input.addEventListener('input', function(){
+    clearTimeout(ft); ft = setTimeout(function(){ doFind(input.value.trim()); }, 250);
+  });
+  input.addEventListener('keydown', function(e){
+    if (e.key === 'Enter') { e.preventDefault(); go(cur + (e.shiftKey ? -1 : 1)); }
+    if (e.key === 'Escape') closeFind();
+  });
+  find.addEventListener('click', function(e){
+    var a = e.target.dataset && e.target.dataset.a;
+    if (a === 'next') go(cur + 1);
+    if (a === 'prev') go(cur - 1);
+    if (a === 'close') closeFind();
+  });
+  function openFind(){ find.style.display = 'block'; input.focus(); input.select(); }
+  function closeFind(){ find.style.display = 'none'; clearHits(); cnt.textContent = ''; }
+  bFind.onclick = openFind;
+  document.addEventListener('keydown', function(e){
+    if ((e.metaKey || e.ctrlKey) && e.key === 'f') { e.preventDefault(); openFind(); }
+  });
+})();
+</script>
 </section>
 <footer style="border-top:1px solid var(--line);margin-top:4rem;padding-top:1.4rem;color:var(--hai);font-size:.85rem"><p>条文は e-Gov の現行法令から機械取得したものを引用しています。判例は収録データのうち確度の高いものだけを引きました。過去問については、その論点が扱われた問題の番号だけを載せ、問題文および選択肢の本文は載せていません。</p></footer>
 </div>
