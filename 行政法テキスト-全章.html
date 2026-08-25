@@ -149,12 +149,70 @@ section+section{margin-top:0}
   table{font-size:.85rem}
 }
 
+/* ─────────────────────────────────────────────
+   読みやすさの修正（2026-08-25）
+   ・表が横スクロールできなくなっていたのを直す
+   ・行見出しが折り返さず横に伸びていたのを直す
+   ・見出し行を固定して、横スクロール中も何の列か分かるようにする
+   ───────────────────────────────────────────── */
+
+/* .scroll が二重定義され、後の overflow:hidden が overflow-x:auto を
+   打ち消していた。角丸を保ったまま横スクロールできるようにする。 */
+.scroll{
+  overflow-x:auto !important;
+  overflow-y:visible !important;
+  -webkit-overflow-scrolling:touch;
+  border:1px solid var(--line2);
+  border-radius:6px;
+  margin:1.2rem 0;
+  /* スクロールできることを影で示す */
+  background:
+    linear-gradient(to right, var(--card) 30%, transparent),
+    linear-gradient(to left,  var(--card) 30%, transparent) 100% 0,
+    linear-gradient(to right, rgba(0,0,0,.10), transparent 12px),
+    linear-gradient(to left,  rgba(0,0,0,.10), transparent 12px) 100% 0;
+  background-repeat:no-repeat;
+  background-size:36px 100%, 36px 100%, 14px 100%, 14px 100%;
+  background-attachment:local, local, scroll, scroll;
+}
+
+/* 表そのもの。最小幅を下げ、行見出しを折り返せるようにする。 */
+.scroll table{ min-width:0; width:100%; }
+.scroll th[scope="row"]{
+  white-space:normal;      /* 折り返さないせいで横に伸びていた */
+  word-break:auto-phrase;  /* 日本語を文節で折り返す */
+  min-width:7rem;
+  max-width:14rem;
+}
+.scroll td{ word-break:auto-phrase; }
+
+/* 横スクロール中も、何の列かが分かるように見出し行を上に固定する。 */
+.scroll{ max-height:none; }
+.scroll thead th{
+  position:sticky; top:0; z-index:2;
+  background:var(--fill);
+}
+
+/* スクロールバーを細く、常に見えるようにする（存在に気づけるように） */
+.scroll::-webkit-scrollbar{ height:9px }
+.scroll::-webkit-scrollbar-thumb{
+  background:var(--line2); border-radius:5px;
+}
+.scroll::-webkit-scrollbar-track{ background:transparent }
+
+/* 画面が狭いときは、表の文字を詰めすぎない */
+@media(max-width:720px){
+  .scroll table{ font-size:.86rem }
+  .scroll th, .scroll td{ padding:.6rem .55rem !important }
+  .scroll th[scope="row"]{ min-width:5.5rem; max-width:9rem }
+}
+
 .cite{color:var(--seiji); text-decoration:none; border-bottom:1px dotted var(--seiji); font-weight:600}
 .cite:hover{background:var(--seiji-soft); border-bottom-style:solid}
 /* ── サイドナビ ───────────────────────────── */
 body{display:flex; align-items:flex-start}
 #nav{
-  position:sticky; top:0; flex:none; width:15rem; height:100vh; overflow-y:auto;
+  position:fixed; left:0; top:0; flex:none; width:15rem; height:100vh; max-height:100vh; overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
   background:var(--card); border-right:1px solid var(--line2); padding:1.2rem 0 3rem;
   font-size:.86rem; line-height:1.6;
 }
@@ -168,9 +226,10 @@ body{display:flex; align-items:flex-start}
 #nav .sub{padding-left:1.9rem; font-size:.82rem}
 #nav .todo{color:var(--hai); opacity:.55; pointer-events:none}
 #navbtn{display:none}
-.wrap{flex:1; min-width:0}
+.wrap{flex:1; min-width:0; margin-left:15rem}
 @media(max-width:900px){
   body{display:block}
+  .wrap{margin-left:0}
   #nav{position:fixed; left:-15rem; top:0; z-index:50; transition:left .2s; box-shadow:2px 0 12px rgba(0,0,0,.15)}
   #nav.open{left:0}
   #navbtn{display:flex; position:fixed; left:.7rem; top:.7rem; z-index:60; width:2.5rem; height:2.5rem;
@@ -254,7 +313,7 @@ section + section{margin-top:1.5rem}
 /* ── サイドナビ ───────────────────────────── */
 body{display:flex; align-items:flex-start}
 #nav{
-  position:sticky; top:0; flex:none; width:15rem; height:100vh; overflow-y:auto;
+  position:fixed; left:0; top:0; flex:none; width:15rem; height:100vh; max-height:100vh; overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
   background:var(--card); border-right:1px solid var(--line2); padding:1.2rem 0 3rem;
   font-size:.86rem; line-height:1.6;
 }
@@ -268,9 +327,10 @@ body{display:flex; align-items:flex-start}
 #nav .sub{padding-left:1.9rem; font-size:.82rem}
 #nav .todo{color:var(--hai); opacity:.55; pointer-events:none}
 #navbtn{display:none}
-.wrap{flex:1; min-width:0}
+.wrap{flex:1; min-width:0; margin-left:15rem}
 @media(max-width:900px){
   body{display:block}
+  .wrap{margin-left:0}
   #nav{position:fixed; left:-15rem; top:0; z-index:50; transition:left .2s; box-shadow:2px 0 12px rgba(0,0,0,.15)}
   #nav.open{left:0}
   #navbtn{display:flex; position:fixed; left:.7rem; top:.7rem; z-index:60; width:2.5rem; height:2.5rem;
@@ -331,7 +391,7 @@ section + section{margin-top:1.5rem}
 /* ── サイドナビ ───────────────────────────── */
 body{display:flex; align-items:flex-start}
 #nav{
-  position:sticky; top:0; flex:none; width:15rem; height:100vh; overflow-y:auto;
+  position:fixed; left:0; top:0; flex:none; width:15rem; height:100vh; max-height:100vh; overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
   background:var(--card); border-right:1px solid var(--line2); padding:1.2rem 0 3rem;
   font-size:.86rem; line-height:1.6;
 }
@@ -345,9 +405,10 @@ body{display:flex; align-items:flex-start}
 #nav .sub{padding-left:1.9rem; font-size:.82rem}
 #nav .todo{color:var(--hai); opacity:.55; pointer-events:none}
 #navbtn{display:none}
-.wrap{flex:1; min-width:0}
+.wrap{flex:1; min-width:0; margin-left:15rem}
 @media(max-width:900px){
   body{display:block}
+  .wrap{margin-left:0}
   #nav{position:fixed; left:-15rem; top:0; z-index:50; transition:left .2s; box-shadow:2px 0 12px rgba(0,0,0,.15)}
   #nav.open{left:0}
   #navbtn{display:flex; position:fixed; left:.7rem; top:.7rem; z-index:60; width:2.5rem; height:2.5rem;
@@ -434,7 +495,7 @@ section + section{margin-top:1.5rem}
 /* ── サイドナビ ───────────────────────────── */
 body{display:flex; align-items:flex-start}
 #nav{
-  position:sticky; top:0; flex:none; width:15rem; height:100vh; overflow-y:auto;
+  position:fixed; left:0; top:0; flex:none; width:15rem; height:100vh; max-height:100vh; overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
   background:var(--card); border-right:1px solid var(--line2); padding:1.2rem 0 3rem;
   font-size:.86rem; line-height:1.6;
 }
@@ -448,9 +509,10 @@ body{display:flex; align-items:flex-start}
 #nav .sub{padding-left:1.9rem; font-size:.82rem}
 #nav .todo{color:var(--hai); opacity:.55; pointer-events:none}
 #navbtn{display:none}
-.wrap{flex:1; min-width:0}
+.wrap{flex:1; min-width:0; margin-left:15rem}
 @media(max-width:900px){
   body{display:block}
+  .wrap{margin-left:0}
   #nav{position:fixed; left:-15rem; top:0; z-index:50; transition:left .2s; box-shadow:2px 0 12px rgba(0,0,0,.15)}
   #nav.open{left:0}
   #navbtn{display:flex; position:fixed; left:.7rem; top:.7rem; z-index:60; width:2.5rem; height:2.5rem;
@@ -629,7 +691,7 @@ h4.sub{position:relative}
 /* ── サイドナビ ───────────────────────────── */
 body{display:flex; align-items:flex-start}
 #nav{
-  position:sticky; top:0; flex:none; width:15rem; height:100vh; overflow-y:auto;
+  position:fixed; left:0; top:0; flex:none; width:15rem; height:100vh; max-height:100vh; overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
   background:var(--card); border-right:1px solid var(--line2); padding:1.2rem 0 3rem;
   font-size:.86rem; line-height:1.6;
 }
@@ -643,9 +705,10 @@ body{display:flex; align-items:flex-start}
 #nav .sub{padding-left:1.9rem; font-size:.82rem}
 #nav .todo{color:var(--hai); opacity:.55; pointer-events:none}
 #navbtn{display:none}
-.wrap{flex:1; min-width:0}
+.wrap{flex:1; min-width:0; margin-left:15rem}
 @media(max-width:900px){
   body{display:block}
+  .wrap{margin-left:0}
   #nav{position:fixed; left:-15rem; top:0; z-index:50; transition:left .2s; box-shadow:2px 0 12px rgba(0,0,0,.15)}
   #nav.open{left:0}
   #navbtn{display:flex; position:fixed; left:.7rem; top:.7rem; z-index:60; width:2.5rem; height:2.5rem;
@@ -742,7 +805,7 @@ section + section{margin-top:1.5rem}
 /* ── サイドナビ ───────────────────────────── */
 body{display:flex; align-items:flex-start}
 #nav{
-  position:sticky; top:0; flex:none; width:15rem; height:100vh; overflow-y:auto;
+  position:fixed; left:0; top:0; flex:none; width:15rem; height:100vh; max-height:100vh; overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
   background:var(--card); border-right:1px solid var(--line2); padding:1.2rem 0 3rem;
   font-size:.86rem; line-height:1.6;
 }
@@ -756,9 +819,10 @@ body{display:flex; align-items:flex-start}
 #nav .sub{padding-left:1.9rem; font-size:.82rem}
 #nav .todo{color:var(--hai); opacity:.55; pointer-events:none}
 #navbtn{display:none}
-.wrap{flex:1; min-width:0}
+.wrap{flex:1; min-width:0; margin-left:15rem}
 @media(max-width:900px){
   body{display:block}
+  .wrap{margin-left:0}
   #nav{position:fixed; left:-15rem; top:0; z-index:50; transition:left .2s; box-shadow:2px 0 12px rgba(0,0,0,.15)}
   #nav.open{left:0}
   #navbtn{display:flex; position:fixed; left:.7rem; top:.7rem; z-index:60; width:2.5rem; height:2.5rem;
@@ -864,7 +928,7 @@ section + section{margin-top:1.5rem}
 /* ── サイドナビ ───────────────────────────── */
 body{display:flex; align-items:flex-start}
 #nav{
-  position:sticky; top:0; flex:none; width:15rem; height:100vh; overflow-y:auto;
+  position:fixed; left:0; top:0; flex:none; width:15rem; height:100vh; max-height:100vh; overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
   background:var(--card); border-right:1px solid var(--line2); padding:1.2rem 0 3rem;
   font-size:.86rem; line-height:1.6;
 }
@@ -878,9 +942,10 @@ body{display:flex; align-items:flex-start}
 #nav .sub{padding-left:1.9rem; font-size:.82rem}
 #nav .todo{color:var(--hai); opacity:.55; pointer-events:none}
 #navbtn{display:none}
-.wrap{flex:1; min-width:0}
+.wrap{flex:1; min-width:0; margin-left:15rem}
 @media(max-width:900px){
   body{display:block}
+  .wrap{margin-left:0}
   #nav{position:fixed; left:-15rem; top:0; z-index:50; transition:left .2s; box-shadow:2px 0 12px rgba(0,0,0,.15)}
   #nav.open{left:0}
   #navbtn{display:flex; position:fixed; left:.7rem; top:.7rem; z-index:60; width:2.5rem; height:2.5rem;
@@ -1080,7 +1145,7 @@ footer{border-top:1px solid var(--line); margin-top:3rem; padding-top:1.2rem; co
 /* ── サイドナビ ───────────────────────────── */
 body{display:flex; align-items:flex-start}
 #nav{
-  position:sticky; top:0; flex:none; width:15rem; height:100vh; overflow-y:auto;
+  position:fixed; left:0; top:0; flex:none; width:15rem; height:100vh; max-height:100vh; overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
   background:var(--card); border-right:1px solid var(--line2); padding:1.2rem 0 3rem;
   font-size:.86rem; line-height:1.6;
 }
@@ -1094,9 +1159,10 @@ body{display:flex; align-items:flex-start}
 #nav .sub{padding-left:1.9rem; font-size:.82rem}
 #nav .todo{color:var(--hai); opacity:.55; pointer-events:none}
 #navbtn{display:none}
-.wrap{flex:1; min-width:0}
+.wrap{flex:1; min-width:0; margin-left:15rem}
 @media(max-width:900px){
   body{display:block}
+  .wrap{margin-left:0}
   #nav{position:fixed; left:-15rem; top:0; z-index:50; transition:left .2s; box-shadow:2px 0 12px rgba(0,0,0,.15)}
   #nav.open{left:0}
   #navbtn{display:flex; position:fixed; left:.7rem; top:.7rem; z-index:60; width:2.5rem; height:2.5rem;
@@ -1203,7 +1269,7 @@ section + section{margin-top:1.5rem}
 /* ── サイドナビ ───────────────────────────── */
 body{display:flex; align-items:flex-start}
 #nav{
-  position:sticky; top:0; flex:none; width:15rem; height:100vh; overflow-y:auto;
+  position:fixed; left:0; top:0; flex:none; width:15rem; height:100vh; max-height:100vh; overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
   background:var(--card); border-right:1px solid var(--line2); padding:1.2rem 0 3rem;
   font-size:.86rem; line-height:1.6;
 }
@@ -1217,9 +1283,10 @@ body{display:flex; align-items:flex-start}
 #nav .sub{padding-left:1.9rem; font-size:.82rem}
 #nav .todo{color:var(--hai); opacity:.55; pointer-events:none}
 #navbtn{display:none}
-.wrap{flex:1; min-width:0}
+.wrap{flex:1; min-width:0; margin-left:15rem}
 @media(max-width:900px){
   body{display:block}
+  .wrap{margin-left:0}
   #nav{position:fixed; left:-15rem; top:0; z-index:50; transition:left .2s; box-shadow:2px 0 12px rgba(0,0,0,.15)}
   #nav.open{left:0}
   #navbtn{display:flex; position:fixed; left:.7rem; top:.7rem; z-index:60; width:2.5rem; height:2.5rem;
@@ -1329,7 +1396,7 @@ section + section{margin-top:1.5rem}
 /* ── サイドナビ ───────────────────────────── */
 body{display:flex; align-items:flex-start}
 #nav{
-  position:sticky; top:0; flex:none; width:15rem; height:100vh; overflow-y:auto;
+  position:fixed; left:0; top:0; flex:none; width:15rem; height:100vh; max-height:100vh; overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
   background:var(--card); border-right:1px solid var(--line2); padding:1.2rem 0 3rem;
   font-size:.86rem; line-height:1.6;
 }
@@ -1343,9 +1410,10 @@ body{display:flex; align-items:flex-start}
 #nav .sub{padding-left:1.9rem; font-size:.82rem}
 #nav .todo{color:var(--hai); opacity:.55; pointer-events:none}
 #navbtn{display:none}
-.wrap{flex:1; min-width:0}
+.wrap{flex:1; min-width:0; margin-left:15rem}
 @media(max-width:900px){
   body{display:block}
+  .wrap{margin-left:0}
   #nav{position:fixed; left:-15rem; top:0; z-index:50; transition:left .2s; box-shadow:2px 0 12px rgba(0,0,0,.15)}
   #nav.open{left:0}
   #navbtn{display:flex; position:fixed; left:.7rem; top:.7rem; z-index:60; width:2.5rem; height:2.5rem;
@@ -1455,7 +1523,7 @@ section + section{margin-top:1.5rem}
 /* ── サイドナビ ───────────────────────────── */
 body{display:flex; align-items:flex-start}
 #nav{
-  position:sticky; top:0; flex:none; width:15rem; height:100vh; overflow-y:auto;
+  position:fixed; left:0; top:0; flex:none; width:15rem; height:100vh; max-height:100vh; overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
   background:var(--card); border-right:1px solid var(--line2); padding:1.2rem 0 3rem;
   font-size:.86rem; line-height:1.6;
 }
@@ -1469,9 +1537,10 @@ body{display:flex; align-items:flex-start}
 #nav .sub{padding-left:1.9rem; font-size:.82rem}
 #nav .todo{color:var(--hai); opacity:.55; pointer-events:none}
 #navbtn{display:none}
-.wrap{flex:1; min-width:0}
+.wrap{flex:1; min-width:0; margin-left:15rem}
 @media(max-width:900px){
   body{display:block}
+  .wrap{margin-left:0}
   #nav{position:fixed; left:-15rem; top:0; z-index:50; transition:left .2s; box-shadow:2px 0 12px rgba(0,0,0,.15)}
   #nav.open{left:0}
   #navbtn{display:flex; position:fixed; left:.7rem; top:.7rem; z-index:60; width:2.5rem; height:2.5rem;
@@ -1581,7 +1650,7 @@ section + section{margin-top:1.5rem}
 /* ── サイドナビ ───────────────────────────── */
 body{display:flex; align-items:flex-start}
 #nav{
-  position:sticky; top:0; flex:none; width:15rem; height:100vh; overflow-y:auto;
+  position:fixed; left:0; top:0; flex:none; width:15rem; height:100vh; max-height:100vh; overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
   background:var(--card); border-right:1px solid var(--line2); padding:1.2rem 0 3rem;
   font-size:.86rem; line-height:1.6;
 }
@@ -1595,9 +1664,10 @@ body{display:flex; align-items:flex-start}
 #nav .sub{padding-left:1.9rem; font-size:.82rem}
 #nav .todo{color:var(--hai); opacity:.55; pointer-events:none}
 #navbtn{display:none}
-.wrap{flex:1; min-width:0}
+.wrap{flex:1; min-width:0; margin-left:15rem}
 @media(max-width:900px){
   body{display:block}
+  .wrap{margin-left:0}
   #nav{position:fixed; left:-15rem; top:0; z-index:50; transition:left .2s; box-shadow:2px 0 12px rgba(0,0,0,.15)}
   #nav.open{left:0}
   #navbtn{display:flex; position:fixed; left:.7rem; top:.7rem; z-index:60; width:2.5rem; height:2.5rem;
@@ -1707,7 +1777,7 @@ section + section{margin-top:1.5rem}
 /* ── サイドナビ ───────────────────────────── */
 body{display:flex; align-items:flex-start}
 #nav{
-  position:sticky; top:0; flex:none; width:15rem; height:100vh; overflow-y:auto;
+  position:fixed; left:0; top:0; flex:none; width:15rem; height:100vh; max-height:100vh; overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
   background:var(--card); border-right:1px solid var(--line2); padding:1.2rem 0 3rem;
   font-size:.86rem; line-height:1.6;
 }
@@ -1721,9 +1791,10 @@ body{display:flex; align-items:flex-start}
 #nav .sub{padding-left:1.9rem; font-size:.82rem}
 #nav .todo{color:var(--hai); opacity:.55; pointer-events:none}
 #navbtn{display:none}
-.wrap{flex:1; min-width:0}
+.wrap{flex:1; min-width:0; margin-left:15rem}
 @media(max-width:900px){
   body{display:block}
+  .wrap{margin-left:0}
   #nav{position:fixed; left:-15rem; top:0; z-index:50; transition:left .2s; box-shadow:2px 0 12px rgba(0,0,0,.15)}
   #nav.open{left:0}
   #navbtn{display:flex; position:fixed; left:.7rem; top:.7rem; z-index:60; width:2.5rem; height:2.5rem;
@@ -1833,7 +1904,7 @@ section + section{margin-top:1.5rem}
 /* ── サイドナビ ───────────────────────────── */
 body{display:flex; align-items:flex-start}
 #nav{
-  position:sticky; top:0; flex:none; width:15rem; height:100vh; overflow-y:auto;
+  position:fixed; left:0; top:0; flex:none; width:15rem; height:100vh; max-height:100vh; overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
   background:var(--card); border-right:1px solid var(--line2); padding:1.2rem 0 3rem;
   font-size:.86rem; line-height:1.6;
 }
@@ -1847,9 +1918,10 @@ body{display:flex; align-items:flex-start}
 #nav .sub{padding-left:1.9rem; font-size:.82rem}
 #nav .todo{color:var(--hai); opacity:.55; pointer-events:none}
 #navbtn{display:none}
-.wrap{flex:1; min-width:0}
+.wrap{flex:1; min-width:0; margin-left:15rem}
 @media(max-width:900px){
   body{display:block}
+  .wrap{margin-left:0}
   #nav{position:fixed; left:-15rem; top:0; z-index:50; transition:left .2s; box-shadow:2px 0 12px rgba(0,0,0,.15)}
   #nav.open{left:0}
   #navbtn{display:flex; position:fixed; left:.7rem; top:.7rem; z-index:60; width:2.5rem; height:2.5rem;
@@ -1910,7 +1982,7 @@ section + section{margin-top:1.5rem}
 /* ── サイドナビ ───────────────────────────── */
 body{display:flex; align-items:flex-start}
 #nav{
-  position:sticky; top:0; flex:none; width:15rem; height:100vh; overflow-y:auto;
+  position:fixed; left:0; top:0; flex:none; width:15rem; height:100vh; max-height:100vh; overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
   background:var(--card); border-right:1px solid var(--line2); padding:1.2rem 0 3rem;
   font-size:.86rem; line-height:1.6;
 }
@@ -1924,9 +1996,10 @@ body{display:flex; align-items:flex-start}
 #nav .sub{padding-left:1.9rem; font-size:.82rem}
 #nav .todo{color:var(--hai); opacity:.55; pointer-events:none}
 #navbtn{display:none}
-.wrap{flex:1; min-width:0}
+.wrap{flex:1; min-width:0; margin-left:15rem}
 @media(max-width:900px){
   body{display:block}
+  .wrap{margin-left:0}
   #nav{position:fixed; left:-15rem; top:0; z-index:50; transition:left .2s; box-shadow:2px 0 12px rgba(0,0,0,.15)}
   #nav.open{left:0}
   #navbtn{display:flex; position:fixed; left:.7rem; top:.7rem; z-index:60; width:2.5rem; height:2.5rem;
@@ -3767,7 +3840,7 @@ body{display:flex; align-items:flex-start; margin:0}
 
 <p><span class="warn">法令が使う語と、講学上の分類は一致しません。</span>農地法の「許可」は講学上の認可です。古典的な説明では「公益法人の設立認可」を特許の例とすることがありますが、現行法では一般社団・一般財団法人は設立登記で成立し、公益法人化は別途の公益認定によります。<span class="key">名称ではなく、禁止の解除、地位の設定、第三者行為の補充、事実・法律関係の確認のどれかで判断します。</span></p>
 
-<p><span class="warn">自動車の運転免許は「特許」ではありません。</span>公道で自動車を運転する自由はもともと誰にでもあり、道路交通法が一般的に禁じたうえで、試験に合格した者について解除しているからです。<span class="key">新たな権利を与えているのではなく、一般的な禁止を解いている</span>ので、講学上は許可に当たります。
+<p><span class="warn">自動車の運転免許は「特許」ではありません。</span>公道で自動車を運転する自由はもともと誰にでもあり、道路交通法が一般的に禁じたうえで、試験に合格した者について解除しているからです。<span class="key">新たな権利を与えているのではなく、一般的な禁止を解いている</span>ので、講学上は許可に当たります。</p>
 
 <h3>公安委員会は、内閣総理大臣の指揮監督を受けるか</h3>
 
@@ -4509,7 +4582,21 @@ body{display:flex; align-items:flex-start; margin:0}
 
 <p>他方、<span class="key">いったん定めたのであれば、それを隠しておく理由がありません。</span>目安を持っているのに申請者に知らせないのは、行政の内部だけが情報を持っている状態を作ることになります。だから<span class="key">定めたときの公表は義務</span>です。</p>
 
-<p>この「作るのは任意、作ったら隠すな」という形は、行政法のあちこちに繰り返し現れます。行政不服審査法16条の標準審理期間も、同法17条の審理員となるべき者の名簿も、まったく同じ構造です。<span class="key">一つの形として覚えておくと、他の科目でも使えます。</span></p>
+<p>この「作るのは努力義務、作ったら公にするのは義務」という形をとる条文は、<span class="key">全部で三つしかありません</span>。行政手続法6条の標準処理期間、行政不服審査法16条の標準審理期間、同法17条の審理員となるべき者の名簿です。三つとも「定める（作成する）よう努めるとともに、これを定めた（作成した）ときは……公にしておかなければならない」という同じ文型で書かれています。</p>
+<div class="exc"><h4>この形に当てはまらないもの</h4><div class="scroll"><table>
+<caption>基準・指針を「作ること」と「公にすること」の義務の強さ</caption>
+<thead><tr><th>条文</th><th>作ること</th><th>公にすること</th></tr></thead>
+<tbody>
+<tr><th scope="row">行政手続法6条　標準処理期間</th><td>努力義務です。</td><td><b>義務です。</b>定めたときは公にしておかなければなりません。</td></tr>
+<tr><th scope="row">行政不服審査法16条　標準審理期間</th><td>努力義務です。</td><td><b>義務です。</b>定めたときは公にしておかなければなりません。</td></tr>
+<tr><th scope="row">行政不服審査法17条　審理員となるべき者の名簿</th><td>努力義務です。</td><td><b>義務です。</b>作成したときは公にしておかなければなりません。</td></tr>
+<tr><th scope="row"><b>行政手続法12条　処分基準</b></th><td><b>努力義務です。</b></td><td><span class="warn">努力義務です。</span>定めても、公にすることは義務になりません。ただし12条2項により、定めるのであれば不利益処分の性質に照らしてできる限り具体的なものとしなければならず、この部分は義務です。</td></tr>
+<tr><th scope="row"><b>行政手続法5条　審査基準</b></th><td><span class="warn">義務です。</span></td><td><b>義務です。</b>ただし行政上特別の支障があるときは除かれます（5条3項）。</td></tr>
+<tr><th scope="row"><b>行政手続法36条　行政指導指針</b></th><td><span class="warn">義務です。</span></td><td><b>義務です。</b>ただし行政上特別の支障がない限り、という留保が付きます。</td></tr>
+</tbody>
+</table></div>
+<p><span class="warn">処分基準（12条1項）だけが、作ることも公にすることも努力義務です。</span>「作ったら公にするのは義務」という形を処分基準に当てはめてはいけません。逆に、審査基準（5条）と行政指導指針（36条）は、作ること自体が義務なので、この形の前半にも当てはまりません。</p>
+<p>三つの形をそのまま他の条文へ広げないでください。<span class="key">条文ごとに、作ることと公にすることの強さを一つずつ確かめてください。</span></p></div>
 
 <h3>標準処理期間を過ぎたらどうなるか</h3>
 

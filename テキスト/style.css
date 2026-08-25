@@ -143,3 +143,61 @@ section+section{margin-top:0}
   h2{font-size:1.2rem !important}
   table{font-size:.85rem}
 }
+
+/* ─────────────────────────────────────────────
+   読みやすさの修正（2026-08-25）
+   ・表が横スクロールできなくなっていたのを直す
+   ・行見出しが折り返さず横に伸びていたのを直す
+   ・見出し行を固定して、横スクロール中も何の列か分かるようにする
+   ───────────────────────────────────────────── */
+
+/* .scroll が二重定義され、後の overflow:hidden が overflow-x:auto を
+   打ち消していた。角丸を保ったまま横スクロールできるようにする。 */
+.scroll{
+  overflow-x:auto !important;
+  overflow-y:visible !important;
+  -webkit-overflow-scrolling:touch;
+  border:1px solid var(--line2);
+  border-radius:6px;
+  margin:1.2rem 0;
+  /* スクロールできることを影で示す */
+  background:
+    linear-gradient(to right, var(--card) 30%, transparent),
+    linear-gradient(to left,  var(--card) 30%, transparent) 100% 0,
+    linear-gradient(to right, rgba(0,0,0,.10), transparent 12px),
+    linear-gradient(to left,  rgba(0,0,0,.10), transparent 12px) 100% 0;
+  background-repeat:no-repeat;
+  background-size:36px 100%, 36px 100%, 14px 100%, 14px 100%;
+  background-attachment:local, local, scroll, scroll;
+}
+
+/* 表そのもの。最小幅を下げ、行見出しを折り返せるようにする。 */
+.scroll table{ min-width:0; width:100%; }
+.scroll th[scope="row"]{
+  white-space:normal;      /* 折り返さないせいで横に伸びていた */
+  word-break:auto-phrase;  /* 日本語を文節で折り返す */
+  min-width:7rem;
+  max-width:14rem;
+}
+.scroll td{ word-break:auto-phrase; }
+
+/* 横スクロール中も、何の列かが分かるように見出し行を上に固定する。 */
+.scroll{ max-height:none; }
+.scroll thead th{
+  position:sticky; top:0; z-index:2;
+  background:var(--fill);
+}
+
+/* スクロールバーを細く、常に見えるようにする（存在に気づけるように） */
+.scroll::-webkit-scrollbar{ height:9px }
+.scroll::-webkit-scrollbar-thumb{
+  background:var(--line2); border-radius:5px;
+}
+.scroll::-webkit-scrollbar-track{ background:transparent }
+
+/* 画面が狭いときは、表の文字を詰めすぎない */
+@media(max-width:720px){
+  .scroll table{ font-size:.86rem }
+  .scroll th, .scroll td{ padding:.6rem .55rem !important }
+  .scroll th[scope="row"]{ min-width:5.5rem; max-width:9rem }
+}

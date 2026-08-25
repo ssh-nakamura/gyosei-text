@@ -56,7 +56,7 @@
 /* ── サイドナビ ───────────────────────────── */
 body{display:flex; align-items:flex-start}
 #nav{
-  position:sticky; top:0; flex:none; width:15rem; height:100vh; overflow-y:auto;
+  position:fixed; left:0; top:0; flex:none; width:15rem; height:100vh; max-height:100vh; overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
   background:var(--card); border-right:1px solid var(--line2); padding:1.2rem 0 3rem;
   font-size:.86rem; line-height:1.6;
 }
@@ -70,9 +70,10 @@ body{display:flex; align-items:flex-start}
 #nav .sub{padding-left:1.9rem; font-size:.82rem}
 #nav .todo{color:var(--hai); opacity:.55; pointer-events:none}
 #navbtn{display:none}
-.wrap{flex:1; min-width:0}
+.wrap{flex:1; min-width:0; margin-left:15rem}
 @media(max-width:900px){
   body{display:block}
+  .wrap{margin-left:0}
   #nav{position:fixed; left:-15rem; top:0; z-index:50; transition:left .2s; box-shadow:2px 0 12px rgba(0,0,0,.15)}
   #nav.open{left:0}
   #navbtn{display:flex; position:fixed; left:.7rem; top:.7rem; z-index:60; width:2.5rem; height:2.5rem;
@@ -676,7 +677,7 @@ section + section{margin-top:1.5rem}
 
 <p><span class="warn">法令が使う語と、講学上の分類は一致しません。</span>農地法の「許可」は講学上の認可です。古典的な説明では「公益法人の設立認可」を特許の例とすることがありますが、現行法では一般社団・一般財団法人は設立登記で成立し、公益法人化は別途の公益認定によります。<span class="key">名称ではなく、禁止の解除、地位の設定、第三者行為の補充、事実・法律関係の確認のどれかで判断します。</span></p>
 
-<p><span class="warn">自動車の運転免許は「特許」ではありません。</span>公道で自動車を運転する自由はもともと誰にでもあり、道路交通法が一般的に禁じたうえで、試験に合格した者について解除しているからです。<span class="key">新たな権利を与えているのではなく、一般的な禁止を解いている</span>ので、講学上は許可に当たります。
+<p><span class="warn">自動車の運転免許は「特許」ではありません。</span>公道で自動車を運転する自由はもともと誰にでもあり、道路交通法が一般的に禁じたうえで、試験に合格した者について解除しているからです。<span class="key">新たな権利を与えているのではなく、一般的な禁止を解いている</span>ので、講学上は許可に当たります。</p>
 
 <h3>公安委員会は、内閣総理大臣の指揮監督を受けるか</h3>
 

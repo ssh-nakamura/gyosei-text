@@ -56,7 +56,7 @@
 /* ── サイドナビ ───────────────────────────── */
 body{display:flex; align-items:flex-start}
 #nav{
-  position:sticky; top:0; flex:none; width:15rem; height:100vh; overflow-y:auto;
+  position:fixed; left:0; top:0; flex:none; width:15rem; height:100vh; max-height:100vh; overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
   background:var(--card); border-right:1px solid var(--line2); padding:1.2rem 0 3rem;
   font-size:.86rem; line-height:1.6;
 }
@@ -70,9 +70,10 @@ body{display:flex; align-items:flex-start}
 #nav .sub{padding-left:1.9rem; font-size:.82rem}
 #nav .todo{color:var(--hai); opacity:.55; pointer-events:none}
 #navbtn{display:none}
-.wrap{flex:1; min-width:0}
+.wrap{flex:1; min-width:0; margin-left:15rem}
 @media(max-width:900px){
   body{display:block}
+  .wrap{margin-left:0}
   #nav{position:fixed; left:-15rem; top:0; z-index:50; transition:left .2s; box-shadow:2px 0 12px rgba(0,0,0,.15)}
   #nav.open{left:0}
   #navbtn{display:flex; position:fixed; left:.7rem; top:.7rem; z-index:60; width:2.5rem; height:2.5rem;
