@@ -3,11 +3,16 @@
 <title>行政書士 行政法テキスト</title>
 <meta name="robots" content="noindex,nofollow">
 <link rel="stylesheet" href="テキスト/style.css">
+<style>
+#navbtn{position:fixed;z-index:300;top:.7rem;left:.7rem;width:2.6rem;height:2.6rem;display:grid;place-items:center;border:1px solid var(--line2);border-radius:6px;background:var(--card);font-size:1.25rem;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.1)}#nav{display:none;position:fixed;z-index:290;top:0;bottom:0;left:0;width:min(19rem,88vw);overflow-y:auto;padding:4rem 1rem 2rem;background:var(--card);border-right:1px solid var(--line2);box-shadow:4px 0 18px rgba(0,0,0,.15)}#nav.open{display:block}#nav a{display:block;padding:.45rem .6rem;border-radius:4px;text-decoration:none}#nav a:hover{background:var(--fill)}#nav h4{margin:1.1rem .6rem .35rem;color:var(--hai);font-size:.72rem;letter-spacing:.1em}#nav .brand{font-weight:700;border-bottom:1px solid var(--line);padding-bottom:.8rem}#nav .brand small{display:block;font-weight:400;font-size:.72rem;color:var(--hai)}
+.subject-picker{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin:1.4rem 0 2rem}.subject-card{display:block;border:2px solid var(--line2);border-radius:9px;padding:1.15rem 1.25rem;background:var(--card);color:var(--ink);text-decoration:none;box-shadow:0 3px 12px rgba(0,0,0,.05)}.subject-card:hover{border-color:var(--shu);transform:translateY(-1px)}.subject-card b{display:block;font-size:1.25rem;margin-bottom:.3rem}.subject-card span{display:block;color:var(--hai);font-size:.88rem;line-height:1.55}.subject-card.civil{border-color:var(--seiji)}.subject-card .status{display:inline-block;margin-top:.65rem;padding:.14rem .45rem;border-radius:3px;background:var(--fill);font-size:.72rem;color:var(--ink)}@media(max-width:640px){.subject-picker{grid-template-columns:1fr}}
+</style>
 <div id="navbtn" onclick="document.getElementById('nav').classList.toggle('open')">☰</div>
 <nav id="nav">
 <a class="brand" href="テキスト/index.html">行政法テキスト<small>条文と判例から</small></a>
 <h4>入口</h4>
 <a href="テキスト/index.html" class="cur">目次</a>
+<a href="テキスト/民法-index.html">民法テキスト（作成中）</a>
 <a href="テキスト/全体像.html">行政法の全体像</a>
 <a href="テキスト/救済の三つの道.html">救済の三つの争訟方法</a>
 <a href="テキスト/用語集.html">用語集</a>
@@ -34,6 +39,10 @@
 <a href="テキスト/資料/索引.html">条文・判例の全文</a>
 </nav>
 <div class="wrap">
+<div class="subject-picker" aria-label="科目を選ぶ">
+  <a class="subject-card" href="テキスト/index.html"><b>行政法を読む</b><span>行政法総論から地方自治法までの目次を開きます。</span><span class="status">公開済み</span></a>
+  <a class="subject-card civil" href="テキスト/民法-index.html"><b>民法を読む</b><span>民法の専用目次から、公開済みの章を選びます。</span><span class="status">第1〜3章を先行公開</span></a>
+</div>
 <header>
   <p class="eyebrow">条文と判例から組んだ</p>
   <h1>行政書士 行政法テキスト</h1>
@@ -53,7 +62,15 @@
     <p>人による校閲済み教材ではありません。判例3件の留保を含め、誤りを完全に排除したと保証するものではありません。</p>
   </div>
 </div>
-<p style="font-size:1.05rem"><a href="テキスト/index.html">→ テキストを開く</a></p>
+<p style="font-size:1.05rem"><a href="テキスト/index.html">→ 行政法テキストを開く</a></p>
+<div class="audit-block" style="margin-top:1.5rem">
+  <div class="audit-title">民法テキストは作成中です</div>
+  <div class="audit-body">
+    <p><b>第1章「人・行為能力・不在者」から第3章「物権」までを先行公開しました。</b></p>
+    <p>民法全体の完成版ではありません。未公開の8章と、70問・350肢の最終横断監査が残っています。</p>
+    <p style="font-size:1.05rem"><a href="テキスト/民法-index.html">→ 民法テキストの先行公開版を開く</a></p>
+  </div>
+</div>
 <p style="color:var(--hai); font-size:.85rem; margin-top:2rem">
 本サイトは試験問題の問題文および選択肢を掲載していません。過去問は問題番号のみを参照しています。<br>
 条文は法令(著作権法13条1号)、判例の判決文は裁判所の判決(同条3号)であり、いずれも著作権の対象外です。<br>
