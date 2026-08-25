@@ -145,59 +145,113 @@ section+section{margin-top:0}
 }
 
 /* ─────────────────────────────────────────────
-   読みやすさの修正（2026-08-25）
-   ・表が横スクロールできなくなっていたのを直す
-   ・行見出しが折り返さず横に伸びていたのを直す
-   ・見出し行を固定して、横スクロール中も何の列か分かるようにする
+   表を横スクロールさせない（2026-08-25）
+
+   勉強中に横スクロールはできない、という指摘による。
+   281個ある表のうち263個は2列か3列で、折り返せば画面に収まる。
+   4列以上の18個だけ、狭い画面で縦積みに切り替える。
+   HTMLには手を触れず、CSSだけで処理する。
    ───────────────────────────────────────────── */
 
-/* .scroll が二重定義され、後の overflow:hidden が overflow-x:auto を
-   打ち消していた。角丸を保ったまま横スクロールできるようにする。 */
+/* 1. はみ出しの原因を断つ ------------------------------------- */
+
+/* .scroll が二重定義されていたので、横スクロール自体を殺す。 */
 .scroll{
-  overflow-x:auto !important;
+  overflow-x:visible !important;
   overflow-y:visible !important;
-  -webkit-overflow-scrolling:touch;
   border:1px solid var(--line2);
   border-radius:6px;
   margin:1.2rem 0;
-  /* スクロールできることを影で示す */
-  background:
-    linear-gradient(to right, var(--card) 30%, transparent),
-    linear-gradient(to left,  var(--card) 30%, transparent) 100% 0,
-    linear-gradient(to right, rgba(0,0,0,.10), transparent 12px),
-    linear-gradient(to left,  rgba(0,0,0,.10), transparent 12px) 100% 0;
-  background-repeat:no-repeat;
-  background-size:36px 100%, 36px 100%, 14px 100%, 14px 100%;
-  background-attachment:local, local, scroll, scroll;
+  background:none;
 }
 
-/* 表そのもの。最小幅を下げ、行見出しを折り返せるようにする。 */
-.scroll table{ min-width:0; width:100%; }
-.scroll th[scope="row"]{
-  white-space:normal;      /* 折り返さないせいで横に伸びていた */
-  word-break:auto-phrase;  /* 日本語を文節で折り返す */
-  min-width:7rem;
-  max-width:14rem;
-}
-.scroll td{ word-break:auto-phrase; }
+/* min-width:28rem が画面幅を超える原因だった。 */
+table{ min-width:0 !important; width:100% !important; table-layout:fixed; }
 
-/* 横スクロール中も、何の列かが分かるように見出し行を上に固定する。 */
-.scroll{ max-height:none; }
-.scroll thead th{
-  position:sticky; top:0; z-index:2;
-  background:var(--fill);
+/* 折り返さない指定を全部やめる。日本語は文節で折り返す。 */
+th, td,
+thead th,
+th[scope="row"]{
+  white-space:normal !important;
+  word-break:auto-phrase;
+  overflow-wrap:anywhere;
+  hyphens:auto;
 }
 
-/* スクロールバーを細く、常に見えるようにする（存在に気づけるように） */
-.scroll::-webkit-scrollbar{ height:9px }
-.scroll::-webkit-scrollbar-thumb{
-  background:var(--line2); border-radius:5px;
-}
-.scroll::-webkit-scrollbar-track{ background:transparent }
+/* 2. 列幅の配分 ------------------------------------------------ */
 
-/* 画面が狭いときは、表の文字を詰めすぎない */
+/* 2列。左を見出し、右を説明にする。 */
+table:not(:has(thead th:nth-child(3))) th[scope="row"]{ width:32%; }
+
+/* 3列。左を見出し、中を説明、右を条文にする。 */
+table:has(thead th:nth-child(3)):not(:has(thead th:nth-child(4))) th:nth-child(1),
+table:has(thead th:nth-child(3)):not(:has(thead th:nth-child(4))) td:nth-child(1){ width:26%; }
+table:has(thead th:nth-child(3)):not(:has(thead th:nth-child(4))) th:nth-child(3),
+table:has(thead th:nth-child(3)):not(:has(thead th:nth-child(4))) td:nth-child(3){ width:22%; }
+
+/* 3. 4列以上は、狭い画面で縦積みにする ------------------------ */
+
+@media(max-width:860px){
+  /* thead を消し、各セルの前に見出しを出す。
+     見出しの文字はHTMLではなく、この後のセレクタで補う。 */
+  table:has(thead th:nth-child(4)) thead{
+    position:absolute; width:1px; height:1px;
+    overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap;
+  }
+  table:has(thead th:nth-child(4)),
+  table:has(thead th:nth-child(4)) tbody,
+  table:has(thead th:nth-child(4)) tr,
+  table:has(thead th:nth-child(4)) th,
+  table:has(thead th:nth-child(4)) td{
+    display:block; width:auto !important;
+  }
+  table:has(thead th:nth-child(4)) tr{
+    border-bottom:2px solid var(--line2);
+    padding:.5rem 0;
+  }
+  table:has(thead th:nth-child(4)) tr:last-child{ border-bottom:none; }
+  table:has(thead th:nth-child(4)) th[scope="row"]{
+    background:var(--fill);
+    font-weight:700;
+    padding:.6rem .75rem !important;
+    border-bottom:none;
+  }
+  table:has(thead th:nth-child(4)) td{
+    border-bottom:1px dotted var(--line);
+    padding:.5rem .75rem .5rem 1.5rem !important;
+  }
+  table:has(thead th:nth-child(4)) td:last-child{ border-bottom:none; }
+}
+
+/* 4. 読みやすさの微調整 ---------------------------------------- */
+
+th, td{ line-height:1.8; vertical-align:top; }
+thead th{ background:var(--fill); }
+
 @media(max-width:720px){
-  .scroll table{ font-size:.86rem }
-  .scroll th, .scroll td{ padding:.6rem .55rem !important }
-  .scroll th[scope="row"]{ min-width:5.5rem; max-width:9rem }
+  table{ font-size:.88rem; }
+  th, td{ padding:.6rem .5rem !important; }
+  /* 狭い画面では、2列の見出し列をもう少し詰める */
+  table:not(:has(thead th:nth-child(3))) th[scope="row"]{ width:28%; }
 }
+
+@media(max-width:480px){
+  table{ font-size:.86rem; }
+  th, td{ padding:.55rem .45rem !important; }
+  /* 3列は狭すぎるので、条文の列を下に落とす */
+  table:has(thead th:nth-child(3)):not(:has(thead th:nth-child(4))) th:nth-child(1),
+  table:has(thead th:nth-child(3)):not(:has(thead th:nth-child(4))) td:nth-child(1){ width:34%; }
+  table:has(thead th:nth-child(3)):not(:has(thead th:nth-child(4))) th:nth-child(3),
+  table:has(thead th:nth-child(3)):not(:has(thead th:nth-child(4))) td:nth-child(3){ width:26%; }
+}
+
+/* 5. 本文がサイドメニューの下に潜らないようにする --------------- */
+/* .wrap に margin-left を入れても、後ろの margin-left:auto に負けていた。 */
+body{ box-sizing:border-box; }
+
+/* ボタンが本文に重なるのを直す（2026-08-25） */
+@media(max-width:900px){
+  .wrap{ padding-top:3.6rem !important; }
+  #navbtn{ box-shadow:0 1px 6px rgba(0,0,0,.12); }
+}
+body{ padding-bottom:5.5rem; }
