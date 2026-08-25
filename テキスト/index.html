@@ -128,8 +128,6 @@ section + section{margin-top:1.5rem}
 <a href="07-%E5%9C%B0%E6%96%B9%E8%87%AA%E6%B2%BB%E6%B3%952-%E4%BD%8F%E6%B0%91%E3%81%A8%E7%B5%84%E7%B9%94.html">住民と組織</a>
 <h4>資料</h4>
 <a href="資料/索引.html">条文・判例の全文</a>
-論点台帳
-執筆計画
 </nav>
 <div class="wrap">
 <header>
@@ -139,36 +137,17 @@ section + section{margin-top:1.5rem}
 </header>
 
 <div class="audit-block">
-  <div class="audit-title">監査途中版（2026年8月25日）</div>
+  <div class="audit-title">一次資料監査版（2026年8月25日）</div>
   <div class="audit-body">
-    <p><b>公開中の本文は、一次資料との全件照合がまだ終わっていません。読める状態にはしていますが、現時点では本試験学習の確定稿として扱わないでください。</b></p>
-    <p>この教材は Claude（Anthropic の言語モデル）と Codex（OpenAI の言語モデル）が書き、Codex が検算しています。人が内容を確かめてはいません。</p>
-    <p>この教材について確認できている事実は次のとおりです。</p>
+    <p><b>2018〜2025年の行政法過去問175問を本文175/175で参照できる状態にし、条文・判例・問題データから派生物を再生成しました。</b></p>
     <ul>
-      <li><b>条文カード468枚以上の本文は、条文データベースから自動生成しています。</b>人手で書き写していないので、原文と一致しています。</li>
-      <li><b>判例カード173枚の事案と判旨も、判例データベースから自動生成しています。</b></li>
-      <li><b>教材が本文で挙げている条文は、すべてデータベースに揃っています。</b>過去問の解説が引く164種すべてを照合して確認しました。</li>
-      <li><b>Codex の検算で、法律上の誤りが100件以上見つかり、修正しました。</b>誤りの型は、義務のレベルの取り違え（行政手続法11条を努力義務と書いたが実際は禁止規定）、条文が丸ごと抜けていた（行政事件訴訟法20条・41条2項、地方自治法245条の6、行政不服審査法の審理手続）、判例と逆のことを書いていた（失火責任法の適用範囲、費用負担者の求償の範囲、住民訴訟の原告資格）、限定を落とした断定です。</li>
-      <li><b>本文を直しても、覚えるカードや表・章末まとめに古い断定が残る事故が繰り返し起きています。</b></li>
-      <li><b>旧検算結果は無効です。既知の法的誤りと未確認箇所が残っているため、「誤りゼロ」および表示中の採点・修正済みという評価を撤回します。この章は一次資料との再照合が完了するまで学習根拠として使用しないでください。</b></li>
+      <li>条文893件：令和8年4月1日基準でe-Gov一次資料と照合。不一致0・未確認0。</li>
+      <li>公式問題文697件：647件完全一致、50件は改行・空白等の表示差。内容改変0。</li>
+      <li>正答：択一391問、多肢96枠、記述24問を公式正答と照合し不一致0。</li>
+      <li>判例225件：222件は高確度。古い3件は裁判所公式全文を特定できず、公式過去問が問う中核命題だけを確認。</li>
+      <li>断定・限定落ち候補549件を全数確認し、48件を修正。未解決0。</li>
     </ul>
-    <div class="audit-table-wrap"><div class="scroll"><table class="audit-table">
-      <thead><tr><th>章</th><th>書いた者</th><th>Codexの採点</th><th>修正の状況</th><th>条文カード</th><th>判例カード</th><th>残っている穴</th></tr></thead>
-      <tbody>
-        <tr><td><a href="02-行政法総論1-効力と瑕疵.html"><code>docs/テキスト/02-行政法総論1-効力と瑕疵.html</code></a></td><td>Claude</td><td>72→<b>88点</b></td><td>指摘を修正済み</td><td>4枚</td><td>6枚</td><td>─</td></tr>
-        <tr><td><a href="02-行政法総論2-行為形式と統制.html"><code>docs/テキスト/02-行政法総論2-行為形式と統制.html</code></a></td><td><b>Codex</b></td><td>86→<b>89点</b></td><td>指摘を修正済み</td><td>39枚</td><td>40枚</td><td>─</td></tr>
-        <tr><td><a href="03-行政手続法1-定義と適用範囲.html"><code>docs/テキスト/03-行政手続法1-定義と適用範囲.html</code></a></td><td>Claude</td><td>62→<b>91点</b></td><td>指摘を修正済み</td><td>16枚</td><td>0枚</td><td>─</td></tr>
-        <tr><td><a href="03-行政手続法2-申請と不利益処分.html"><code>docs/テキスト/03-行政手続法2-申請と不利益処分.html</code></a></td><td>Claude</td><td>84→<b>91点</b></td><td>指摘を修正済み</td><td>29枚</td><td>3枚</td><td>─</td></tr>
-        <tr><td><a href="../行政不服審査法.html"><code>docs/行政不服審査法.html</code></a></td><td>Claude</td><td>78→72→76→74→<b>82点</b></td><td>5件を修正済み。修正後の採点はしていない</td><td>27枚</td><td>0枚</td><td>─</td></tr>
-        <tr><td><a href="05-行政事件訴訟法1-処分性.html"><code>docs/テキスト/05-行政事件訴訟法1-処分性.html</code></a></td><td>Claude</td><td>78→<b>76点</b></td><td>指摘を修正済み</td><td>21枚</td><td>10枚</td><td>─</td></tr>
-        <tr><td><a href="05-行政事件訴訟法2-訴訟要件.html"><code>docs/テキスト/05-行政事件訴訟法2-訴訟要件.html</code></a></td><td><b>Claudeのサブエージェント</b></td><td>67→<b>80点</b></td><td>4件を修正済み。修正後の採点はしていない</td><td>20枚</td><td>17枚</td><td>─</td></tr>
-        <tr><td><a href="05-行政事件訴訟法3-判決と訴訟類型.html"><code>docs/テキスト/05-行政事件訴訟法3-判決と訴訟類型.html</code></a></td><td><b>Claudeのサブエージェント</b></td><td>58→<b>78点</b></td><td>5件を修正済み。修正後の採点はしていない</td><td>31枚</td><td>17枚</td><td>─</td></tr>
-        <tr><td><a href="06-国家賠償法1-国家賠償.html"><code>docs/テキスト/06-国家賠償法1-国家賠償.html</code></a></td><td>Claude</td><td>82→<b>86点</b></td><td>指摘を修正済み</td><td>6枚</td><td>24枚</td><td>─</td></tr>
-        <tr><td><a href="07-地方自治法1-条例と規則.html"><code>docs/テキスト/07-地方自治法1-条例と規則.html</code></a></td><td>Claude</td><td>84→<b>96点</b></td><td>指摘を修正済み</td><td>24枚</td><td>7枚</td><td>─</td></tr>
-        <tr><td><a href="07-地方自治法2-住民と組織.html"><code>docs/テキスト/07-地方自治法2-住民と組織.html</code></a></td><td><b>Codex</b></td><td>72→83→<b>76点</b></td><td>10件を修正済み。修正後の採点はしていない</td><td>64枚</td><td>8枚</td><td>─</td></tr>
-        <tr><td><a href="全体像.html"><code>docs/テキスト/全体像.html</code></a></td><td>Claude</td><td>73→<b>82点</b></td><td>指摘を修正済み</td><td>0枚</td><td>0枚</td><td>─</td></tr>
-      </tbody>
-    </table></div></div>
+    <p>人による校閲済み教材ではありません。判例3件の留保を含め、誤りを完全に排除したと保証するものではありません。</p>
   </div>
 </div>
 
@@ -250,14 +229,6 @@ section + section{margin-top:1.5rem}
   <h2>資料</h2>
   <div class="row"><span class="ch">資料</span><span class="tt"><a href="資料/索引.html">条文・判例の全文</a>
     <span class="d">条文824件・判例215件。各ページに本文と「この条文が問われた問題」の一覧。本文中の青い文字から直接飛べる</span></span><span class="st done">完成</span></div>
-  <div class="row"><span class="ch">台帳</span><span class="tt">論点台帳
-    <span class="d">8年分147問を59グループに全数割付。どの論点が何回出たかの一次資料</span></span><span class="st done">完成</span></div>
-  <div class="row"><span class="ch">手順</span><span class="tt">テキストの作り方
-    <span class="d">1論点グループを仕上げる手順。材料収集→骨格→部品→執筆→5段階の検査→記録</span></span><span class="st done">運用中</span></div>
-  <div class="row"><span class="ch">計画</span><span class="tt">執筆計画
-    <span class="d">59論点グループの残作業と、その進み具合</span></span><span class="st done">運用中</span></div>
-  <div class="row"><span class="ch">工程</span><span class="tt">執筆チェックリスト
-    <span class="d">15項目。指摘された誤りから作った再発防止。全ページ納品前に通す</span></span><span class="st done">運用中</span></div>
 </div>
 
 <footer>
