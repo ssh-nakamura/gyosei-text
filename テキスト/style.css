@@ -55,6 +55,10 @@ th[scope="row"]{font-weight:700; white-space:nowrap}
 .q .src{color:var(--hai); font-size:.78rem; white-space:nowrap}
 .q p{margin:.2rem 0 0; line-height:1.65}
 .q .why-x{color:var(--ink-sub); font-size:.84rem; margin-top:.3rem}
+/* 条文カードの下に置く案内。上の .q .why-x は問題カードの中だけを対象にしているので、
+   カードの外に置いたものには当たらない。全章のページと同じ見え方にそろえてある。
+   .q の中では上の .q .why-x のほうが詳しいので、そちらが勝つ。 */
+.why-x{color:var(--hai); font-size:.8rem; margin:.25rem 0 0}
 code{font-family:inherit; background:var(--fill); padding:.05rem .4rem; border-radius:3px; font-size:.92em}
 a{color:var(--seiji)}
 footer{border-top:1px solid var(--line); margin-top:3rem; padding-top:1.1rem; color:var(--hai); font-size:.84rem}
@@ -83,6 +87,19 @@ figcaption{font-size:.84rem; color:var(--hai); margin-top:.45rem}
 .audit-meta>div{border:1px solid var(--line); border-radius:4px; padding:.55rem .7rem; background:var(--paper)}
 .audit-meta dt{margin:0 0 .15rem; color:var(--hai); font-size:.72rem; letter-spacing:.08em; font-weight:700}
 .audit-meta dd{margin:0; font-size:.92rem; line-height:1.65}
+/* この章の作り ── リード文の後ろに畳んで置く。scripts/build_audit_notes.py が生成する */
+.audit-note{border:1px solid var(--line); border-radius:5px; background:var(--card);
+  margin:1.4rem 0 0; font-size:.86rem}
+.audit-note>summary{cursor:pointer; padding:.6rem .85rem; color:var(--ink-sub);
+  line-height:1.75; list-style:none}
+.audit-note>summary::-webkit-details-marker{display:none}
+.audit-note>summary::before{content:"＋"; color:var(--hai); margin-right:.45rem; font-weight:700}
+.audit-note[open]>summary::before{content:"−"}
+.audit-note[open]>summary{border-bottom:1px solid var(--line); color:var(--ink)}
+.audit-note>summary:hover{background:var(--fill)}
+.audit-note-body{padding:.15rem .85rem .75rem}
+.audit-note-body p{margin:.7rem 0; line-height:1.85; color:var(--ink-sub)}
+
 .audit-table-wrap{overflow-x:auto; border:1px solid var(--line2); border-radius:6px; margin:.9rem 0 0}
 .audit-table{min-width:56rem; margin:0; font-size:.84rem}
 .audit-table th,.audit-table td{line-height:1.65}
