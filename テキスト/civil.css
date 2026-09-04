@@ -49,6 +49,8 @@
 .key{background:linear-gradient(transparent 62%,var(--seiji-soft) 62%);font-weight:700}
 .warn{color:var(--shu);font-weight:700}
 .cite{color:var(--seiji);text-decoration:none;border-bottom:1px dotted var(--seiji);font-weight:600}
+.term{color:inherit;text-decoration:none;border-bottom:1px dashed var(--seiji);cursor:help}
+.term:hover{background:var(--seiji-soft);color:var(--seiji)}
 .chapter-list{display:grid;gap:.8rem}.chapter-link{display:block;padding:1rem 1.1rem;border:1px solid var(--line);border-radius:7px;background:var(--card);text-decoration:none;color:var(--ink)}.chapter-link:hover{border-color:var(--seiji);box-shadow:0 3px 14px rgba(0,0,0,.06)}.chapter-link b,.chapter-link span{display:block}.chapter-link span{margin-top:.35rem;color:var(--hai);line-height:1.7;font-size:.92rem}
 
 @media(max-width:900px){

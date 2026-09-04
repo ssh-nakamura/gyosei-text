@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>過去問ドリル</title><link rel="stylesheet" href="style.css">
+<style>
+body{margin:0;background:#faf9f6;color:#222;font-family:-apple-system,"Hiragino Sans","Noto Sans JP",sans-serif;line-height:1.75}
+.dw{max-width:48rem;margin:0 auto;padding:1.2rem 1rem 6rem}
+h1{font-size:1.3rem;margin:.4rem 0 .6rem}.note{color:#555;font-size:.88rem}
+.menu{display:flex;flex-wrap:wrap;gap:.5rem;margin:.6rem 0 1rem}
+.menu a,.menu button{background:#fff;border:1px solid #cfcac0;border-radius:999px;padding:.3rem .8rem;font-size:.86rem;color:#222;text-decoration:none;cursor:pointer}
+.menu a.on{border-color:#2b6a6a;color:#2b6a6a;background:#e6f0ef}
+.fields{display:grid;grid-template-columns:1fr auto auto;gap:.3rem .8rem;align-items:center;font-size:.9rem;margin:.4rem 0 1rem}
+.fields a{color:#2b6a6a;text-decoration:none;border-bottom:1px dotted #2b6a6a}
+.fields .sub{grid-column:1/-1;margin-top:.6rem;font-size:.78rem;letter-spacing:.1em;color:#888}
+#run{margin-top:1rem}
+</style></head><body><div class="dw">
+<p class="note"><a href="../計画.html">ダッシュボードへ</a> ／ <a href="民法-index.html">民法テキスト</a> ／ <a href="../行政法テキスト-全章.html">行政法テキスト</a></p>
+<h1>過去問ドリル</h1>
+<p class="note">公式過去問8年分の肢を、正しい・誤りで解きます。間違えた肢は1日後、正解した肢は3日後・7日後・30日後にまた出ます。結果はこのブラウザに保存されます。</p>
+<div class="menu"><a href="ドリル.html?due=1" id="m-due">今日解く肢</a><a href="ドリル.html?all=1">全部を順に</a></div>
+<div class="fields" id="fields"></div>
+<div id="run"></div>
+</div><script src="drill.js" defer></script></body></html>
