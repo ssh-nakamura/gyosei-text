@@ -13,6 +13,17 @@
 .civil-wrap header{margin-bottom:2rem}
 .civil-wrap section+section{margin-top:3rem}
 .civil-wrap h2{margin-top:0}
+.civil-wrap .scroll{overflow-x:auto !important;overflow-y:hidden !important}
+.civil-wrap table.compare{display:table;table-layout:fixed;width:100% !important}
+.civil-wrap table.compare:has(thead th:nth-child(3)){min-width:30rem !important}
+.civil-wrap table.compare:has(thead th:nth-child(4)){min-width:40rem !important}
+.civil-wrap table.compare:has(thead th:nth-child(5)){min-width:50rem !important}
+.civil-wrap table.compare thead{display:table-header-group;position:static;width:auto !important;height:auto;overflow:visible;clip:auto}
+.civil-wrap table.compare tbody{display:table-row-group}
+.civil-wrap table.compare tr{display:table-row;width:auto !important;padding:0;border-bottom:0}
+.civil-wrap table.compare th,.civil-wrap table.compare td{display:table-cell;width:auto !important;padding:.7rem .75rem !important;overflow-wrap:normal;word-break:normal}
+.civil-wrap table.compare tbody th{position:sticky;left:0;z-index:1;background:var(--fill)}
+.civil-wrap table.compare thead th:first-child{position:sticky;left:0;z-index:2;background:var(--fill)}
 .civil-wrap section[data-gap-label]::before{content:"過去問外補強  " attr(data-gap-label);display:inline-block;margin:0 0 .65rem;padding:.25rem .58rem;border:1px solid #a56a16;border-radius:999px;background:#fff5dc;color:#80500f;font-size:.72rem;font-weight:700;letter-spacing:.03em;line-height:1.45}
 
 .civil-toc{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:1rem 1.2rem;margin:0 0 2.5rem}
