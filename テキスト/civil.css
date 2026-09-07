@@ -10,6 +10,13 @@
 .civil-nav a.cur{border-left-color:var(--seiji);color:var(--seiji);font-weight:700;background:var(--seiji-soft)}
 .civil-nav .planned{display:block;padding:.38rem 1rem;color:var(--hai);font-size:.78rem;line-height:1.45}
 .civil-wrap{flex:1;min-width:0;max-width:54rem;margin:0 auto;padding:2rem 2.2rem 5rem;overflow-x:hidden}
+.civil-wrap .civil-sequence{list-style:none;display:flex;gap:1.8rem;padding:0;margin:1.2rem 0;letter-spacing:0}
+.civil-wrap .civil-sequence li{position:relative;flex:1;min-width:0;border-top:2px solid var(--seiji);padding:.7rem .25rem;font-size:.95rem;line-height:1.8;overflow-wrap:anywhere}
+.civil-wrap .civil-sequence li:not(:last-child)::after{content:'\2192';position:absolute;right:-1.4rem;top:.7rem;color:var(--seiji)}
+.civil-wrap .civil-conditions{border-left:2px solid var(--seiji);padding-left:1rem;margin:1.2rem 0}
+.civil-wrap .civil-conditions dt{font-weight:700;margin-top:1rem;line-height:1.8}
+.civil-wrap .civil-conditions dd{margin:.35rem 0 1rem;line-height:1.9}
+@media(max-width:640px){.civil-wrap .civil-sequence{display:block;padding-left:.5rem}.civil-wrap .civil-sequence li{border-top:0;border-left:2px solid var(--seiji);padding:.5rem 0 1.6rem 1rem}.civil-wrap .civil-sequence li:not(:last-child)::after{content:'\2193';left:.9rem;right:auto;top:auto;bottom:0}}
 .civil-wrap header{margin-bottom:2rem}
 .civil-wrap section+section{margin-top:3rem}
 .civil-wrap h2{margin-top:0}
