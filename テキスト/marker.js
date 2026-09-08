@@ -110,7 +110,10 @@
     '#mk-bar button.red{border-bottom:3px solid #c0392b}#mk-bar button.yel{background:#fff3a0}' +
     '#mk-msg{color:#555;opacity:0;transition:opacity .3s;margin-left:.3rem}' +
     '#rd-top{position:fixed;left:0;top:0;width:100%;height:4px;background:#e5e2db;z-index:60}#rd-top i{display:block;height:100%;background:#2b6a6a;width:0;transition:width .15s}' +
-    '#rd-info{position:fixed;right:1rem;top:.5rem;background:#fff;border:1px solid #cfcac0;border-radius:999px;padding:.2rem .7rem;font-size:.78rem;color:#333;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:60;display:flex;gap:.6rem;align-items:center}' +
+    '#rd-info{position:fixed;left:0;right:0;top:4px;background:#fff;border-bottom:1px solid #cfcac0;padding:.3rem .7rem;font-size:.78rem;color:#333;z-index:60;display:flex;flex-wrap:wrap;justify-content:flex-end;gap:.2rem .6rem;align-items:center;box-sizing:border-box}' +
+    '#rd-eta{min-height:1.4em;font-variant-numeric:tabular-nums;overflow-wrap:anywhere;border-left:1px solid #ddd;padding-left:.6rem}' +
+    'html{scroll-padding-top:var(--reader-info-height,0px)}.civil-nav{top:var(--reader-info-height,0px);height:calc(100vh - var(--reader-info-height,0px))}' +
+    '@media(max-width:640px){#rd-info .bar{display:none}#rd-eta{flex-basis:100%;border:0;padding:0;text-align:right}}@media print{#rd-info,#rd-top,#mk-bar{display:none}body{padding-top:0!important}}' +
     '#rd-info .bar{width:5rem;height:6px;background:#e5e2db;border-radius:3px;overflow:hidden}#rd-info .bar i{display:block;height:100%;background:#2b6a6a;width:0}' +
     '.rd-btn{display:block;margin:1rem 0 0;border:1px solid #cfcac0;background:#faf9f6;border-radius:999px;padding:.3rem .9rem;cursor:pointer;font-size:.85rem;color:#333}' +
     '.rd-btn.on{background:#e6f0ef;border-color:#2b6a6a;color:#2b6a6a}.rd-chk{color:#2b6a6a}a.rd-done{color:#2b6a6a}a.rd-done::before{content:"✓ "}';
@@ -119,8 +122,17 @@
   var top = document.createElement('div'); top.id = 'rd-top'; top.innerHTML = '<i id="rd-pos"></i>'; document.body.appendChild(top);
   if (secs.length) {
     var info = document.createElement('div'); info.id = 'rd-info';
-    info.innerHTML = '<span id="rd-pct">0%</span><span id="rd-count"></span><span class="bar"><i id="rd-total"></i></span>';
+    info.innerHTML = '<span id="rd-pct">0%</span><span id="rd-count"></span><span class="bar"><i id="rd-total"></i></span><span id="rd-eta">章の残り：ペース計測中</span>';
     document.body.appendChild(info);
+    var originalPadding = parseFloat(getComputedStyle(document.body).paddingTop) || 0;
+    function fitReaderHeader() {
+      var height = info.offsetHeight + 4;
+      document.documentElement.style.setProperty('--reader-info-height', height + 'px');
+      document.body.style.paddingTop = (originalPadding + height) + 'px';
+    }
+    fitReaderHeader();
+    if (typeof ResizeObserver !== 'undefined') new ResizeObserver(fitReaderHeader).observe(info);
+    else window.addEventListener('resize', fitReaderHeader);
     secs.forEach(function (sec) {
       var b = document.createElement('button'); b.type = 'button'; b.className = 'rd-btn'; b.dataset.sec = sec.id;
       sec.appendChild(b);
@@ -148,4 +160,9 @@
     var id = m.dataset.mid; unwrap(id); store = store.filter(function (r) { return r.id !== id; }); save();
   });
   applyAll();
+  if (secs.length && document.currentScript && document.currentScript.src) {
+    var eta = document.createElement('script');
+    eta.src = new URL('reader-eta.js', document.currentScript.src).href;
+    document.head.appendChild(eta);
+  }
 })();
